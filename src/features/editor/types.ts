@@ -152,6 +152,27 @@ export type TemplateProps = WithLayout<{
   children: Slot;
 }>;
 
+export type MapLocationMode = 'coordinates' | 'link';
+export type MapHeight = 'sm' | 'md' | 'lg' | 'full';
+export type MapAspectRatio = 'auto' | '16/9' | '4/3' | '1/1';
+
+export type MapProps = WithLayout<{
+  title: string;
+  eyebrow?: string;
+  description?: string;
+  address?: string;
+  locationMode: MapLocationMode;
+  latitude: number | string;
+  longitude: number | string;
+  googleMapsUrl?: string;
+  zoom: number;
+  height: MapHeight;
+  aspectRatio: MapAspectRatio;
+  showDirectionsButton: boolean;
+  directionsButtonLabel: string;
+  theme: 'dark' | 'light';
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
