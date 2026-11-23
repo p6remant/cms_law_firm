@@ -1,5 +1,12 @@
-import { type ObjectField, type SelectField } from '@puckeditor/core';
-import { type LayoutFieldProps, type SpacingValue, type TextAlign } from '@/features/editor/types';
+import type { ObjectField, SelectField } from '@puckeditor/core';
+import type {
+  LayoutFieldProps,
+  MapAspectRatio,
+  MapHeight,
+  MapLocationMode,
+  SpacingValue,
+  TextAlign,
+} from '../types.ts';
 
 export const SPACING_OPTIONS: { label: string; value: SpacingValue }[] = [
   { label: '0px', value: '0px' },
@@ -16,6 +23,30 @@ export const ALIGN_OPTIONS: { label: string; value: TextAlign }[] = [
   { label: 'Left', value: 'left' },
   { label: 'Center', value: 'center' },
   { label: 'Right', value: 'right' },
+];
+
+export const MAP_LOCATION_MODE_OPTIONS: { label: string; value: MapLocationMode }[] = [
+  { label: 'Coordinates (Lat/Lng)', value: 'coordinates' },
+  { label: 'Google Maps Link', value: 'link' },
+];
+
+export const MAP_HEIGHT_OPTIONS: { label: string; value: MapHeight }[] = [
+  { label: 'Small (256px)', value: 'sm' },
+  { label: 'Medium (384px)', value: 'md' },
+  { label: 'Large (512px)', value: 'lg' },
+  { label: 'Full (640px)', value: 'full' },
+];
+
+export const MAP_ASPECT_RATIO_OPTIONS: { label: string; value: MapAspectRatio }[] = [
+  { label: 'Auto (Use Height)', value: 'auto' },
+  { label: '16:9 (Widescreen)', value: '16/9' },
+  { label: '4:3 (Standard)', value: '4/3' },
+  { label: '1:1 (Square)', value: '1/1' },
+];
+
+export const MAP_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
 ];
 
 export const DEFAULT_LAYOUT: LayoutFieldProps = {
@@ -49,4 +80,30 @@ export function getGridColumnsClass(columns: 2 | 3 | 4): string {
   if (columns === 2) return 'grid-cols-1 md:grid-cols-2';
   if (columns === 4) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
   return 'grid-cols-1 md:grid-cols-3';
+}
+
+export function getMapContainerClass(height?: MapHeight, aspectRatio?: MapAspectRatio): string {
+  if (aspectRatio && aspectRatio !== 'auto') {
+    switch (aspectRatio) {
+      case '16/9':
+        return 'aspect-video w-full';
+      case '4/3':
+        return 'aspect-[4/3] w-full';
+      case '1/1':
+        return 'aspect-square w-full';
+    }
+  }
+
+  switch (height) {
+    case 'sm':
+      return 'h-64 w-full';
+    case 'md':
+      return 'h-96 w-full';
+    case 'lg':
+      return 'h-[32rem] w-full';
+    case 'full':
+      return 'h-[40rem] w-full';
+    default:
+      return 'h-96 w-full';
+  }
 }
