@@ -1348,5 +1348,27 @@ export const initialPageData: PuckPageData = {
         ],
       },
     },
+    {
+      type: 'Map',
+      props: {
+        id: 'Map-initial-1',
+        title: 'New York Headquarters',
+        eyebrow: 'Our Office',
+        description:
+          'Visit our central office in Manhattan for partner consultations, corporate litigation, and client meetings.',
+        address: '120 Broadway, Suite 300, New York, NY 10271',
+        locationMode: 'coordinates',
+        latitude: 40.7081,
+        longitude: -74.0109,
+        googleMapsUrl: '',
+        zoom: 15,
+        height: 'md',
+        aspectRatio: '16/9',
+        showDirectionsButton: true,
+        directionsButtonLabel: 'Get Directions',
+        theme: 'light',
+        layout: { padding: '48px' },
+      },
+    },
   ],
 };

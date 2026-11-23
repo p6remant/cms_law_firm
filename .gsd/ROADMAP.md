@@ -26,5 +26,5 @@
 
 ### Phase 3: Verification & Integration Sample
 
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add sample map block data to default templates if appropriate, verify editor and preview rendering, and pass typecheck and linting.
