@@ -9,6 +9,7 @@
 | Node.js    | `>=20.0.0` (recommended `v22+`) | Local JavaScript runtime environment (`README.md:22`)                           |
 | pnpm       | `>=10.0.0` (lockfile v12.21.0)  | Fast, disk space-efficient package manager (`README.md:23`, `pnpm-lock.yaml:1`) |
 | Browser    | Modern ES2022+ targets          | Target execution runtime (`tsconfig.app.json:3`, `eslint.config.js:21`)         |
+| Testing    | Built-in `node:test` (Node 22+) | Zero-dependency native unit test suite (`src/features/editor/**/*.test.ts`)     |
 
 ## Production Dependencies
 

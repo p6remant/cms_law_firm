@@ -139,10 +139,15 @@ The application is designed around a modular, feature-oriented structure (`src/f
   - **Dependencies:** `@puckeditor/core`, `src/features/editor/config/puck-config.tsx`
   - **Dependents:** `src/routes/_authenticated/preview.tsx:3`
 - **Puck Configuration & Initial Data:**
-  - **Purpose:** Configures 18 Puck blocks across 7 categories (`introduction`, `content`, `socialProof`, `layout`, `typography`, `interactive`, `other`) and exports sample page data (`initialPageData`).
-  - **Location:** `src/features/editor/config/puck-config.tsx:32-1248`
-  - **Dependencies:** `@puckeditor/core`, `lucide-react`, `src/features/editor/components/BlockLayout.tsx`, `src/features/editor/components/FieldTabs.tsx`, `src/features/editor/config/field-options.ts`, `src/features/editor/types.ts`
+  - **Purpose:** Configures 19 Puck blocks across 7 categories (`introduction`, `content`, `socialProof`, `layout`, `typography`, `interactive`, `other`) and exports sample page data (`initialPageData`). Includes `Map` block under `interactive` for office location display via coordinates or Google Maps links.
+  - **Location:** `src/features/editor/config/puck-config.tsx`
+  - **Dependencies:** `@puckeditor/core`, `lucide-react`, `src/features/editor/components/BlockLayout.tsx`, `src/features/editor/components/FieldTabs.tsx`, `src/features/editor/components/MapBlock.tsx`, `src/features/editor/config/field-options.ts`, `src/features/editor/types.ts`
   - **Dependents:** `src/features/editor/components/PuckEditor.tsx:4`, `src/features/editor/components/PuckPageRenderer.tsx:2`
+- **MapBlock Component & Location Utilities:**
+  - **Purpose:** Responsive map block rendering Google Maps iframe embeds, address overlays, external directions link, and fallback states. Powered by URL/coordinate parsing utility with zero external API dependencies.
+  - **Location:** `src/features/editor/components/MapBlock.tsx`, `src/features/editor/utils/map-location.ts`
+  - **Dependencies:** `@puckeditor/core`, `lucide-react`, `src/features/editor/types.ts`, `src/features/editor/config/field-options.ts`, `src/lib/utils.ts`
+  - **Dependents:** `src/features/editor/config/puck-config.tsx`
 - **Editor Types:**
   - **Purpose:** Strict TypeScript types for block props, alignment, spacing, slots, and Puck configuration.
   - **Location:** `src/features/editor/types.ts:1-177`
@@ -227,7 +232,7 @@ The following directories contain only `.gitkeep` placeholders:
 
 ## Technical Debt
 
-- [ ] **CRLF vs LF Prettier Conflict:** `.prettierrc:8` enforces `"endOfLine": "lf"`, causing `pnpm run lint` to fail on Windows with 1,962 `prettier/prettier` errors (`Delete ␍`). Missing `.gitattributes` to enforce consistent line endings (`.prettierrc:8`, `eslint.config.js:48`).
+- [x] **CRLF vs LF Prettier Conflict (Resolved):** Updated `.prettierrc` to `"endOfLine": "auto"`, enabling cross-platform linting without line-ending errors.
 - [ ] **Auth Route Guard Missing:** `src/routes/_authenticated/route.tsx:3-9` unconditionally renders `<Outlet />` without checking user session or redirecting unauthenticated users to `/login`.
 - [ ] **Mock Authentication:** `src/features/auth/components/SignInForm.tsx:18-21` navigates to `/dashboard` upon form submit without making an API request, setting tokens, or handling authentication errors.
 - [ ] **Disconnected Editor & Preview State:** `src/features/editor/components/PuckEditor.tsx:13` and `src/features/editor/components/PuckPageRenderer.tsx:7` both read static `initialPageData`. Edits made in `/editor` do not propagate to `/preview` and are lost on navigation.
