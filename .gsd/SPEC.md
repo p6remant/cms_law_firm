@@ -4,36 +4,39 @@
 
 ## Vision
 
-An enterprise law firm Content Management System (CMS) frontend built with React 19, Vite, TanStack Router, Tailwind CSS v4, and Puck editor, enabling non-technical staff and administrators to visually compose, customize, and publish firm landing pages, practice areas, attorney bios, and contact/location sections with flexible UI blocks.
+An enterprise law firm Content Management System (CMS) frontend built with React 19, Vite, TanStack Router, Tailwind CSS v4, and Puck editor, enabling non-technical staff and administrators to visually compose, customize, and publish firm landing pages, practice areas, attorney bios, office location maps, and interactive inquiry/contact forms with flexible UI blocks.
 
 ## Goals
 
 1. Provide a robust visual page editor with specialized, customizable law firm website blocks.
-2. Deliver clean, responsive, and accessible page rendering for public visitor experiences.
-3. Support seamless location and contact sharing through embedded map blocks supporting coordinates (latitude/longitude) and Google Maps links.
-4. Maintain high code quality, strict TypeScript typing, and fast client-side performance.
+2. Deliver clean, responsive, accessible, and type-safe UI components for public visitor experiences.
+3. Support visual form building with customizable fields (Input, Textarea, Select, Submit Button) for inquiries, consultation requests, and newsletter subscriptions.
+4. Provide high-conversion composite section blocks including Law Firm Contact Sections and Newsletter Subscription banners.
+5. Maintain high code quality, strict TypeScript typing, and fast client-side performance.
 
 ## Non-Goals (Out of Scope for Current Milestone)
 
-- Full backend persistence API for maps (client-side Puck configuration & block data flow first).
-- Complex GIS routing or proprietary tile servers (standard Google Maps embed/link & coordinate-based embedding).
-- Live geolocation tracking of end-users.
+- Backend email dispatch server or database storage of form submissions (frontend validation, customizable schema, and client submission handler/hooks first).
+- Complex multi-page conditional survey branching logic (standard contact & lead forms with core fields).
+- External CAPTCHA dependencies (clean client-side validation and honeypot field support).
 
 ## Users
 
-- **Law firm content editors & administrators:** Composing office location pages, contact sections, and branch details.
-- **Site visitors & prospective clients:** Viewing law firm office locations, getting directions, and viewing interactive maps.
+- **Law firm content editors & administrators:** Composing contact forms, newsletter signups, and client intake sections.
+- **Site visitors & prospective clients:** Inquiring about legal services, booking consultations, or subscribing to firm legal updates.
 
 ## Constraints
 
-- Integrates with existing `@puckeditor/core` architecture in `src/features/editor/`.
-- Compatible with Tailwind CSS v4 and project theme tokens (`cn`, `clsx`, `tailwind-merge`).
-- Must not require paid API keys for standard coordinate or URL-based iframe embedding.
+- Integrates cleanly with `@puckeditor/core` configuration and slot architecture in `src/features/editor/`.
+- Accessible form elements (`aria-labels`, visible labels, focus rings, keyboard navigation).
+- Compatible with Tailwind CSS v4 design tokens and existing theme conventions (`light` / `dark`).
+- Strict TypeScript compatibility under `noUncheckedIndexedAccess: true`.
 
-## Success Criteria
+## Milestone Success Criteria (form-blocks)
 
-- [ ] Map block registered in Puck editor configuration (`puck-config.tsx`) and exported types (`types.ts`).
-- [ ] Supports inputting location via Latitude/Longitude coordinates or Google Maps share/embed link.
-- [ ] Provides configurable display options: Title/Eyebrow, office address description, zoom level, aspect ratio/height, theme/style, and external directions link button.
-- [ ] Renders interactively and gracefully handles invalid or empty inputs with fallback states.
-- [ ] Passes TypeScript type checks and project lint standards.
+- [ ] Essential form field blocks defined: `InputField` (text/email/tel), `TextareaField`, `SelectField` (dropdown with options), and `FormButton`.
+- [ ] `Form` container block with a slot accepting form field components and customizable title, description, layout, and submit behavior.
+- [ ] Pre-configured `ContactSection` block pairing firm contact info with an inquiry form.
+- [ ] Pre-configured `Newsletter` block supporting inline and stacked subscription layouts.
+- [ ] Automated unit test suites for form validation, field helpers, and options.
+- [ ] Full project build (`pnpm run build`), typecheck (`pnpm run typecheck`), and lint (`pnpm run lint`) pass cleanly.

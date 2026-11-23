@@ -2,18 +2,18 @@
 
 ## Current Position
 
-- **Milestone**: `map-block` (completed)
-- **Status**: Milestone finalized and archived
-- **Archive**: `.gsd/milestones/map-block/`
+- **Milestone**: `form-blocks`
+- **Phase**: Not started
+- **Status**: Milestone planned
 
-## Last Milestone Summary
+## Milestone Goal
 
-Milestone `map-block` completed successfully:
+Build customizable form field blocks (input, textarea, select, submit button) and form container in Puck editor, followed by pre-configured Contact Section and Newsletter Subscription blocks.
 
-- Map block fully integrated into Puck editor with coordinate (`latitude`/`longitude`) and Google Maps link support.
-- Responsive UI component with office details, dark/light themes, aspect ratio controls, and external directions button.
-- Comprehensive test coverage (32 unit tests) with all builds and linters passing.
+## Last Session Summary
 
-## Next Steps
+Milestone `form-blocks` created.
 
-1. Run `/new-milestone` to define the next milestone.
+- Updated `.gsd/SPEC.md` with form requirements and success criteria.
+- Established 3-phase roadmap in `.gsd/ROADMAP.md`.
+- Next step: Run `/plan 1` to create execution plans for Phase 1.
