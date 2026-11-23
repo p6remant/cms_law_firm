@@ -1,12 +1,25 @@
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import {
+  FormButton,
+  FormContainer,
+  InputField,
+  SelectField,
+  TextareaField,
+} from '@/features/editor/components/form';
 import { MapBlock } from '@/features/editor/components/MapBlock';
 import {
   ALIGN_OPTIONS,
+  BUTTON_WIDTH_OPTIONS,
   DEFAULT_LAYOUT,
+  FIELD_WIDTH_OPTIONS,
+  FORM_BUTTON_VARIANT_OPTIONS,
+  FORM_METHOD_OPTIONS,
+  FORM_THEME_OPTIONS,
   getGridColumnsClass,
   getTextAlignClass,
+  INPUT_TYPE_OPTIONS,
   layoutField,
   MAP_ASPECT_RATIO_OPTIONS,
   MAP_HEIGHT_OPTIONS,
@@ -59,6 +72,10 @@ export const puckConfig: PuckConfig = {
     interactive: {
       title: 'Actions',
       components: ['Button', 'Map'],
+    },
+    forms: {
+      title: 'Forms',
+      components: ['Form', 'InputField', 'SelectField', 'TextareaField', 'FormButton'],
     },
     other: {
       title: 'Other',
@@ -1254,6 +1271,330 @@ export const puckConfig: PuckConfig = {
           <ChildrenSlot className="space-y-4" />
         </BlockLayout>
       ),
+    },
+
+    Form: {
+      label: 'Form Container',
+      fields: {
+        title: { type: 'text', label: 'Form Title' },
+        description: { type: 'textarea', label: 'Description' },
+        submitEndpoint: { type: 'text', label: 'Submit Endpoint (URL)' },
+        submitMethod: {
+          type: 'radio',
+          label: 'Submit Method',
+          options: FORM_METHOD_OPTIONS,
+        },
+        successMessage: { type: 'text', label: 'Success Message' },
+        errorMessage: { type: 'text', label: 'Error Message' },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        fields: {
+          type: 'slot',
+          allow: ['InputField', 'SelectField', 'TextareaField', 'FormButton'],
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.title}
+              {fields.description}
+              {fields.fields}
+              {fields.submitEndpoint}
+              {fields.successMessage}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.submitMethod}
+              {fields.errorMessage}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        title: 'Request a Legal Consultation',
+        description:
+          'Fill out the form below to connect with an experienced attorney for a confidential case evaluation.',
+        submitEndpoint: '',
+        submitMethod: 'POST',
+        successMessage: 'Thank you! Your consultation request has been submitted.',
+        errorMessage: 'Unable to submit your request. Please try again or contact us directly.',
+        theme: 'light',
+        layout: { padding: '32px' },
+        fields: [
+          {
+            type: 'InputField',
+            props: {
+              name: 'full_name',
+              label: 'Full Name',
+              type: 'text',
+              placeholder: 'e.g. John Doe',
+              required: true,
+              helperText: '',
+              width: 'half',
+            },
+          },
+          {
+            type: 'InputField',
+            props: {
+              name: 'email',
+              label: 'Email Address',
+              type: 'email',
+              placeholder: 'e.g. john@example.com',
+              required: true,
+              helperText: '',
+              width: 'half',
+            },
+          },
+          {
+            type: 'SelectField',
+            props: {
+              name: 'practice_area',
+              label: 'Practice Area',
+              placeholder: 'Select practice area...',
+              options:
+                'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
+              required: false,
+              helperText: '',
+              width: 'full',
+            },
+          },
+          {
+            type: 'TextareaField',
+            props: {
+              name: 'message',
+              label: 'Case Details',
+              placeholder: 'Please briefly describe your legal inquiry...',
+              rows: 4,
+              required: true,
+              helperText: '',
+              width: 'full',
+            },
+          },
+          {
+            type: 'FormButton',
+            props: {
+              label: 'Submit Consultation Request',
+              variant: 'primary',
+              width: 'full',
+              align: 'left',
+            },
+          },
+        ],
+      },
+      render: (props) => <FormContainer {...props} />,
+    },
+
+    InputField: {
+      label: 'Input Field',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        type: {
+          type: 'select',
+          label: 'Input Type',
+          options: INPUT_TYPE_OPTIONS,
+        },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.type}
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'full_name',
+        label: 'Full Name',
+        type: 'text',
+        placeholder: 'e.g. John Doe',
+        required: true,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <InputField {...props} />,
+    },
+
+    TextareaField: {
+      label: 'Textarea Field',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        rows: { type: 'number', label: 'Number of Rows', min: 2, max: 20 },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.rows}
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'message',
+        label: 'Case Details',
+        placeholder: 'Please briefly describe your legal inquiry...',
+        rows: 4,
+        required: true,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <TextareaField {...props} />,
+    },
+
+    SelectField: {
+      label: 'Select Dropdown',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        options: { type: 'textarea', label: 'Options (Label | value per line)' },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.options}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'practice_area',
+        label: 'Practice Area',
+        placeholder: 'Select practice area...',
+        options:
+          'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
+        required: false,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <SelectField {...props} />,
+    },
+
+    FormButton: {
+      label: 'Form Submit Button',
+      fields: {
+        label: { type: 'text', label: 'Button Label' },
+        variant: {
+          type: 'radio',
+          label: 'Variant',
+          options: FORM_BUTTON_VARIANT_OPTIONS,
+        },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: BUTTON_WIDTH_OPTIONS,
+        },
+        align: {
+          type: 'radio',
+          label: 'Alignment',
+          options: ALIGN_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={<>{fields.label}</>}
+          appearance={
+            <>
+              {fields.variant}
+              {fields.width}
+              {fields.align}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        label: 'Submit Consultation Request',
+        variant: 'primary',
+        width: 'full',
+        align: 'left',
+      },
+      render: (props) => <FormButton {...props} />,
     },
   },
 };
