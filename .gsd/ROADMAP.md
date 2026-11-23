@@ -6,7 +6,7 @@
 ## Must-Haves
 
 - [ ] `MapProps` defined in `src/features/editor/types.ts` and registered in `EditorComponentProps`.
-- [ ] Map location utility to parse and transform latitude/longitude or Google Maps URLs into valid embed sources and directions links.
+- [x] Map location utility to parse and transform latitude/longitude or Google Maps URLs into valid embed sources and directions links.
 - [ ] `Map` block configured in `src/features/editor/config/puck-config.tsx` under the `interactive` category with field schema and default props.
 - [ ] Responsive map renderer supporting office title, address description, configurable height, zoom level, and an external directions button.
 - [ ] Graceful fallback / placeholder state when coordinates or links are empty or invalid.
@@ -16,7 +16,7 @@
 
 ### Phase 1: Map Types & URL/Coordinate Resolution Utility
 
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Define `MapProps` in `src/features/editor/types.ts` and implement a helper utility to reliably generate embed iframes and external directions links from coordinates or Google Maps URLs.
 
 ### Phase 2: Puck Map Block Configuration & UI Component
