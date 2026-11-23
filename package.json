@@ -33,6 +33,7 @@
     "errorMsg": "Branch name must match: <feature|bug|release|setup|hotfix|refactor>/<ticket-id>-<short_description> (lower-case words separated by underscores). Example: feature/123-add_login_page"
   },
   "dependencies": {
+    "@puckeditor/core": "^0.24.1",
     "@tanstack/react-form": "^1.33.5",
     "@tanstack/react-router": "^1.170.46",
     "clsx": "^2.1.1",
