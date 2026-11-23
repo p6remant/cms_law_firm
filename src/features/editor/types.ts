@@ -191,6 +191,7 @@ export type EditorComponentProps = {
   Text: TextProps;
   RichText: RichTextProps;
   Button: ButtonProps;
+  Map: MapProps;
   Template: TemplateProps;
 };
 

@@ -1,12 +1,17 @@
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import { MapBlock } from '@/features/editor/components/MapBlock';
 import {
   ALIGN_OPTIONS,
   DEFAULT_LAYOUT,
   getGridColumnsClass,
   getTextAlignClass,
   layoutField,
+  MAP_ASPECT_RATIO_OPTIONS,
+  MAP_HEIGHT_OPTIONS,
+  MAP_LOCATION_MODE_OPTIONS,
+  MAP_THEME_OPTIONS,
   SPACING_OPTIONS,
 } from '@/features/editor/config/field-options';
 import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
@@ -53,7 +58,7 @@ export const puckConfig: PuckConfig = {
     },
     interactive: {
       title: 'Actions',
-      components: ['Button'],
+      components: ['Button', 'Map'],
     },
     other: {
       title: 'Other',
@@ -1142,6 +1147,83 @@ export const puckConfig: PuckConfig = {
           </BlockLayout>
         );
       },
+    },
+
+    Map: {
+      label: 'Map',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        title: { type: 'text', label: 'Title' },
+        description: { type: 'textarea', label: 'Description' },
+        address: { type: 'textarea', label: 'Address' },
+        locationMode: {
+          type: 'radio',
+          label: 'Location source',
+          options: MAP_LOCATION_MODE_OPTIONS,
+        },
+        latitude: { type: 'text', label: 'Latitude' },
+        longitude: { type: 'text', label: 'Longitude' },
+        googleMapsUrl: { type: 'text', label: 'Google Maps URL / Embed' },
+        zoom: { type: 'number', label: 'Zoom level', min: 1, max: 20 },
+        height: { type: 'select', label: 'Height', options: MAP_HEIGHT_OPTIONS },
+        aspectRatio: { type: 'select', label: 'Aspect ratio', options: MAP_ASPECT_RATIO_OPTIONS },
+        showDirectionsButton: {
+          type: 'radio',
+          label: 'Directions button',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        directionsButtonLabel: { type: 'text', label: 'Button label' },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.address}
+              {fields.locationMode}
+              {fields.latitude}
+              {fields.longitude}
+              {fields.googleMapsUrl}
+              {fields.showDirectionsButton}
+              {fields.directionsButtonLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.zoom}
+              {fields.height}
+              {fields.aspectRatio}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        title: 'Office Location',
+        eyebrow: 'VISIT US',
+        description: 'Visit our law firm headquarters for in-person consultation and case reviews.',
+        address: '123 Legal Avenue, Suite 400, New York, NY 10001',
+        locationMode: 'coordinates',
+        latitude: 40.7128,
+        longitude: -74.006,
+        googleMapsUrl: '',
+        zoom: 15,
+        height: 'md',
+        aspectRatio: '16/9',
+        showDirectionsButton: true,
+        directionsButtonLabel: 'Get Directions',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <MapBlock {...props} />,
     },
 
     Template: {
