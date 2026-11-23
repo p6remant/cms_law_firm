@@ -5,12 +5,12 @@
 
 ## Must-Haves
 
-- [ ] `MapProps` defined in `src/features/editor/types.ts` and registered in `EditorComponentProps`.
+- [x] `MapProps` defined in `src/features/editor/types.ts` and registered in `EditorComponentProps`.
 - [x] Map location utility to parse and transform latitude/longitude or Google Maps URLs into valid embed sources and directions links.
-- [ ] `Map` block configured in `src/features/editor/config/puck-config.tsx` under the `interactive` category with field schema and default props.
-- [ ] Responsive map renderer supporting office title, address description, configurable height, zoom level, and an external directions button.
-- [ ] Graceful fallback / placeholder state when coordinates or links are empty or invalid.
-- [ ] Verification through TypeScript compilation (`pnpm run build` or `pnpm run typecheck`).
+- [x] `Map` block configured in `src/features/editor/config/puck-config.tsx` under the `interactive` category with field schema and default props.
+- [x] Responsive map renderer supporting office title, address description, configurable height, zoom level, and an external directions button.
+- [x] Graceful fallback / placeholder state when coordinates or links are empty or invalid.
+- [x] Verification through TypeScript compilation (`pnpm run build` or `pnpm run typecheck`).
 
 ## Phases
 
@@ -21,7 +21,7 @@
 
 ### Phase 2: Puck Map Block Configuration & UI Component
 
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Register the `Map` block in `src/features/editor/config/puck-config.tsx` with fields for location mode (lat/long vs link), coordinates, Google Maps URL, title, address, height, and render a styled, accessible map preview.
 
 ### Phase 3: Verification & Integration Sample
