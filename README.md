@@ -10,6 +10,7 @@ Enterprise Content Management System (CMS) frontend built with **React 19**, **V
 - **Framework:** React 19 + Vite + TypeScript (Strict Mode)
 - **Routing:** TanStack Router (`@tanstack/react-router`) with file-based routing & auto code-splitting
 - **Forms & Validation:** TanStack Form (`@tanstack/react-form`) + Zod
+- **Visual Page Editor:** Puck (`@puckeditor/core`) for drag-and-drop React page building & rendering
 - **Styling & Icons:** Tailwind CSS v4 + `clsx` & `tailwind-merge` (`cn` utility) + `lucide-react`
 - **Code Quality:** ESLint (Flat Config, `strictTypeChecked`), Prettier, TypeScript
 - **Git Workflow:** Husky, `lint-staged`, Commitlint, Commitizen, `validate-branch-name`
@@ -78,7 +79,7 @@ cms_law_frontend/
 ├── public/                     # Static assets
 ├── src/
 │   ├── app/                    # App-wide providers, router instance, global setup
-│   │   └── router.tsx
+│   │   └── router.ts
 │   ├── components/             # Shared/reusable UI components
 │   │   ├── ui/                 # Base primitives (Button, Input, Modal, Table)
 │   │   └── layout/             # CMS Shell (Sidebar, Topbar, PageHeader)
@@ -87,7 +88,10 @@ cms_law_frontend/
 │   │   │   ├── components/
 │   │   │   ├── hooks/
 │   │   │   └── schemas.ts
-│   │   ├── content/            # Posts, Pages, Categories
+│   │   ├── editor/             # Puck Visual Page Editor & Page Renderer
+│   │   │   ├── components/     # BlockLayout.tsx, FieldTabs.tsx, PuckEditor.tsx, PuckPageRenderer.tsx
+│   │   │   ├── config/         # field-options.ts, puck-config.tsx
+│   │   │   └── types.ts        # Strict Puck Config & Data TypeScript interfaces
 │   │   └── media/              # Asset manager & uploads
 │   ├── hooks/                  # Global custom hooks (useDebounce, useDisclosure)
 │   ├── lib/                    # Utility functions & third-party configurations
@@ -99,9 +103,9 @@ cms_law_frontend/
 │   │   ├── login.tsx
 │   │   └── _authenticated/     # Protected CMS layout routes
 │   │       ├── route.tsx
-│   │       ├── dashboard.tsx
-│   │       └── content/
-│   │           └── index.tsx
+│   │       ├── dashboard.tsx   # Dashboard (/dashboard)
+│   │       ├── editor.tsx      # Visual page editor (/editor)
+│   │       └── preview.tsx     # Rendered page preview (/preview)
 │   ├── types/                  # Shared global TypeScript interfaces/types
 │   ├── index.css               # Tailwind CSS v4 entry
 │   ├── main.tsx                # Application entry point
