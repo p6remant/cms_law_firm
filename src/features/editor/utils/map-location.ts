@@ -105,9 +105,10 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
 
   // 1. Detect iframe code and extract src attribute
   const iframeMatch = targetUrl.match(/<iframe[^>]*\ssrc=["']([^"']+)["'][^>]*>/i);
-  if (iframeMatch) {
+  const iframeSrc = iframeMatch?.[1];
+  if (iframeSrc) {
     isIframeSnippet = true;
-    targetUrl = iframeMatch[1].trim();
+    targetUrl = iframeSrc.trim();
   }
 
   // Decode standard HTML entities in URL
@@ -155,7 +156,7 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
   // 4. Coordinates extraction from path (e.g., /@40.7128,-74.006,15z)
   const pathWithHash = parsedUrl.pathname + parsedUrl.hash;
   const atMatch = pathWithHash.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
-  if (atMatch) {
+  if (atMatch && atMatch[1] && atMatch[2]) {
     const coords = parseCoordinates(atMatch[1], atMatch[2]);
     if (coords) {
       coordinates = coords;
@@ -165,7 +166,7 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
   // 5. Coordinates extraction from pb param (e.g. !2d-73.9856!3d40.7484)
   const pb = parsedUrl.searchParams.get('pb') || targetUrl;
   const pbMatch = pb.match(/!2d(-?\d+(?:\.\d+)?)(?:!3d|.*!3d)(-?\d+(?:\.\d+)?)/);
-  if (pbMatch && !coordinates) {
+  if (pbMatch && pbMatch[1] && pbMatch[2] && !coordinates) {
     // !2d is longitude, !3d is latitude
     const coords = parseCoordinates(pbMatch[2], pbMatch[1]);
     if (coords) {
@@ -182,7 +183,7 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
 
   if (qParam) {
     const coordMatch = qParam.trim().match(/^([-+]?\d*(?:\.\d+)?),\s*([-+]?\d*(?:\.\d+)?)$/);
-    if (coordMatch) {
+    if (coordMatch && coordMatch[1] && coordMatch[2]) {
       const coords = parseCoordinates(coordMatch[1], coordMatch[2]);
       if (coords && !coordinates) {
         coordinates = coords;
@@ -194,8 +195,9 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
 
   // 7. Place name extraction from pathname (e.g., /place/Empire+State+Building/)
   const placeMatch = parsedUrl.pathname.match(/\/place\/([^/@]+)/);
-  if (placeMatch) {
-    const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, ' ')).trim();
+  const placeParam = placeMatch?.[1];
+  if (placeParam) {
+    const placeName = decodeURIComponent(placeParam.replace(/\+/g, ' ')).trim();
     if (placeName) {
       query = placeName;
     }
@@ -203,8 +205,9 @@ export function parseGoogleMapsUrl(rawUrl: string): GoogleMapsUrlParseResult | n
 
   // 8. Search query from pathname (e.g., /search/Statue+of+Liberty)
   const searchMatch = parsedUrl.pathname.match(/\/(?:maps\/)?search\/([^/@?]+)/);
-  if (searchMatch && !query) {
-    const searchName = decodeURIComponent(searchMatch[1].replace(/\+/g, ' ')).trim();
+  const searchParam = searchMatch?.[1];
+  if (searchParam && !query) {
+    const searchName = decodeURIComponent(searchParam.replace(/\+/g, ' ')).trim();
     if (searchName) {
       query = searchName;
     }
