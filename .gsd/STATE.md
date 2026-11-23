@@ -3,8 +3,9 @@
 ## Current Position
 
 - **Milestone**: `map-block`
-- **Phase**: Not started
-- **Status**: Milestone planned
+- **Phase**: 1
+- **Task**: Planning complete
+- **Status**: Ready for execution
 
 ## Milestone Goal
 
@@ -12,8 +13,8 @@ Add Map block to the Puck visual editor allowing users to share location either 
 
 ## Last Session Summary
 
-Milestone `map-block` created.
+Phase 1 planned successfully.
 
-- Project specification defined in `.gsd/SPEC.md`.
-- 3-phase roadmap established in `.gsd/ROADMAP.md`.
-- Next step: Run `/plan 1` to create execution plans for Phase 1.
+- Plan `01-PLAN.md` created in `.gsd/phases/1/` with 3 atomic tasks across wave 1.
+- Plan covers `MapProps` types, coordinate & Google Maps link resolution utility, and unit tests.
+- Next step: Run `/execute 1` to execute Phase 1 plans.
