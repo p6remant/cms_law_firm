@@ -13,7 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedContentIndexRouteImport } from './routes/_authenticated/content/index'
+import { Route as AuthenticatedEditorRouteImport } from './routes/_authenticated/editor'
+import { Route as AuthenticatedPreviewRouteImport } from './routes/_authenticated/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,24 +35,30 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedContentIndexRoute =
-  AuthenticatedContentIndexRouteImport.update({
-    id: '/content/',
-    path: '/content/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+const AuthenticatedEditorRoute = AuthenticatedEditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPreviewRoute = AuthenticatedPreviewRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/content/': typeof AuthenticatedContentIndexRoute
+  '/editor': typeof AuthenticatedEditorRoute
+  '/preview': typeof AuthenticatedPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/content': typeof AuthenticatedContentIndexRoute
+  '/editor': typeof AuthenticatedEditorRoute
+  '/preview': typeof AuthenticatedPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,20 +66,22 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/content/': typeof AuthenticatedContentIndexRoute
+  '/_authenticated/editor': typeof AuthenticatedEditorRoute
+  '/_authenticated/preview': typeof AuthenticatedPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/content/'
+  fullPaths: '/' | '/login' | '/dashboard' | '/editor' | '/preview'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/content'
+  to: '/' | '/login' | '/dashboard' | '/editor' | '/preview'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
     | '/_authenticated/dashboard'
-    | '/_authenticated/content/'
+    | '/_authenticated/editor'
+    | '/_authenticated/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -111,11 +120,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/content/': {
-      id: '/_authenticated/content/'
-      path: '/content'
-      fullPath: '/content/'
-      preLoaderRoute: typeof AuthenticatedContentIndexRouteImport
+    '/_authenticated/editor': {
+      id: '/_authenticated/editor'
+      path: '/editor'
+      fullPath: '/editor'
+      preLoaderRoute: typeof AuthenticatedEditorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/preview': {
+      id: '/_authenticated/preview'
+      path: '/preview'
+      fullPath: '/preview'
+      preLoaderRoute: typeof AuthenticatedPreviewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -123,12 +139,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedContentIndexRoute: typeof AuthenticatedContentIndexRoute
+  AuthenticatedEditorRoute: typeof AuthenticatedEditorRoute
+  AuthenticatedPreviewRoute: typeof AuthenticatedPreviewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedContentIndexRoute: AuthenticatedContentIndexRoute,
+  AuthenticatedEditorRoute: AuthenticatedEditorRoute,
+  AuthenticatedPreviewRoute: AuthenticatedPreviewRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
