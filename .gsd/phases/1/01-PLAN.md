@@ -140,7 +140,7 @@ Load for context:
     Use `node:test` and `node:assert/strict` for zero-dependency test runner.
     AVOID adding dependencies or test libraries to package.json.
   </action>
-  <verify>node --experimental-strip-types --test src/features/editor/utils/map-location.test.ts && pnpm run typecheck && pnpm run lint</verify>
+  <verify>node --experimental-strip-types --test src/features/editor/utils/map-location.test.ts; pnpm run typecheck; pnpm run lint</verify>
   <done>All unit tests pass, pnpm run typecheck succeeds with 0 errors, and pnpm run lint succeeds with 0 warnings.</done>
 </task>
 
