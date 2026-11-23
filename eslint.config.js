@@ -36,7 +36,13 @@ export default defineConfig([
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }],
+    },
+  },
+  {
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   eslintPluginPrettierRecommended,

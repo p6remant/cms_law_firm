@@ -1,13 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/')({
-  component: () => (
+function HomePage() {
+  return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center gap-6 px-6 text-center">
-      <h1 className="text-4xl font-bold tracking-tight text-slate-900">CMS Law Frontend</h1>
-      <p className="text-base text-slate-600">
-        Enterprise Content Management System powered by React 19, TanStack Router, TanStack Form,
-        and Tailwind CSS v4.
-      </p>
+      <h1 className="text-4xl font-bold tracking-tight text-slate-900">CMS Law</h1>
       <div className="flex items-center gap-4">
         <Link
           to="/dashboard"
@@ -23,5 +19,9 @@ export const Route = createFileRoute('/')({
         </Link>
       </div>
     </main>
-  ),
+  );
+}
+
+export const Route = createFileRoute('/')({
+  component: HomePage,
 });
