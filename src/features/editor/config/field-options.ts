@@ -1,5 +1,8 @@
 import type { ObjectField, SelectField } from '@puckeditor/core';
 import type {
+  FormButtonVariant,
+  FormFieldWidth,
+  InputFieldType,
   LayoutFieldProps,
   MapAspectRatio,
   MapHeight,
@@ -47,6 +50,40 @@ export const MAP_ASPECT_RATIO_OPTIONS: { label: string; value: MapAspectRatio }[
 export const MAP_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
   { label: 'Light', value: 'light' },
   { label: 'Dark', value: 'dark' },
+];
+
+export const INPUT_TYPE_OPTIONS: { label: string; value: InputFieldType }[] = [
+  { label: 'Text', value: 'text' },
+  { label: 'Email', value: 'email' },
+  { label: 'Phone (Tel)', value: 'tel' },
+  { label: 'Number', value: 'number' },
+];
+
+export const FIELD_WIDTH_OPTIONS: { label: string; value: FormFieldWidth }[] = [
+  { label: 'Full Width (100%)', value: 'full' },
+  { label: 'Half Width (50%)', value: 'half' },
+];
+
+export const BUTTON_WIDTH_OPTIONS: { label: string; value: FormFieldWidth | 'auto' }[] = [
+  { label: 'Auto', value: 'auto' },
+  { label: 'Full Width', value: 'full' },
+  { label: 'Half Width', value: 'half' },
+];
+
+export const FORM_BUTTON_VARIANT_OPTIONS: { label: string; value: FormButtonVariant }[] = [
+  { label: 'Primary', value: 'primary' },
+  { label: 'Secondary', value: 'secondary' },
+  { label: 'Outline', value: 'outline' },
+];
+
+export const FORM_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = [
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+];
+
+export const FORM_METHOD_OPTIONS: { label: string; value: 'POST' | 'GET' }[] = [
+  { label: 'POST', value: 'POST' },
+  { label: 'GET', value: 'GET' },
 ];
 
 export const DEFAULT_LAYOUT: LayoutFieldProps = {
