@@ -1,6 +1,8 @@
 import { createLucideIcon, Globe, type LucideIcon } from 'lucide-react';
 import type { FooterMultiColumnProps, FooterSplitProps, SocialPlatform } from '../types';
 
+export { Globe, type LucideIcon };
+
 export interface FooterThemeClasses {
   wrapper: string;
   heading: string;
