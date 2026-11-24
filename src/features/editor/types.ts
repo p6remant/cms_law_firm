@@ -226,6 +226,64 @@ export type FormProps = WithLayout<{
   fields: Slot;
 }>;
 
+export type SocialPlatform =
+  'linkedin' | 'twitter' | 'facebook' | 'youtube' | 'instagram' | 'github';
+
+export type SocialLinkItem = {
+  platform: SocialPlatform;
+  href: string;
+  label?: string;
+};
+
+export type FooterLinkItem = {
+  label: string;
+  href: string;
+  isExternal?: boolean;
+  badge?: string;
+};
+
+export type FooterColumn = {
+  title: string;
+  links: FooterLinkItem[];
+};
+
+export type OfficeLocationItem = {
+  city: string;
+  address: string;
+  phone: string;
+  email?: string;
+};
+
+export type FooterMultiColumnProps = WithLayout<{
+  theme: 'dark' | 'light';
+  firmName: string;
+  tagline?: string;
+  logoUrl?: string;
+  description?: string;
+  offices?: OfficeLocationItem[];
+  columns?: FooterColumn[];
+  socialLinks?: SocialLinkItem[];
+  copyrightNotice?: string;
+  legalDisclaimer?: string;
+  regulatoryNotice?: string;
+}>;
+
+export type FooterSplitProps = WithLayout<{
+  theme: 'dark' | 'light';
+  statementQuote: string;
+  statementAuthor?: string;
+  firmName: string;
+  tagline?: string;
+  primaryEmail?: string;
+  primaryPhone?: string;
+  primaryAddress?: string;
+  links?: FooterLinkItem[];
+  socialLinks?: SocialLinkItem[];
+  copyrightNotice?: string;
+  legalDisclaimer?: string;
+  showBackToTop?: boolean;
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
