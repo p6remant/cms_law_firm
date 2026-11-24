@@ -2,11 +2,29 @@ import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react'
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import {
+  FormButton,
+  FormContainer,
+  InputField,
+  SelectField,
+  TextareaField,
+} from '@/features/editor/components/form';
+import { MapBlock } from '@/features/editor/components/MapBlock';
+import {
   ALIGN_OPTIONS,
+  BUTTON_WIDTH_OPTIONS,
   DEFAULT_LAYOUT,
+  FIELD_WIDTH_OPTIONS,
+  FORM_BUTTON_VARIANT_OPTIONS,
+  FORM_METHOD_OPTIONS,
+  FORM_THEME_OPTIONS,
   getGridColumnsClass,
   getTextAlignClass,
+  INPUT_TYPE_OPTIONS,
   layoutField,
+  MAP_ASPECT_RATIO_OPTIONS,
+  MAP_HEIGHT_OPTIONS,
+  MAP_LOCATION_MODE_OPTIONS,
+  MAP_THEME_OPTIONS,
   SPACING_OPTIONS,
 } from '@/features/editor/config/field-options';
 import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
@@ -53,7 +71,11 @@ export const puckConfig: PuckConfig = {
     },
     interactive: {
       title: 'Actions',
-      components: ['Button'],
+      components: ['Button', 'Map'],
+    },
+    forms: {
+      title: 'Forms',
+      components: ['Form', 'InputField', 'SelectField', 'TextareaField', 'FormButton'],
     },
     other: {
       title: 'Other',
@@ -1144,6 +1166,83 @@ export const puckConfig: PuckConfig = {
       },
     },
 
+    Map: {
+      label: 'Map',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        title: { type: 'text', label: 'Title' },
+        description: { type: 'textarea', label: 'Description' },
+        address: { type: 'textarea', label: 'Address' },
+        locationMode: {
+          type: 'radio',
+          label: 'Location source',
+          options: MAP_LOCATION_MODE_OPTIONS,
+        },
+        latitude: { type: 'text', label: 'Latitude' },
+        longitude: { type: 'text', label: 'Longitude' },
+        googleMapsUrl: { type: 'text', label: 'Google Maps URL / Embed' },
+        zoom: { type: 'number', label: 'Zoom level', min: 1, max: 20 },
+        height: { type: 'select', label: 'Height', options: MAP_HEIGHT_OPTIONS },
+        aspectRatio: { type: 'select', label: 'Aspect ratio', options: MAP_ASPECT_RATIO_OPTIONS },
+        showDirectionsButton: {
+          type: 'radio',
+          label: 'Directions button',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        directionsButtonLabel: { type: 'text', label: 'Button label' },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.address}
+              {fields.locationMode}
+              {fields.latitude}
+              {fields.longitude}
+              {fields.googleMapsUrl}
+              {fields.showDirectionsButton}
+              {fields.directionsButtonLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.zoom}
+              {fields.height}
+              {fields.aspectRatio}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        title: 'Office Location',
+        eyebrow: 'VISIT US',
+        description: 'Visit our law firm headquarters for in-person consultation and case reviews.',
+        address: '123 Legal Avenue, Suite 400, New York, NY 10001',
+        locationMode: 'coordinates',
+        latitude: 40.7128,
+        longitude: -74.006,
+        googleMapsUrl: '',
+        zoom: 15,
+        height: 'md',
+        aspectRatio: '16/9',
+        showDirectionsButton: true,
+        directionsButtonLabel: 'Get Directions',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <MapBlock {...props} />,
+    },
+
     Template: {
       label: 'Template',
       fields: {
@@ -1172,6 +1271,330 @@ export const puckConfig: PuckConfig = {
           <ChildrenSlot className="space-y-4" />
         </BlockLayout>
       ),
+    },
+
+    Form: {
+      label: 'Form Container',
+      fields: {
+        title: { type: 'text', label: 'Form Title' },
+        description: { type: 'textarea', label: 'Description' },
+        submitEndpoint: { type: 'text', label: 'Submit Endpoint (URL)' },
+        submitMethod: {
+          type: 'radio',
+          label: 'Submit Method',
+          options: FORM_METHOD_OPTIONS,
+        },
+        successMessage: { type: 'text', label: 'Success Message' },
+        errorMessage: { type: 'text', label: 'Error Message' },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        fields: {
+          type: 'slot',
+          allow: ['InputField', 'SelectField', 'TextareaField', 'FormButton'],
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.title}
+              {fields.description}
+              {fields.fields}
+              {fields.submitEndpoint}
+              {fields.successMessage}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.submitMethod}
+              {fields.errorMessage}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        title: 'Request a Legal Consultation',
+        description:
+          'Fill out the form below to connect with an experienced attorney for a confidential case evaluation.',
+        submitEndpoint: '',
+        submitMethod: 'POST',
+        successMessage: 'Thank you! Your consultation request has been submitted.',
+        errorMessage: 'Unable to submit your request. Please try again or contact us directly.',
+        theme: 'light',
+        layout: { padding: '32px' },
+        fields: [
+          {
+            type: 'InputField',
+            props: {
+              name: 'full_name',
+              label: 'Full Name',
+              type: 'text',
+              placeholder: 'e.g. John Doe',
+              required: true,
+              helperText: '',
+              width: 'half',
+            },
+          },
+          {
+            type: 'InputField',
+            props: {
+              name: 'email',
+              label: 'Email Address',
+              type: 'email',
+              placeholder: 'e.g. john@example.com',
+              required: true,
+              helperText: '',
+              width: 'half',
+            },
+          },
+          {
+            type: 'SelectField',
+            props: {
+              name: 'practice_area',
+              label: 'Practice Area',
+              placeholder: 'Select practice area...',
+              options:
+                'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
+              required: false,
+              helperText: '',
+              width: 'full',
+            },
+          },
+          {
+            type: 'TextareaField',
+            props: {
+              name: 'message',
+              label: 'Case Details',
+              placeholder: 'Please briefly describe your legal inquiry...',
+              rows: 4,
+              required: true,
+              helperText: '',
+              width: 'full',
+            },
+          },
+          {
+            type: 'FormButton',
+            props: {
+              label: 'Submit Consultation Request',
+              variant: 'primary',
+              width: 'full',
+              align: 'left',
+            },
+          },
+        ],
+      },
+      render: (props) => <FormContainer {...props} />,
+    },
+
+    InputField: {
+      label: 'Input Field',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        type: {
+          type: 'select',
+          label: 'Input Type',
+          options: INPUT_TYPE_OPTIONS,
+        },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.type}
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'full_name',
+        label: 'Full Name',
+        type: 'text',
+        placeholder: 'e.g. John Doe',
+        required: true,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <InputField {...props} />,
+    },
+
+    TextareaField: {
+      label: 'Textarea Field',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        rows: { type: 'number', label: 'Number of Rows', min: 2, max: 20 },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.rows}
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'message',
+        label: 'Case Details',
+        placeholder: 'Please briefly describe your legal inquiry...',
+        rows: 4,
+        required: true,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <TextareaField {...props} />,
+    },
+
+    SelectField: {
+      label: 'Select Dropdown',
+      fields: {
+        name: { type: 'text', label: 'Field Name (HTML attribute)' },
+        label: { type: 'text', label: 'Field Label' },
+        placeholder: { type: 'text', label: 'Placeholder' },
+        options: { type: 'textarea', label: 'Options (Label | value per line)' },
+        required: {
+          type: 'radio',
+          label: 'Required',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        helperText: { type: 'text', label: 'Helper Text' },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: FIELD_WIDTH_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.label}
+              {fields.name}
+              {fields.placeholder}
+              {fields.options}
+              {fields.helperText}
+            </>
+          }
+          appearance={
+            <>
+              {fields.required}
+              {fields.width}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        name: 'practice_area',
+        label: 'Practice Area',
+        placeholder: 'Select practice area...',
+        options:
+          'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
+        required: false,
+        helperText: '',
+        width: 'full',
+      },
+      render: (props) => <SelectField {...props} />,
+    },
+
+    FormButton: {
+      label: 'Form Submit Button',
+      fields: {
+        label: { type: 'text', label: 'Button Label' },
+        variant: {
+          type: 'radio',
+          label: 'Variant',
+          options: FORM_BUTTON_VARIANT_OPTIONS,
+        },
+        width: {
+          type: 'radio',
+          label: 'Width',
+          options: BUTTON_WIDTH_OPTIONS,
+        },
+        align: {
+          type: 'radio',
+          label: 'Alignment',
+          options: ALIGN_OPTIONS,
+        },
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={<>{fields.label}</>}
+          appearance={
+            <>
+              {fields.variant}
+              {fields.width}
+              {fields.align}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        label: 'Submit Consultation Request',
+        variant: 'primary',
+        width: 'full',
+        align: 'left',
+      },
+      render: (props) => <FormButton {...props} />,
     },
   },
 };
@@ -1264,6 +1687,28 @@ export const initialPageData: PuckPageData = {
             },
           },
         ],
+      },
+    },
+    {
+      type: 'Map',
+      props: {
+        id: 'Map-initial-1',
+        title: 'New York Headquarters',
+        eyebrow: 'Our Office',
+        description:
+          'Visit our central office in Manhattan for partner consultations, corporate litigation, and client meetings.',
+        address: '120 Broadway, Suite 300, New York, NY 10271',
+        locationMode: 'coordinates',
+        latitude: 40.7081,
+        longitude: -74.0109,
+        googleMapsUrl: '',
+        zoom: 15,
+        height: 'md',
+        aspectRatio: '16/9',
+        showDirectionsButton: true,
+        directionsButtonLabel: 'Get Directions',
+        theme: 'light',
+        layout: { padding: '48px' },
       },
     },
   ],

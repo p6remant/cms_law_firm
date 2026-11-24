@@ -152,6 +152,80 @@ export type TemplateProps = WithLayout<{
   children: Slot;
 }>;
 
+export type MapLocationMode = 'coordinates' | 'link';
+export type MapHeight = 'sm' | 'md' | 'lg' | 'full';
+export type MapAspectRatio = 'auto' | '16/9' | '4/3' | '1/1';
+
+export type MapProps = WithLayout<{
+  title: string;
+  eyebrow?: string;
+  description?: string;
+  address?: string;
+  locationMode: MapLocationMode;
+  latitude: number | string;
+  longitude: number | string;
+  googleMapsUrl?: string;
+  zoom: number;
+  height: MapHeight;
+  aspectRatio: MapAspectRatio;
+  showDirectionsButton: boolean;
+  directionsButtonLabel: string;
+  theme: 'dark' | 'light';
+}>;
+
+export type FormFieldWidth = 'full' | 'half';
+export type InputFieldType = 'text' | 'email' | 'tel' | 'number';
+export type FormButtonVariant = 'primary' | 'secondary' | 'outline';
+export type SelectOption = { label: string; value: string };
+
+export type InputFieldProps = {
+  name: string;
+  label: string;
+  type: InputFieldType;
+  placeholder?: string;
+  required?: boolean;
+  helperText?: string;
+  width: FormFieldWidth;
+};
+
+export type TextareaFieldProps = {
+  name: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+  rows?: number;
+  helperText?: string;
+  width: FormFieldWidth;
+};
+
+export type SelectFieldProps = {
+  name: string;
+  label: string;
+  placeholder?: string;
+  options: string;
+  required?: boolean;
+  helperText?: string;
+  width: FormFieldWidth;
+};
+
+export type FormButtonProps = {
+  label: string;
+  variant: FormButtonVariant;
+  width: FormFieldWidth | 'auto';
+  align: TextAlign;
+};
+
+export type FormProps = WithLayout<{
+  title?: string;
+  description?: string;
+  submitEndpoint?: string;
+  submitMethod: 'POST' | 'GET';
+  successMessage?: string;
+  errorMessage?: string;
+  theme: 'dark' | 'light';
+  fields: Slot;
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
@@ -170,8 +244,16 @@ export type EditorComponentProps = {
   Text: TextProps;
   RichText: RichTextProps;
   Button: ButtonProps;
+  Map: MapProps;
   Template: TemplateProps;
+  Form: FormProps;
+  InputField: InputFieldProps;
+  TextareaField: TextareaFieldProps;
+  SelectField: SelectFieldProps;
+  FormButton: FormButtonProps;
 };
 
-export type PuckConfig = Config<EditorComponentProps>;
+export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {
+  components: Partial<Config<EditorComponentProps>['components']>;
+};
 export type PuckPageData = Data<EditorComponentProps>;
