@@ -1,5 +1,6 @@
 import { createLucideIcon, Globe, type LucideIcon } from 'lucide-react';
 import type {
+  Footer2Props,
   FooterColumn,
   FooterLinkItem,
   FooterSimpleProps,
@@ -268,6 +269,66 @@ export const DEFAULT_FOOTER_SIMPLE_DATA: FooterSimpleProps = {
   ],
 };
 
+export const DEFAULT_FOOTER_2_DATA: Footer2Props = {
+  theme: 'dark',
+  layout: {
+    padding: '64px',
+  },
+  logoText: 'LOGO',
+  brandSubtitle: '',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  showNewsletter: true,
+  newsletterHeading: 'Subscribe to our newsletter',
+  newsletterDescription: 'Stay up to date with the latest updates, insights, and announcements.',
+  newsletterPlaceholder: 'Enter your email',
+  newsletterButtonText: 'Subscribe',
+  linkColumns: [
+    {
+      title: 'Product',
+      links: [
+        { label: 'Overview', href: '/' },
+        { label: 'Features', href: '/features' },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Releases', href: '/releases' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { label: 'Documentation', href: '/docs' },
+        { label: 'Guides', href: '/guides' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Help Center', href: '/help' },
+      ],
+    },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About', href: '/about' },
+        { label: 'Careers', href: '/careers' },
+        { label: 'Press', href: '/press' },
+        { label: 'Contact', href: '/contact' },
+      ],
+    },
+  ],
+  socialLinks: [
+    { platform: 'facebook', href: 'https://facebook.com', label: 'Facebook' },
+    { platform: 'twitter', href: 'https://x.com', label: 'Twitter' },
+    { platform: 'instagram', href: 'https://instagram.com', label: 'Instagram' },
+    { platform: 'linkedin', href: 'https://linkedin.com', label: 'LinkedIn' },
+    { platform: 'github', href: 'https://github.com', label: 'GitHub' },
+  ],
+  copyrightNotice: '© 2026 Company Name. All rights reserved.',
+  bottomLinks: [
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Cookie Policy', href: '/cookies' },
+    { label: 'Support', href: '/support' },
+  ],
+  showBackToTop: true,
+};
+
 export interface ResolvedFooterLink {
   label: string;
   href: string;
@@ -310,12 +371,45 @@ export interface ResolvedFooterSimple {
   bottomLinks: ResolvedFooterLink[];
 }
 
+export interface ResolvedFooter2 {
+  theme: 'dark' | 'light';
+  themeClasses: FooterThemeClasses;
+  layout: LayoutFieldProps;
+  logoText: string;
+  logoUrl?: string;
+  brandSubtitle?: string;
+  description?: string;
+  showNewsletter: boolean;
+  newsletterHeading?: string;
+  newsletterDescription?: string;
+  newsletterPlaceholder: string;
+  newsletterButtonText: string;
+  linkColumns: ResolvedFooterColumn[];
+  contactTitle?: string;
+  addressLines: string[];
+  phone?: string;
+  phoneHref: string | null;
+  email?: string;
+  emailHref: string | null;
+  socialLinks: ResolvedSocialLink[];
+  copyrightNotice?: string;
+  bottomLinks: ResolvedFooterLink[];
+  showBackToTop: boolean;
+}
+
 function normalizeOptionalText(value?: string | null): string | undefined {
   if (!value) {
     return undefined;
   }
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function splitAddressLines(address?: string | null): string[] {
+  return (address ?? '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 }
 
 export function resolveFooterLink(item: FooterLinkItem): ResolvedFooterLink {
@@ -441,10 +535,7 @@ export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): Res
   const email = normalizeOptionalText(props.email);
   const copyrightNotice = normalizeOptionalText(props.copyrightNotice);
 
-  const addressLines = (props.address ?? '')
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  const addressLines = splitAddressLines(props.address);
 
   const phoneHref = formatPhoneHref(phone);
   const emailHref = formatEmailHref(email);
@@ -474,6 +565,96 @@ export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): Res
   }
   if (description !== undefined) {
     resolved.description = description;
+  }
+  if (contactTitle !== undefined) {
+    resolved.contactTitle = contactTitle;
+  }
+  if (phone !== undefined) {
+    resolved.phone = phone;
+  }
+  if (email !== undefined) {
+    resolved.email = email;
+  }
+  if (copyrightNotice !== undefined) {
+    resolved.copyrightNotice = copyrightNotice;
+  }
+
+  return resolved;
+}
+
+export function resolveFooter2Props(props: Partial<Footer2Props>): ResolvedFooter2 {
+  const theme: 'dark' | 'light' = props.theme === 'light' ? 'light' : 'dark';
+  const themeClasses = getFooterThemeClasses(theme);
+  const layout = props.layout ?? DEFAULT_FOOTER_2_DATA.layout;
+  const logoText =
+    normalizeOptionalText(props.logoText) ?? DEFAULT_FOOTER_2_DATA.logoText ?? 'LOGO';
+
+  const logoUrl = normalizeOptionalText(props.logoUrl);
+  const brandSubtitle = normalizeOptionalText(props.brandSubtitle);
+  const description = normalizeOptionalText(props.description);
+
+  const showNewsletter = props.showNewsletter ?? DEFAULT_FOOTER_2_DATA.showNewsletter ?? true;
+  const newsletterHeading =
+    props.newsletterHeading === undefined
+      ? DEFAULT_FOOTER_2_DATA.newsletterHeading
+      : normalizeOptionalText(props.newsletterHeading);
+  const newsletterDescription =
+    props.newsletterDescription === undefined
+      ? DEFAULT_FOOTER_2_DATA.newsletterDescription
+      : normalizeOptionalText(props.newsletterDescription);
+  const newsletterPlaceholder =
+    normalizeOptionalText(props.newsletterPlaceholder) ??
+    DEFAULT_FOOTER_2_DATA.newsletterPlaceholder ??
+    'Enter your email';
+  const newsletterButtonText =
+    normalizeOptionalText(props.newsletterButtonText) ??
+    DEFAULT_FOOTER_2_DATA.newsletterButtonText ??
+    'Subscribe';
+
+  const contactTitle = normalizeOptionalText(props.contactTitle);
+  const addressLines = splitAddressLines(props.address);
+  const phone = normalizeOptionalText(props.phone);
+  const phoneHref = formatPhoneHref(phone);
+  const email = normalizeOptionalText(props.email);
+  const emailHref = formatEmailHref(email);
+
+  const linkColumns = resolveFooterColumns(props.linkColumns);
+  const socialLinks = resolveSocialLinks(props.socialLinks);
+  const copyrightNotice = normalizeOptionalText(props.copyrightNotice);
+  const bottomLinks = resolveFooterLinks(props.bottomLinks);
+  const showBackToTop = props.showBackToTop ?? DEFAULT_FOOTER_2_DATA.showBackToTop ?? true;
+
+  const resolved: ResolvedFooter2 = {
+    theme,
+    themeClasses,
+    layout,
+    logoText,
+    showNewsletter,
+    newsletterPlaceholder,
+    newsletterButtonText,
+    linkColumns,
+    addressLines,
+    phoneHref,
+    emailHref,
+    socialLinks,
+    bottomLinks,
+    showBackToTop,
+  };
+
+  if (logoUrl !== undefined) {
+    resolved.logoUrl = logoUrl;
+  }
+  if (brandSubtitle !== undefined) {
+    resolved.brandSubtitle = brandSubtitle;
+  }
+  if (description !== undefined) {
+    resolved.description = description;
+  }
+  if (newsletterHeading !== undefined) {
+    resolved.newsletterHeading = newsletterHeading;
+  }
+  if (newsletterDescription !== undefined) {
+    resolved.newsletterDescription = newsletterDescription;
   }
   if (contactTitle !== undefined) {
     resolved.contactTitle = contactTitle;
