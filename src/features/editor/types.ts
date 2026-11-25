@@ -287,6 +287,28 @@ export type FooterSimpleProps = WithLayout<{
   bottomLinks?: FooterLinkItem[];
 }>;
 
+export type Footer2Props = WithLayout<{
+  theme: 'dark' | 'light';
+  logoText?: string;
+  logoUrl?: string;
+  brandSubtitle?: string;
+  description?: string;
+  showNewsletter?: boolean;
+  newsletterHeading?: string;
+  newsletterDescription?: string;
+  newsletterPlaceholder?: string;
+  newsletterButtonText?: string;
+  linkColumns?: FooterColumn[];
+  contactTitle?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  socialLinks?: SocialLinkItem[];
+  copyrightNotice?: string;
+  bottomLinks?: FooterLinkItem[];
+  showBackToTop?: boolean;
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
