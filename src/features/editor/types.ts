@@ -363,6 +363,7 @@ export type EditorComponentProps = {
   FormButton: FormButtonProps;
   FooterSimple: FooterSimpleProps;
   Footer2: Footer2Props;
+  CTA1: CTA1Props;
 };
 
 export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {

@@ -1,6 +1,7 @@
-import { type ArrayField } from '@puckeditor/core';
+import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
+import { CTA1 } from '@/features/editor/components/cta';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
@@ -33,12 +34,16 @@ import {
 } from '@/features/editor/config/field-options';
 import {
   type CardIconName,
+  type CTAActionType,
+  type CTAButtonProps,
+  type CTAButtonVariant,
   type FooterColumn,
   type FooterLinkItem,
   type PuckConfig,
   type PuckPageData,
   type SocialLinkItem,
 } from '@/features/editor/types';
+import { DEFAULT_CTA1_DATA } from '@/features/editor/utils/cta-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -140,6 +145,43 @@ const footerBottomLinksField: ArrayField<FooterLinkItem[]> = {
   },
 };
 
+const CTA_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const CTA_ACTION_TYPE_OPTIONS: { label: string; value: CTAActionType }[] = [
+  { label: 'Newsletter', value: 'newsletter' },
+  { label: 'Buttons', value: 'button' },
+];
+
+const CTA_BUTTON_VARIANT_OPTIONS: { label: string; value: CTAButtonVariant }[] = [
+  { label: 'Primary', value: 'primary' },
+  { label: 'Secondary', value: 'secondary' },
+  { label: 'Outline', value: 'outline' },
+  { label: 'Ghost', value: 'ghost' },
+];
+
+const CTA_TARGET_OPTIONS: { label: string; value: '_self' | '_blank' }[] = [
+  { label: 'Same Tab (_self)', value: '_self' },
+  { label: 'New Tab (_blank)', value: '_blank' },
+];
+
+function createCTAButtonField(label: string): ObjectField<CTAButtonProps> {
+  return {
+    type: 'object',
+    label,
+    collapsible: true,
+    defaultExpanded: true,
+    objectFields: {
+      text: { type: 'text', label: 'Button Text' },
+      href: { type: 'text', label: 'Link URL / Path' },
+      target: { type: 'radio', label: 'Open Target', options: CTA_TARGET_OPTIONS },
+      variant: { type: 'select', label: 'Button Variant', options: CTA_BUTTON_VARIANT_OPTIONS },
+    },
+  };
+}
+
 export const puckConfig: PuckConfig = {
   categories: {
     introduction: {
@@ -148,7 +190,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento'],
+      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento', 'CTA1'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1750,6 +1792,54 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FOOTER_2_DATA,
       render: (props) => <Footer2 {...props} />,
+    },
+
+    CTA1: {
+      label: 'CTA 1 (Newsletter / Action)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        actionType: { type: 'radio', label: 'Action Mode', options: CTA_ACTION_TYPE_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Newsletter Submit Label' },
+        newsletterButtonVariant: {
+          type: 'select',
+          label: 'Newsletter Button Variant',
+          options: CTA_BUTTON_VARIANT_OPTIONS,
+        },
+        disclaimer: { type: 'text', label: 'Newsletter Disclaimer' },
+        primaryButton: createCTAButtonField('Primary Button'),
+        secondaryButton: createCTAButtonField('Secondary Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.actionType}
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.newsletterPlaceholder}
+              {fields.newsletterButtonText}
+              {fields.disclaimer}
+              {fields.primaryButton}
+              {fields.secondaryButton}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.newsletterButtonVariant}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CTA1_DATA,
+      render: (props) => <CTA1 {...props} />,
     },
   },
 };
