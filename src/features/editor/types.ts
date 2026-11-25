@@ -227,7 +227,7 @@ export type FormProps = WithLayout<{
 }>;
 
 export type SocialPlatform =
-  'linkedin' | 'twitter' | 'facebook' | 'youtube' | 'instagram' | 'github';
+  'linkedin' | 'twitter' | 'facebook' | 'youtube' | 'instagram' | 'github' | 'pinterest';
 
 export type SocialLinkItem = {
   platform: SocialPlatform;

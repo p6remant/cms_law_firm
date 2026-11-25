@@ -11,54 +11,101 @@ import {
   Instagram,
   isExternalLink,
   Linkedin,
+  Pinterest,
   Twitter,
   Youtube,
 } from './footer-utils.ts';
 import type { SocialPlatform } from '../types.ts';
 
+const THEME_CLASS_KEYS = [
+  'wrapper',
+  'heading',
+  'text',
+  'mutedText',
+  'link',
+  'border',
+  'badge',
+  'disclaimer',
+] as const;
+
+const FORBIDDEN_THEME_PATTERNS = [
+  /shadow/,
+  /stone/,
+  /zinc/,
+  /tracking-tight/,
+  /tracking-wide/,
+  /tracking-wider/,
+  /tracking-widest/,
+];
+
 void describe('footer-utils', () => {
   void describe('getFooterThemeClasses', () => {
-    void it('returns warm stone classes for light theme', () => {
+    void it('returns pure white classes for light theme', () => {
       const light = getFooterThemeClasses('light');
-      assert.match(light.wrapper, /bg-stone-50/);
-      assert.match(light.wrapper, /border-stone-200/);
-      assert.match(light.wrapper, /text-stone-900/);
-      assert.match(light.heading, /text-stone-950/);
-      assert.match(light.heading, /font-serif/);
-      assert.match(light.mutedText, /text-stone-600/);
-      assert.match(light.border, /border-stone-200/);
-      assert.match(light.badge, /bg-stone-100/);
-      assert.match(light.disclaimer, /text-stone-600/);
+      assert.match(light.wrapper, /bg-white/);
+      assert.match(light.wrapper, /text-black/);
+      assert.match(light.wrapper, /border-neutral-200/);
+      assert.match(light.wrapper, /tracking-normal/);
+      assert.match(light.heading, /text-black/);
+      assert.match(light.heading, /tracking-normal/);
+      assert.match(light.text, /text-black/);
+      assert.match(light.text, /tracking-normal/);
+      assert.match(light.mutedText, /text-neutral-600/);
+      assert.match(light.mutedText, /tracking-normal/);
+      assert.match(light.link, /text-neutral-700/);
+      assert.match(light.link, /hover:text-black/);
+      assert.match(light.link, /tracking-normal/);
+      assert.match(light.border, /border-neutral-200/);
+      assert.match(light.badge, /bg-neutral-100/);
+      assert.match(light.badge, /text-neutral-700/);
+      assert.match(light.badge, /border-neutral-200/);
+      assert.match(light.badge, /tracking-normal/);
+      assert.match(light.disclaimer, /text-neutral-600/);
+      assert.match(light.disclaimer, /border-neutral-200/);
+      assert.match(light.disclaimer, /tracking-normal/);
+
+      for (const key of THEME_CLASS_KEYS) {
+        for (const pattern of FORBIDDEN_THEME_PATTERNS) {
+          assert.doesNotMatch(light[key], pattern);
+        }
+      }
     });
 
-    void it('returns obsidian/zinc classes for dark theme', () => {
+    void it('returns pure black classes for dark theme', () => {
       const dark = getFooterThemeClasses('dark');
-      assert.match(dark.wrapper, /bg-zinc-950/);
-      assert.match(dark.wrapper, /border-zinc-800/);
-      assert.match(dark.wrapper, /text-zinc-100/);
+      assert.match(dark.wrapper, /bg-black/);
+      assert.match(dark.wrapper, /text-white/);
+      assert.match(dark.wrapper, /border-neutral-800/);
+      assert.match(dark.wrapper, /tracking-normal/);
       assert.match(dark.heading, /text-white/);
-      assert.match(dark.heading, /font-serif/);
-      assert.match(dark.mutedText, /text-zinc-400/);
-      assert.match(dark.border, /border-zinc-800/);
-      assert.match(dark.badge, /bg-zinc-900/);
-      assert.match(dark.disclaimer, /text-zinc-400/);
+      assert.match(dark.heading, /tracking-normal/);
+      assert.match(dark.text, /text-white/);
+      assert.match(dark.text, /tracking-normal/);
+      assert.match(dark.mutedText, /text-neutral-400/);
+      assert.match(dark.mutedText, /tracking-normal/);
+      assert.match(dark.link, /text-neutral-300/);
+      assert.match(dark.link, /hover:text-white/);
+      assert.match(dark.link, /tracking-normal/);
+      assert.match(dark.border, /border-neutral-800/);
+      assert.match(dark.badge, /bg-neutral-900/);
+      assert.match(dark.badge, /text-neutral-300/);
+      assert.match(dark.badge, /border-neutral-800/);
+      assert.match(dark.badge, /tracking-normal/);
+      assert.match(dark.disclaimer, /text-neutral-400/);
+      assert.match(dark.disclaimer, /border-neutral-800/);
+      assert.match(dark.disclaimer, /tracking-normal/);
+
+      for (const key of THEME_CLASS_KEYS) {
+        for (const pattern of FORBIDDEN_THEME_PATTERNS) {
+          assert.doesNotMatch(dark[key], pattern);
+        }
+      }
     });
 
     void it('contains all required keys with non-empty string values', () => {
-      const requiredKeys = [
-        'wrapper',
-        'heading',
-        'text',
-        'mutedText',
-        'link',
-        'border',
-        'badge',
-        'disclaimer',
-      ] as const;
-
       for (const theme of ['light', 'dark'] as const) {
         const classes = getFooterThemeClasses(theme);
-        for (const key of requiredKeys) {
+        for (const key of THEME_CLASS_KEYS) {
           assert.strictEqual(typeof classes[key], 'string');
           assert.ok(classes[key].length > 0, `Key ${key} should not be empty for theme ${theme}`);
         }
@@ -75,8 +122,9 @@ void describe('footer-utils', () => {
         'youtube',
         'instagram',
         'github',
+        'pinterest',
       ];
-      const expectedIcons = [Linkedin, Twitter, Facebook, Youtube, Instagram, Github];
+      const expectedIcons = [Linkedin, Twitter, Facebook, Youtube, Instagram, Github, Pinterest];
 
       platforms.forEach((platform, index) => {
         const icon = getSocialIcon(platform);
@@ -92,6 +140,7 @@ void describe('footer-utils', () => {
       assert.strictEqual(getSocialIcon('  LinkedIn  '), Linkedin);
       assert.strictEqual(getSocialIcon('TWITTER'), Twitter);
       assert.strictEqual(getSocialIcon('GitHub '), Github);
+      assert.strictEqual(getSocialIcon(' PINTEREST '), Pinterest);
     });
 
     void it('returns Globe fallback icon for unknown or invalid platform string', () => {

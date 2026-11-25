@@ -148,7 +148,7 @@ void describe('footer-multi-column helpers', () => {
       const resolved = resolveFooterMultiColumnProps(DEFAULT_FOOTER_MULTI_COLUMN_DATA);
 
       assert.strictEqual(resolved.theme, 'dark');
-      assert.match(resolved.themeClasses.wrapper, /bg-zinc-950/);
+      assert.match(resolved.themeClasses.wrapper, /bg-black/);
       assert.deepStrictEqual(resolved.layout, { padding: '64px' });
       assert.strictEqual(resolved.firmName, 'Vanguard & Sterling LLP');
       assert.strictEqual(resolved.monogram, 'VS');
@@ -201,15 +201,15 @@ void describe('footer-multi-column helpers', () => {
       );
     });
 
-    void it('switches to warm ivory/stone light theme when theme is light', () => {
+    void it('switches to pure white light theme when theme is light', () => {
       const resolved = resolveFooterMultiColumnProps({
         ...DEFAULT_FOOTER_MULTI_COLUMN_DATA,
         theme: 'light',
       });
 
       assert.strictEqual(resolved.theme, 'light');
-      assert.match(resolved.themeClasses.wrapper, /bg-stone-50/);
-      assert.match(resolved.themeClasses.heading, /text-stone-950/);
+      assert.match(resolved.themeClasses.wrapper, /bg-white/);
+      assert.match(resolved.themeClasses.heading, /text-black/);
     });
 
     void it('normalizes blank optional text fields to undefined and preserves explicit empty arrays', () => {

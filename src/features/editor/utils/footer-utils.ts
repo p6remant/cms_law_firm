@@ -26,26 +26,26 @@ export interface FooterThemeClasses {
 export function getFooterThemeClasses(theme: 'light' | 'dark'): FooterThemeClasses {
   if (theme === 'light') {
     return {
-      wrapper: 'bg-stone-50 text-stone-900 border-stone-200',
-      heading: 'text-stone-950 font-serif tracking-tight',
-      text: 'text-stone-900',
-      mutedText: 'text-stone-600',
-      link: 'text-stone-600 hover:text-stone-950 transition-colors',
-      border: 'border-stone-200',
-      badge: 'bg-stone-100 text-stone-700 border-stone-200',
-      disclaimer: 'text-stone-600 border-stone-200',
+      wrapper: 'bg-white text-black border-neutral-200 tracking-normal',
+      heading: 'text-black tracking-normal',
+      text: 'text-black tracking-normal',
+      mutedText: 'text-neutral-600 tracking-normal',
+      link: 'text-neutral-700 hover:text-black transition-colors tracking-normal',
+      border: 'border-neutral-200',
+      badge: 'bg-neutral-100 text-neutral-700 border-neutral-200 tracking-normal',
+      disclaimer: 'text-neutral-600 border-neutral-200 tracking-normal',
     };
   }
 
   return {
-    wrapper: 'bg-zinc-950 text-zinc-100 border-zinc-800',
-    heading: 'text-white font-serif tracking-tight',
-    text: 'text-zinc-100',
-    mutedText: 'text-zinc-400',
-    link: 'text-zinc-300 hover:text-white transition-colors',
-    border: 'border-zinc-800',
-    badge: 'bg-zinc-900 text-zinc-300 border-zinc-700/60',
-    disclaimer: 'text-zinc-400 border-zinc-800/80',
+    wrapper: 'bg-black text-white border-neutral-800 tracking-normal',
+    heading: 'text-white tracking-normal',
+    text: 'text-white tracking-normal',
+    mutedText: 'text-neutral-400 tracking-normal',
+    link: 'text-neutral-300 hover:text-white transition-colors tracking-normal',
+    border: 'border-neutral-800',
+    badge: 'bg-neutral-900 text-neutral-300 border-neutral-800 tracking-normal',
+    disclaimer: 'text-neutral-400 border-neutral-800 tracking-normal',
   };
 }
 
@@ -123,6 +123,18 @@ export const Github: LucideIcon = createLucideIcon('Github', [
   ['path', { d: 'M9 18c-4.51 2-5-2-7-2', key: 'p2' }],
 ]);
 
+export const Pinterest: LucideIcon = createLucideIcon('Pinterest', [
+  ['circle', { cx: '12', cy: '12', r: '10', key: 'c1' }],
+  ['path', { d: 'M8 20l4-9', key: 'p1' }],
+  [
+    'path',
+    {
+      d: 'M10.7 14c.437 1.263 1.43 2 2.55 2c2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7',
+      key: 'p2',
+    },
+  ],
+]);
+
 export function getSocialIcon(platform?: SocialPlatform | (string & {})): LucideIcon {
   if (!platform) {
     return Globe;
@@ -142,6 +154,8 @@ export function getSocialIcon(platform?: SocialPlatform | (string & {})): Lucide
       return Instagram;
     case 'github':
       return Github;
+    case 'pinterest':
+      return Pinterest;
     default:
       return Globe;
   }
