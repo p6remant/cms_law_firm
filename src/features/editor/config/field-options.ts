@@ -7,7 +7,9 @@ import type {
   MapAspectRatio,
   MapHeight,
   MapLocationMode,
+  ScrollDirection,
   SpacingValue,
+  TeamImageShape,
   TextAlign,
 } from '../types.ts';
 
@@ -85,6 +87,53 @@ export const FORM_METHOD_OPTIONS: { label: string; value: 'POST' | 'GET' }[] = [
   { label: 'POST', value: 'POST' },
   { label: 'GET', value: 'GET' },
 ];
+
+export const BOOLEAN_RADIO_OPTIONS: { label: string; value: boolean }[] = [
+  { label: 'Yes', value: true },
+  { label: 'No', value: false },
+];
+
+export const SCROLL_DIRECTION_OPTIONS: { label: string; value: ScrollDirection }[] = [
+  { label: 'Right (Forward)', value: 'right' },
+  { label: 'Left (Backward)', value: 'left' },
+];
+
+export const AUTO_SCROLL_INTERVAL_OPTIONS: { label: string; value: number }[] = [
+  { label: '2 Seconds', value: 2000 },
+  { label: '3 Seconds', value: 3000 },
+  { label: '5 Seconds', value: 5000 },
+  { label: '8 Seconds', value: 8000 },
+];
+
+export const TEAM_IMAGE_SHAPE_OPTIONS: { label: string; value: TeamImageShape }[] = [
+  { label: 'Rounded (Circle)', value: 'rounded' },
+  { label: 'Square (1:1)', value: 'square' },
+  { label: 'Rectangle (Portrait 3:4)', value: 'rectangle' },
+];
+
+export const TEAM_CARDS_PER_VIEW_OPTIONS: { label: string; value: 2 | 3 | 4 }[] = [
+  { label: '2 Cards', value: 2 },
+  { label: '3 Cards', value: 3 },
+  { label: '4 Cards', value: 4 },
+];
+
+export const CLIENT_COLUMNS_OPTIONS: { label: string; value: 3 | 4 }[] = [
+  { label: '3 Columns', value: 3 },
+  { label: '4 Columns', value: 4 },
+];
+
+export function getTeamImageShapeClass(shape: TeamImageShape): string {
+  switch (shape) {
+    case 'rounded':
+      return 'h-28 w-28 rounded-full aspect-square object-cover mx-auto';
+    case 'square':
+      return 'w-full aspect-square rounded-xl object-cover';
+    case 'rectangle':
+      return 'w-full aspect-[3/4] rounded-xl object-cover';
+    default:
+      return 'h-28 w-28 rounded-full aspect-square object-cover mx-auto';
+  }
+}
 
 export const DEFAULT_LAYOUT: LayoutFieldProps = {
   padding: '0px',

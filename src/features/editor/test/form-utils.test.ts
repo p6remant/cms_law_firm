@@ -7,7 +7,7 @@ import {
   validateEmail,
   validateFormField,
   validatePhone,
-} from './form-utils.ts';
+} from '../utils/form-utils.ts';
 
 void describe('form-utils', () => {
   void describe('parseSelectOptions', () => {
