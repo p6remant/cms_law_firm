@@ -326,6 +326,7 @@ export type EditorComponentProps = {
   SelectField: SelectFieldProps;
   FormButton: FormButtonProps;
   FooterMultiColumn: FooterMultiColumnProps;
+  FooterSimple: FooterSimpleProps;
 };
 
 export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {

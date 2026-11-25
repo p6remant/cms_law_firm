@@ -88,8 +88,8 @@ export const FORM_METHOD_OPTIONS: { label: string; value: 'POST' | 'GET' }[] = [
 ];
 
 export const FOOTER_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = [
-  { label: 'Dark (Obsidian)', value: 'dark' },
-  { label: 'Light (Warm Ivory)', value: 'light' },
+  { label: 'Dark (Black)', value: 'dark' },
+  { label: 'Light (White)', value: 'light' },
 ];
 
 export const SOCIAL_PLATFORM_OPTIONS: { label: string; value: SocialPlatform }[] = [
@@ -99,6 +99,7 @@ export const SOCIAL_PLATFORM_OPTIONS: { label: string; value: SocialPlatform }[]
   { label: 'YouTube', value: 'youtube' },
   { label: 'Instagram', value: 'instagram' },
   { label: 'GitHub', value: 'github' },
+  { label: 'Pinterest', value: 'pinterest' },
 ];
 
 export const DEFAULT_LAYOUT: LayoutFieldProps = {

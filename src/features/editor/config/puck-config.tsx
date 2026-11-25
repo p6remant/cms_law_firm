@@ -1,7 +1,7 @@
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
-import { FooterMultiColumn } from '@/features/editor/components/footer';
+import { FooterMultiColumn, FooterSimple } from '@/features/editor/components/footer';
 import {
   FormButton,
   FormContainer,
@@ -31,7 +31,10 @@ import {
   SPACING_OPTIONS,
 } from '@/features/editor/config/field-options';
 import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
-import { DEFAULT_FOOTER_MULTI_COLUMN_DATA } from '@/features/editor/utils/footer-utils';
+import {
+  DEFAULT_FOOTER_MULTI_COLUMN_DATA,
+  DEFAULT_FOOTER_SIMPLE_DATA,
+} from '@/features/editor/utils/footer-utils';
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -83,7 +86,7 @@ export const puckConfig: PuckConfig = {
     },
     navigation: {
       title: 'Navigation & Footers',
-      components: ['FooterMultiColumn'],
+      components: ['FooterSimple', 'FooterMultiColumn'],
     },
     other: {
       title: 'Other',
@@ -1720,6 +1723,130 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FOOTER_MULTI_COLUMN_DATA,
       render: (props) => <FooterMultiColumn {...props} />,
+    },
+
+    FooterSimple: {
+      label: 'Footer 1 (Simple)',
+      fields: {
+        brandName: { type: 'text', label: 'Brand Name' },
+        brandSubtitle: { type: 'text', label: 'Brand Subtitle' },
+        logoUrl: { type: 'text', label: 'Logo URL (Optional)' },
+        description: { type: 'textarea', label: 'Brand Quote / Description' },
+        socialLinks: {
+          type: 'array',
+          label: 'Social Icons',
+          getItemSummary: (item) => item.label || item.platform,
+          defaultItemProps: {
+            platform: 'facebook',
+            href: 'https://facebook.com',
+            label: 'Facebook',
+          },
+          arrayFields: {
+            platform: {
+              type: 'select',
+              label: 'Platform',
+              options: SOCIAL_PLATFORM_OPTIONS,
+            },
+            href: { type: 'text', label: 'Profile URL' },
+            label: { type: 'text', label: 'Accessible Label (Optional)' },
+          },
+        },
+        contactTitle: { type: 'text', label: 'Contact Section Title' },
+        address: { type: 'textarea', label: 'Address (Multiline)' },
+        phone: { type: 'text', label: 'Telephone' },
+        email: { type: 'text', label: 'Email' },
+        linkColumns: {
+          type: 'array',
+          label: 'Link Columns',
+          getItemSummary: (item) => item.title || 'Link Column',
+          defaultItemProps: {
+            title: 'Links',
+            links: [{ label: 'New Link', href: '#', isExternal: false }],
+          },
+          arrayFields: {
+            title: { type: 'text', label: 'Column Title (Optional)' },
+            links: {
+              type: 'array',
+              label: 'Links',
+              getItemSummary: (item) => item.label || 'Link',
+              defaultItemProps: {
+                label: 'New Link',
+                href: '#',
+                isExternal: false,
+              },
+              arrayFields: {
+                label: { type: 'text', label: 'Link Label' },
+                href: { type: 'text', label: 'URL / Path' },
+                isExternal: {
+                  type: 'radio',
+                  label: 'Open in New Tab',
+                  options: [
+                    { label: 'Auto', value: false },
+                    { label: 'External', value: true },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        bottomLinks: {
+          type: 'array',
+          label: 'Bottom Bar Links',
+          getItemSummary: (item) => item.label || 'Link',
+          defaultItemProps: {
+            label: 'Link',
+            href: '#',
+            isExternal: false,
+          },
+          arrayFields: {
+            label: { type: 'text', label: 'Link Label' },
+            href: { type: 'text', label: 'URL / Path' },
+            isExternal: {
+              type: 'radio',
+              label: 'Open in New Tab',
+              options: [
+                { label: 'Auto', value: false },
+                { label: 'External', value: true },
+              ],
+            },
+          },
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FOOTER_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.brandName}
+              {fields.brandSubtitle}
+              {fields.logoUrl}
+              {fields.description}
+              {fields.socialLinks}
+              {fields.contactTitle}
+              {fields.address}
+              {fields.phone}
+              {fields.email}
+              {fields.linkColumns}
+              {fields.copyrightNotice}
+              {fields.bottomLinks}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FOOTER_SIMPLE_DATA,
+      render: (props) => <FooterSimple {...props} />,
     },
   },
 };
