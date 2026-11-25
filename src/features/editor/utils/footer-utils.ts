@@ -1,5 +1,14 @@
 import { createLucideIcon, Globe, type LucideIcon } from 'lucide-react';
-import type { FooterMultiColumnProps, FooterSplitProps, SocialPlatform } from '../types';
+import type {
+  FooterColumn,
+  FooterLinkItem,
+  FooterMultiColumnProps,
+  FooterSplitProps,
+  LayoutFieldProps,
+  OfficeLocationItem,
+  SocialLinkItem,
+  SocialPlatform,
+} from '../types';
 
 export { Globe, type LucideIcon };
 
@@ -288,3 +297,279 @@ export const DEFAULT_FOOTER_SPLIT_DATA: FooterSplitProps = {
     'ATTORNEY ADVERTISING. Prior results do not guarantee a similar outcome. The information presented on this site is not formal legal advice. Communication through this website does not establish an attorney-client relationship.',
   showBackToTop: true,
 };
+
+export interface ResolvedFooterLink {
+  label: string;
+  href: string;
+  isExternal: boolean;
+  target?: '_blank';
+  rel?: 'noopener noreferrer';
+  badge?: string;
+}
+
+export interface ResolvedOfficeLocation {
+  city: string;
+  address: string;
+  phone: string;
+  email?: string;
+  phoneHref: string | null;
+  emailHref: string | null;
+}
+
+export interface ResolvedFooterColumn {
+  title: string;
+  links: ResolvedFooterLink[];
+}
+
+export interface ResolvedSocialLink {
+  platform: SocialPlatform;
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+export interface ResolvedFooterMultiColumn {
+  theme: 'dark' | 'light';
+  themeClasses: FooterThemeClasses;
+  layout: LayoutFieldProps;
+  firmName: string;
+  monogram: string;
+  tagline?: string;
+  logoUrl?: string;
+  description?: string;
+  offices: ResolvedOfficeLocation[];
+  columns: ResolvedFooterColumn[];
+  socialLinks: ResolvedSocialLink[];
+  copyrightNotice?: string;
+  legalDisclaimer?: string;
+  regulatoryNotice?: string;
+}
+
+const FIRM_NAME_STOP_WORDS = new Set([
+  '&',
+  'and',
+  'of',
+  'the',
+  'llp',
+  'llc',
+  'pllc',
+  'pc',
+  'pa',
+  'lp',
+  'inc',
+  'ltd',
+]);
+
+function normalizeOptionalText(value?: string | null): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+export function resolveFooterLink(item: FooterLinkItem): ResolvedFooterLink {
+  const label = item.label.trim();
+  const trimmedHref = item.href.trim();
+  const href = trimmedHref || '#';
+  const isExternal = Boolean(item.isExternal) || isExternalLink(href);
+  const badge = normalizeOptionalText(item.badge);
+
+  const resolved: ResolvedFooterLink = {
+    label,
+    href,
+    isExternal,
+  };
+
+  if (isExternal) {
+    resolved.target = '_blank';
+    resolved.rel = 'noopener noreferrer';
+  }
+
+  if (badge !== undefined) {
+    resolved.badge = badge;
+  }
+
+  return resolved;
+}
+
+export function formatPhoneHref(phone?: string | null): string | null {
+  if (!phone) {
+    return null;
+  }
+
+  const trimmed = phone.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const hasPlus = trimmed.startsWith('+');
+  const stripped = (hasPlus ? trimmed.slice(1) : trimmed).replace(/[\s\-().]/g, '');
+  const digits = stripped.replace(/\D/g, '');
+  if (!digits) {
+    return null;
+  }
+
+  return `tel:${hasPlus ? '+' : ''}${digits}`;
+}
+
+export function formatEmailHref(email?: string | null): string | null {
+  if (!email) {
+    return null;
+  }
+
+  const trimmed = email.trim();
+  if (!trimmed || !trimmed.includes('@')) {
+    return null;
+  }
+
+  return `mailto:${trimmed}`;
+}
+
+export function getFirmMonogram(firmName?: string | null): string {
+  if (!firmName) {
+    return 'LF';
+  }
+
+  const rawWords = firmName
+    .trim()
+    .split(/[\s,&/]+/)
+    .map((word) => word.replace(/[^a-zA-Z]/g, ''))
+    .filter((word) => word.length > 0);
+
+  if (rawWords.length === 0) {
+    return 'LF';
+  }
+
+  const meaningfulWords = rawWords.filter((word) => !FIRM_NAME_STOP_WORDS.has(word.toLowerCase()));
+  const words = meaningfulWords.length > 0 ? meaningfulWords : rawWords;
+
+  const first = words[0];
+  const second = words[1];
+
+  if (first && second) {
+    return `${first.charAt(0)}${second.charAt(0)}`.toUpperCase();
+  }
+
+  if (first) {
+    return first.slice(0, 2).toUpperCase();
+  }
+
+  return 'LF';
+}
+
+function resolveOfficeLocation(office: OfficeLocationItem): ResolvedOfficeLocation | null {
+  const city = office.city.trim();
+  const address = office.address.trim();
+  const phone = office.phone.trim();
+  const email = normalizeOptionalText(office.email);
+
+  if (!city && !address && !phone && email === undefined) {
+    return null;
+  }
+
+  const resolved: ResolvedOfficeLocation = {
+    city,
+    address,
+    phone,
+    phoneHref: formatPhoneHref(phone),
+    emailHref: formatEmailHref(email),
+  };
+
+  if (email !== undefined) {
+    resolved.email = email;
+  }
+
+  return resolved;
+}
+
+function resolveFooterColumn(column: FooterColumn): ResolvedFooterColumn | null {
+  const title = column.title.trim();
+  const links = column.links
+    .filter((link) => link.label.trim().length > 0 || link.href.trim().length > 0)
+    .map(resolveFooterLink);
+
+  if (!title && links.length === 0) {
+    return null;
+  }
+
+  return {
+    title,
+    links,
+  };
+}
+
+function resolveSocialLink(item: SocialLinkItem): ResolvedSocialLink | null {
+  const href = item.href.trim();
+  if (!href) {
+    return null;
+  }
+
+  return {
+    platform: item.platform,
+    href,
+    label: item.label?.trim() || item.platform,
+    icon: getSocialIcon(item.platform),
+  };
+}
+
+export function resolveFooterMultiColumnProps(
+  props: Partial<FooterMultiColumnProps>
+): ResolvedFooterMultiColumn {
+  const theme: 'dark' | 'light' = props.theme === 'light' ? 'light' : 'dark';
+  const themeClasses = getFooterThemeClasses(theme);
+  const layout = props.layout ?? DEFAULT_FOOTER_MULTI_COLUMN_DATA.layout;
+  const firmName = props.firmName?.trim() || DEFAULT_FOOTER_MULTI_COLUMN_DATA.firmName;
+  const monogram = getFirmMonogram(firmName);
+
+  const tagline = normalizeOptionalText(props.tagline);
+  const logoUrl = normalizeOptionalText(props.logoUrl);
+  const description = normalizeOptionalText(props.description);
+  const copyrightNotice = normalizeOptionalText(props.copyrightNotice);
+  const legalDisclaimer = normalizeOptionalText(props.legalDisclaimer);
+  const regulatoryNotice = normalizeOptionalText(props.regulatoryNotice);
+
+  const offices = (props.offices ?? [])
+    .map(resolveOfficeLocation)
+    .filter((office): office is ResolvedOfficeLocation => office !== null);
+
+  const columns = (props.columns ?? [])
+    .map(resolveFooterColumn)
+    .filter((column): column is ResolvedFooterColumn => column !== null);
+
+  const socialLinks = (props.socialLinks ?? [])
+    .map(resolveSocialLink)
+    .filter((item): item is ResolvedSocialLink => item !== null);
+
+  const resolved: ResolvedFooterMultiColumn = {
+    theme,
+    themeClasses,
+    layout,
+    firmName,
+    monogram,
+    offices,
+    columns,
+    socialLinks,
+  };
+
+  if (tagline !== undefined) {
+    resolved.tagline = tagline;
+  }
+  if (logoUrl !== undefined) {
+    resolved.logoUrl = logoUrl;
+  }
+  if (description !== undefined) {
+    resolved.description = description;
+  }
+  if (copyrightNotice !== undefined) {
+    resolved.copyrightNotice = copyrightNotice;
+  }
+  if (legalDisclaimer !== undefined) {
+    resolved.legalDisclaimer = legalDisclaimer;
+  }
+  if (regulatoryNotice !== undefined) {
+    resolved.regulatoryNotice = regulatoryNotice;
+  }
+
+  return resolved;
+}
