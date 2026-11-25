@@ -1,7 +1,7 @@
 import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
-import { CTA1 } from '@/features/editor/components/cta';
+import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
@@ -37,13 +37,14 @@ import {
   type CTAActionType,
   type CTAButtonProps,
   type CTAButtonVariant,
+  type CTAFeatureItem,
   type FooterColumn,
   type FooterLinkItem,
   type PuckConfig,
   type PuckPageData,
   type SocialLinkItem,
 } from '@/features/editor/types';
-import { DEFAULT_CTA1_DATA } from '@/features/editor/utils/cta-utils';
+import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -182,6 +183,18 @@ function createCTAButtonField(label: string): ObjectField<CTAButtonProps> {
   };
 }
 
+const ctaFeaturesField: ArrayField<CTAFeatureItem[]> = {
+  type: 'array',
+  label: 'Feature Highlights',
+  getItemSummary: (item) => item.text || 'Feature',
+  defaultItemProps: {
+    text: 'Dedicated support from start to finish',
+  },
+  arrayFields: {
+    text: { type: 'text', label: 'Feature Text' },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     introduction: {
@@ -190,7 +203,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento', 'CTA1'],
+      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1840,6 +1853,42 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_CTA1_DATA,
       render: (props) => <CTA1 {...props} />,
+    },
+
+    CTA2: {
+      label: 'CTA 2 (Dual Action & Features)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge Pill' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        features: ctaFeaturesField,
+        primaryButton: createCTAButtonField('Primary Button'),
+        secondaryButton: createCTAButtonField('Secondary Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.features}
+              {fields.primaryButton}
+              {fields.secondaryButton}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CTA2_DATA,
+      render: (props) => <CTA2 {...props} />,
     },
   },
 };
