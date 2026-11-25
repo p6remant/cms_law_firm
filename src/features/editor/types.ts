@@ -226,8 +226,82 @@ export type FormProps = WithLayout<{
   fields: Slot;
 }>;
 
+export type ScrollDirection = 'left' | 'right';
+export type TeamImageShape = 'rounded' | 'square' | 'rectangle';
+
+export type NavItem = {
+  label: string;
+};
+
+export type HeaderProps = WithLayout<{
+  brandName: string;
+  logoUrl?: string;
+  navItems: NavItem[];
+  ctaLabel: string;
+  showCta: boolean;
+  sticky: boolean;
+  theme: 'light' | 'dark';
+}>;
+
+export type HeroSlideItem = {
+  badge?: string;
+  title: string;
+  description: string;
+  ctaLabel?: string;
+  bgImage?: string;
+};
+
+export type HeroSliderProps = WithLayout<{
+  slides: HeroSlideItem[];
+  autoScroll: boolean;
+  autoScrollInterval: number;
+  scrollDirection: ScrollDirection;
+  showArrows: boolean;
+  showDots: boolean;
+  align: TextAlign;
+  theme: 'dark' | 'light';
+}>;
+
+export type TeamMemberItem = {
+  name: string;
+  role: string;
+  bio?: string;
+  imageUrl?: string;
+};
+
+export type TeamSliderProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  imageShape: TeamImageShape;
+  members: TeamMemberItem[];
+  cardsPerView: 2 | 3 | 4;
+  autoScroll: boolean;
+  autoScrollInterval: number;
+  scrollDirection: ScrollDirection;
+  showArrows: boolean;
+  showDots: boolean;
+  theme: 'light' | 'dark';
+}>;
+
+export type ClientPartnerItem = {
+  name: string;
+  imageUrl?: string;
+};
+
+export type ClientPartnerProps = WithLayout<{
+  title: string;
+  items: ClientPartnerItem[];
+  columns: 3 | 4;
+  theme: 'light' | 'dark';
+}>;
+
 export type EditorComponentProps = {
+  Header: HeaderProps;
   Hero: HeroProps;
+  HeroSlider: HeroSliderProps;
+  TeamSection: TeamSliderProps;
+  ClientPartnerSection: ClientPartnerProps;
   FeatureGrid: FeatureGridProps;
   Card: CardProps;
   CTA: CTAProps;
