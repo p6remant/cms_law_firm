@@ -1,7 +1,8 @@
+import { type ArrayField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
-import { FooterSimple } from '@/features/editor/components/footer';
+import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
   FormButton,
   FormContainer,
@@ -30,8 +31,18 @@ import {
   SOCIAL_PLATFORM_OPTIONS,
   SPACING_OPTIONS,
 } from '@/features/editor/config/field-options';
-import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
-import { DEFAULT_FOOTER_SIMPLE_DATA } from '@/features/editor/utils/footer-utils';
+import {
+  type CardIconName,
+  type FooterColumn,
+  type FooterLinkItem,
+  type PuckConfig,
+  type PuckPageData,
+  type SocialLinkItem,
+} from '@/features/editor/types';
+import {
+  DEFAULT_FOOTER_2_DATA,
+  DEFAULT_FOOTER_SIMPLE_DATA,
+} from '@/features/editor/utils/footer-utils';
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -50,6 +61,84 @@ function renderCardIcon(icon: CardIconName) {
       return <Sparkles className={iconClass} />;
   }
 }
+
+const footerSocialLinksField: ArrayField<SocialLinkItem[]> = {
+  type: 'array',
+  label: 'Social Icons',
+  getItemSummary: (item) => item.label || item.platform,
+  defaultItemProps: {
+    platform: 'facebook',
+    href: 'https://facebook.com',
+    label: 'Facebook',
+  },
+  arrayFields: {
+    platform: {
+      type: 'select',
+      label: 'Platform',
+      options: SOCIAL_PLATFORM_OPTIONS,
+    },
+    href: { type: 'text', label: 'Profile URL' },
+    label: { type: 'text', label: 'Accessible Label (Optional)' },
+  },
+};
+
+const footerLinkColumnsField: ArrayField<FooterColumn[]> = {
+  type: 'array',
+  label: 'Link Columns',
+  getItemSummary: (item) => item.title || 'Link Column',
+  defaultItemProps: {
+    title: 'Links',
+    links: [{ label: 'New Link', href: '#', isExternal: false }],
+  },
+  arrayFields: {
+    title: { type: 'text', label: 'Column Title (Optional)' },
+    links: {
+      type: 'array',
+      label: 'Links',
+      getItemSummary: (item) => item.label || 'Link',
+      defaultItemProps: {
+        label: 'New Link',
+        href: '#',
+        isExternal: false,
+      },
+      arrayFields: {
+        label: { type: 'text', label: 'Link Label' },
+        href: { type: 'text', label: 'URL / Path' },
+        isExternal: {
+          type: 'radio',
+          label: 'Open in New Tab',
+          options: [
+            { label: 'Auto', value: false },
+            { label: 'External', value: true },
+          ],
+        },
+      },
+    },
+  },
+};
+
+const footerBottomLinksField: ArrayField<FooterLinkItem[]> = {
+  type: 'array',
+  label: 'Bottom Bar Links',
+  getItemSummary: (item) => item.label || 'Link',
+  defaultItemProps: {
+    label: 'Link',
+    href: '#',
+    isExternal: false,
+  },
+  arrayFields: {
+    label: { type: 'text', label: 'Link Label' },
+    href: { type: 'text', label: 'URL / Path' },
+    isExternal: {
+      type: 'radio',
+      label: 'Open in New Tab',
+      options: [
+        { label: 'Auto', value: false },
+        { label: 'External', value: true },
+      ],
+    },
+  },
+};
 
 export const puckConfig: PuckConfig = {
   categories: {
@@ -83,7 +172,7 @@ export const puckConfig: PuckConfig = {
     },
     navigation: {
       title: 'Navigation & Footers',
-      components: ['FooterSimple'],
+      components: ['FooterSimple', 'Footer2'],
     },
     other: {
       title: 'Other',
@@ -1612,86 +1701,14 @@ export const puckConfig: PuckConfig = {
         logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
         brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
         description: { type: 'textarea', label: 'Description / About' },
-        socialLinks: {
-          type: 'array',
-          label: 'Social Icons',
-          getItemSummary: (item) => item.label || item.platform,
-          defaultItemProps: {
-            platform: 'facebook',
-            href: 'https://facebook.com',
-            label: 'Facebook',
-          },
-          arrayFields: {
-            platform: {
-              type: 'select',
-              label: 'Platform',
-              options: SOCIAL_PLATFORM_OPTIONS,
-            },
-            href: { type: 'text', label: 'Profile URL' },
-            label: { type: 'text', label: 'Accessible Label (Optional)' },
-          },
-        },
+        socialLinks: footerSocialLinksField,
         contactTitle: { type: 'text', label: 'Contact Section Title' },
         address: { type: 'textarea', label: 'Address (Multiline)' },
         phone: { type: 'text', label: 'Telephone' },
         email: { type: 'text', label: 'Email' },
-        linkColumns: {
-          type: 'array',
-          label: 'Link Columns',
-          getItemSummary: (item) => item.title || 'Link Column',
-          defaultItemProps: {
-            title: 'Links',
-            links: [{ label: 'New Link', href: '#', isExternal: false }],
-          },
-          arrayFields: {
-            title: { type: 'text', label: 'Column Title (Optional)' },
-            links: {
-              type: 'array',
-              label: 'Links',
-              getItemSummary: (item) => item.label || 'Link',
-              defaultItemProps: {
-                label: 'New Link',
-                href: '#',
-                isExternal: false,
-              },
-              arrayFields: {
-                label: { type: 'text', label: 'Link Label' },
-                href: { type: 'text', label: 'URL / Path' },
-                isExternal: {
-                  type: 'radio',
-                  label: 'Open in New Tab',
-                  options: [
-                    { label: 'Auto', value: false },
-                    { label: 'External', value: true },
-                  ],
-                },
-              },
-            },
-          },
-        },
+        linkColumns: footerLinkColumnsField,
         copyrightNotice: { type: 'text', label: 'Copyright Text' },
-        bottomLinks: {
-          type: 'array',
-          label: 'Bottom Bar Links',
-          getItemSummary: (item) => item.label || 'Link',
-          defaultItemProps: {
-            label: 'Link',
-            href: '#',
-            isExternal: false,
-          },
-          arrayFields: {
-            label: { type: 'text', label: 'Link Label' },
-            href: { type: 'text', label: 'URL / Path' },
-            isExternal: {
-              type: 'radio',
-              label: 'Open in New Tab',
-              options: [
-                { label: 'Auto', value: false },
-                { label: 'External', value: true },
-              ],
-            },
-          },
-        },
+        bottomLinks: footerBottomLinksField,
         theme: {
           type: 'radio',
           label: 'Theme',
@@ -1727,6 +1744,84 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FOOTER_SIMPLE_DATA,
       render: (props) => <FooterSimple {...props} />,
+    },
+
+    Footer2: {
+      label: 'Footer 2',
+      fields: {
+        logoText: { type: 'text', label: 'Logo Text (Default)' },
+        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
+        description: { type: 'textarea', label: 'Description / About' },
+        newsletterHeading: { type: 'text', label: 'Newsletter Heading' },
+        newsletterDescription: { type: 'textarea', label: 'Newsletter Description' },
+        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Newsletter Button Label' },
+        linkColumns: footerLinkColumnsField,
+        contactTitle: { type: 'text', label: 'Contact Section Title' },
+        address: { type: 'textarea', label: 'Address (Multiline)' },
+        phone: { type: 'text', label: 'Telephone' },
+        email: { type: 'text', label: 'Email' },
+        socialLinks: footerSocialLinksField,
+        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        bottomLinks: footerBottomLinksField,
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FOOTER_THEME_OPTIONS,
+        },
+        showNewsletter: {
+          type: 'radio',
+          label: 'Newsletter Strip',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        showBackToTop: {
+          type: 'radio',
+          label: 'Back to Top Button',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.logoText}
+              {fields.logoUrl}
+              {fields.brandSubtitle}
+              {fields.description}
+              {fields.newsletterHeading}
+              {fields.newsletterDescription}
+              {fields.newsletterPlaceholder}
+              {fields.newsletterButtonText}
+              {fields.linkColumns}
+              {fields.contactTitle}
+              {fields.address}
+              {fields.phone}
+              {fields.email}
+              {fields.socialLinks}
+              {fields.copyrightNotice}
+              {fields.bottomLinks}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.showNewsletter}
+              {fields.showBackToTop}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FOOTER_2_DATA,
+      render: (props) => <Footer2 {...props} />,
     },
   },
 };
