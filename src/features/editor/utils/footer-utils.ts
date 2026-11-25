@@ -3,6 +3,7 @@ import type {
   FooterColumn,
   FooterLinkItem,
   FooterMultiColumnProps,
+  FooterSimpleProps,
   FooterSplitProps,
   LayoutFieldProps,
   OfficeLocationItem,
@@ -312,6 +313,57 @@ export const DEFAULT_FOOTER_SPLIT_DATA: FooterSplitProps = {
   showBackToTop: true,
 };
 
+export const DEFAULT_FOOTER_SIMPLE_DATA: FooterSimpleProps = {
+  theme: 'dark',
+  layout: {
+    padding: '64px',
+  },
+  brandName: 'COGNIA',
+  brandSubtitle: 'ATTORNEYS AT LAW',
+  description:
+    'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into.',
+  socialLinks: [
+    { platform: 'facebook', href: 'https://facebook.com', label: 'Facebook' },
+    { platform: 'linkedin', href: 'https://www.linkedin.com', label: 'LinkedIn' },
+    { platform: 'pinterest', href: 'https://www.pinterest.com', label: 'Pinterest' },
+    { platform: 'twitter', href: 'https://x.com', label: 'Twitter' },
+    { platform: 'instagram', href: 'https://www.instagram.com', label: 'Instagram' },
+  ],
+  contactTitle: 'Contact Info',
+  address: 'Level 4, Heritage Plaza\nBabarmahal, Ramshah Path\nKathmandu 44600, Nepal',
+  phone: '+977 1-4256789',
+  email: 'contact@cognialaw.com.np',
+  linkColumns: [
+    {
+      title: 'Practice Areas',
+      links: [
+        { label: 'Family Violence', href: '#' },
+        { label: 'Car Accident Insurance', href: '#' },
+        { label: 'Public Company Fraud', href: '#' },
+        { label: 'Privacy Matter', href: '#' },
+        { label: 'Failure of Apple Acquisition', href: '#' },
+      ],
+    },
+    {
+      title: '',
+      links: [
+        { label: 'Giving Million Air Its Wings', href: '#' },
+        { label: "Making Sure It's Closed", href: '#' },
+        { label: 'Nightmare on Wall Street', href: '#' },
+        { label: 'Matrix Tax Invation', href: '#' },
+      ],
+    },
+  ],
+  copyrightNotice: 'Copyright 2026 Cognia, All Right Reserved',
+  bottomLinks: [
+    { label: 'Home', href: '#' },
+    { label: 'Cases', href: '#' },
+    { label: 'About', href: '#' },
+    { label: 'Legal', href: '#' },
+    { label: 'Privacy & Policy', href: '#' },
+  ],
+};
+
 export interface ResolvedFooterLink {
   label: string;
   href: string;
@@ -357,6 +409,26 @@ export interface ResolvedFooterMultiColumn {
   copyrightNotice?: string;
   legalDisclaimer?: string;
   regulatoryNotice?: string;
+}
+
+export interface ResolvedFooterSimple {
+  theme: 'dark' | 'light';
+  themeClasses: FooterThemeClasses;
+  layout: LayoutFieldProps;
+  brandName: string;
+  brandSubtitle?: string;
+  logoUrl?: string;
+  description?: string;
+  socialLinks: ResolvedSocialLink[];
+  contactTitle?: string;
+  addressLines: string[];
+  phone?: string;
+  phoneHref: string | null;
+  email?: string;
+  emailHref: string | null;
+  linkColumns: ResolvedFooterColumn[];
+  copyrightNotice?: string;
+  bottomLinks: ResolvedFooterLink[];
 }
 
 const FIRM_NAME_STOP_WORDS = new Set([
@@ -497,11 +569,15 @@ function resolveOfficeLocation(office: OfficeLocationItem): ResolvedOfficeLocati
   return resolved;
 }
 
-function resolveFooterColumn(column: FooterColumn): ResolvedFooterColumn | null {
-  const title = column.title.trim();
-  const links = column.links
+function resolveFooterLinks(links?: FooterLinkItem[]): ResolvedFooterLink[] {
+  return (links ?? [])
     .filter((link) => link.label.trim().length > 0 || link.href.trim().length > 0)
     .map(resolveFooterLink);
+}
+
+function resolveFooterColumn(column: FooterColumn): ResolvedFooterColumn | null {
+  const title = column.title.trim();
+  const links = resolveFooterLinks(column.links);
 
   if (!title && links.length === 0) {
     return null;
@@ -511,6 +587,12 @@ function resolveFooterColumn(column: FooterColumn): ResolvedFooterColumn | null 
     title,
     links,
   };
+}
+
+function resolveFooterColumns(columns?: FooterColumn[]): ResolvedFooterColumn[] {
+  return (columns ?? [])
+    .map(resolveFooterColumn)
+    .filter((column): column is ResolvedFooterColumn => column !== null);
 }
 
 function resolveSocialLink(item: SocialLinkItem): ResolvedSocialLink | null {
@@ -525,6 +607,12 @@ function resolveSocialLink(item: SocialLinkItem): ResolvedSocialLink | null {
     label: item.label?.trim() || item.platform,
     icon: getSocialIcon(item.platform),
   };
+}
+
+function resolveSocialLinks(items?: SocialLinkItem[]): ResolvedSocialLink[] {
+  return (items ?? [])
+    .map(resolveSocialLink)
+    .filter((item): item is ResolvedSocialLink => item !== null);
 }
 
 export function resolveFooterMultiColumnProps(
@@ -547,13 +635,8 @@ export function resolveFooterMultiColumnProps(
     .map(resolveOfficeLocation)
     .filter((office): office is ResolvedOfficeLocation => office !== null);
 
-  const columns = (props.columns ?? [])
-    .map(resolveFooterColumn)
-    .filter((column): column is ResolvedFooterColumn => column !== null);
-
-  const socialLinks = (props.socialLinks ?? [])
-    .map(resolveSocialLink)
-    .filter((item): item is ResolvedSocialLink => item !== null);
+  const columns = resolveFooterColumns(props.columns);
+  const socialLinks = resolveSocialLinks(props.socialLinks);
 
   const resolved: ResolvedFooterMultiColumn = {
     theme,
@@ -583,6 +666,69 @@ export function resolveFooterMultiColumnProps(
   }
   if (regulatoryNotice !== undefined) {
     resolved.regulatoryNotice = regulatoryNotice;
+  }
+
+  return resolved;
+}
+
+export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): ResolvedFooterSimple {
+  const theme: 'dark' | 'light' = props.theme === 'light' ? 'light' : 'dark';
+  const themeClasses = getFooterThemeClasses(theme);
+  const layout = props.layout ?? DEFAULT_FOOTER_SIMPLE_DATA.layout;
+  const brandName = props.brandName?.trim() || DEFAULT_FOOTER_SIMPLE_DATA.brandName;
+
+  const brandSubtitle = normalizeOptionalText(props.brandSubtitle);
+  const logoUrl = normalizeOptionalText(props.logoUrl);
+  const description = normalizeOptionalText(props.description);
+  const contactTitle = normalizeOptionalText(props.contactTitle);
+  const phone = normalizeOptionalText(props.phone);
+  const email = normalizeOptionalText(props.email);
+  const copyrightNotice = normalizeOptionalText(props.copyrightNotice);
+
+  const addressLines = (props.address ?? '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  const phoneHref = formatPhoneHref(phone);
+  const emailHref = formatEmailHref(email);
+  const socialLinks = resolveSocialLinks(props.socialLinks);
+  const linkColumns = resolveFooterColumns(props.linkColumns);
+  const bottomLinks = resolveFooterLinks(props.bottomLinks);
+
+  const resolved: ResolvedFooterSimple = {
+    theme,
+    themeClasses,
+    layout,
+    brandName,
+    socialLinks,
+    addressLines,
+    phoneHref,
+    emailHref,
+    linkColumns,
+    bottomLinks,
+  };
+
+  if (brandSubtitle !== undefined) {
+    resolved.brandSubtitle = brandSubtitle;
+  }
+  if (logoUrl !== undefined) {
+    resolved.logoUrl = logoUrl;
+  }
+  if (description !== undefined) {
+    resolved.description = description;
+  }
+  if (contactTitle !== undefined) {
+    resolved.contactTitle = contactTitle;
+  }
+  if (phone !== undefined) {
+    resolved.phone = phone;
+  }
+  if (email !== undefined) {
+    resolved.email = email;
+  }
+  if (copyrightNotice !== undefined) {
+    resolved.copyrightNotice = copyrightNotice;
   }
 
   return resolved;

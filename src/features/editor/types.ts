@@ -284,6 +284,22 @@ export type FooterSplitProps = WithLayout<{
   showBackToTop?: boolean;
 }>;
 
+export type FooterSimpleProps = WithLayout<{
+  theme: 'dark' | 'light';
+  brandName: string;
+  brandSubtitle?: string;
+  logoUrl?: string;
+  description?: string;
+  socialLinks?: SocialLinkItem[];
+  contactTitle?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  linkColumns?: FooterColumn[];
+  copyrightNotice?: string;
+  bottomLinks?: FooterLinkItem[];
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
