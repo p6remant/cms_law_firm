@@ -272,7 +272,8 @@ export type FooterSplitProps = WithLayout<{
 
 export type FooterSimpleProps = WithLayout<{
   theme: 'dark' | 'light';
-  brandName: string;
+  logoText?: string;
+  brandName?: string;
   brandSubtitle?: string;
   logoUrl?: string;
   description?: string;

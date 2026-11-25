@@ -222,49 +222,49 @@ export const DEFAULT_FOOTER_SIMPLE_DATA: FooterSimpleProps = {
   layout: {
     padding: '64px',
   },
-  brandName: 'COGNIA',
-  brandSubtitle: 'ATTORNEYS AT LAW',
+  logoText: 'LOGO',
+  brandName: 'LOGO',
+  brandSubtitle: '',
   description:
-    'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into.',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   socialLinks: [
     { platform: 'facebook', href: 'https://facebook.com', label: 'Facebook' },
-    { platform: 'linkedin', href: 'https://www.linkedin.com', label: 'LinkedIn' },
-    { platform: 'pinterest', href: 'https://www.pinterest.com', label: 'Pinterest' },
     { platform: 'twitter', href: 'https://x.com', label: 'Twitter' },
-    { platform: 'instagram', href: 'https://www.instagram.com', label: 'Instagram' },
+    { platform: 'instagram', href: 'https://instagram.com', label: 'Instagram' },
+    { platform: 'linkedin', href: 'https://linkedin.com', label: 'LinkedIn' },
+    { platform: 'github', href: 'https://github.com', label: 'GitHub' },
   ],
-  contactTitle: 'Contact Info',
-  address: 'Level 4, Heritage Plaza\nBabarmahal, Ramshah Path\nKathmandu 44600, Nepal',
-  phone: '+977 1-4256789',
-  email: 'contact@cognialaw.com.np',
+  contactTitle: 'Contact Us',
+  address: '123 Business Avenue, Suite 100\nCity, State 12345',
+  phone: '+1 (555) 000-0000',
+  email: 'contact@example.com',
   linkColumns: [
     {
-      title: 'Practice Areas',
+      title: 'Quick Links',
       links: [
-        { label: 'Family Violence', href: '#' },
-        { label: 'Car Accident Insurance', href: '#' },
-        { label: 'Public Company Fraud', href: '#' },
-        { label: 'Privacy Matter', href: '#' },
-        { label: 'Failure of Apple Acquisition', href: '#' },
+        { label: 'Home', href: '/' },
+        { label: 'About Us', href: '/about' },
+        { label: 'Services', href: '/services' },
+        { label: 'Products', href: '/products' },
+        { label: 'Contact', href: '/contact' },
       ],
     },
     {
-      title: '',
+      title: 'Resources',
       links: [
-        { label: 'Giving Million Air Its Wings', href: '#' },
-        { label: "Making Sure It's Closed", href: '#' },
-        { label: 'Nightmare on Wall Street', href: '#' },
-        { label: 'Matrix Tax Invation', href: '#' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Documentation', href: '/docs' },
+        { label: 'Help Center', href: '/help' },
+        { label: 'FAQs', href: '/faqs' },
       ],
     },
   ],
-  copyrightNotice: 'Copyright 2026 Cognia, All Right Reserved',
+  copyrightNotice: '© 2026 Company Name. All rights reserved.',
   bottomLinks: [
-    { label: 'Home', href: '#' },
-    { label: 'Cases', href: '#' },
-    { label: 'About', href: '#' },
-    { label: 'Legal', href: '#' },
-    { label: 'Privacy & Policy', href: '#' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Cookie Policy', href: '/cookies' },
+    { label: 'Support', href: '/support' },
   ],
 };
 
@@ -293,6 +293,7 @@ export interface ResolvedFooterSimple {
   theme: 'dark' | 'light';
   themeClasses: FooterThemeClasses;
   layout: LayoutFieldProps;
+  logoText: string;
   brandName: string;
   brandSubtitle?: string;
   logoUrl?: string;
@@ -425,7 +426,12 @@ export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): Res
   const theme: 'dark' | 'light' = props.theme === 'light' ? 'light' : 'dark';
   const themeClasses = getFooterThemeClasses(theme);
   const layout = props.layout ?? DEFAULT_FOOTER_SIMPLE_DATA.layout;
-  const brandName = props.brandName?.trim() || DEFAULT_FOOTER_SIMPLE_DATA.brandName;
+  const logoText =
+    props.logoText?.trim() ||
+    props.brandName?.trim() ||
+    DEFAULT_FOOTER_SIMPLE_DATA.logoText ||
+    'LOGO';
+  const brandName = logoText;
 
   const brandSubtitle = normalizeOptionalText(props.brandSubtitle);
   const logoUrl = normalizeOptionalText(props.logoUrl);
@@ -450,6 +456,7 @@ export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): Res
     theme,
     themeClasses,
     layout,
+    logoText,
     brandName,
     socialLinks,
     addressLines,

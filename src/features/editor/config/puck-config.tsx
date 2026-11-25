@@ -1608,10 +1608,10 @@ export const puckConfig: PuckConfig = {
     FooterSimple: {
       label: 'Footer 1 (Simple)',
       fields: {
-        brandName: { type: 'text', label: 'Brand Name' },
-        brandSubtitle: { type: 'text', label: 'Brand Subtitle' },
-        logoUrl: { type: 'text', label: 'Logo URL (Optional)' },
-        description: { type: 'textarea', label: 'Brand Quote / Description' },
+        logoText: { type: 'text', label: 'Logo Text (Default)' },
+        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
+        description: { type: 'textarea', label: 'Description / About' },
         socialLinks: {
           type: 'array',
           label: 'Social Icons',
@@ -1703,9 +1703,9 @@ export const puckConfig: PuckConfig = {
         <FieldTabs
           content={
             <>
-              {fields.brandName}
-              {fields.brandSubtitle}
+              {fields.logoText}
               {fields.logoUrl}
+              {fields.brandSubtitle}
               {fields.description}
               {fields.socialLinks}
               {fields.contactTitle}

@@ -5,6 +5,7 @@ import {
   Facebook,
   formatEmailHref,
   formatPhoneHref,
+  Github,
   Globe,
   Instagram,
   Linkedin,
@@ -149,66 +150,56 @@ void describe('footer-simple helpers', () => {
   });
 
   void describe('DEFAULT_FOOTER_SIMPLE_DATA', () => {
-    void it('supplies the 4-column reference layout content and bottom bar links', () => {
+    void it('supplies generic non-niche default content and bottom bar links', () => {
       assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.theme, 'dark');
       assert.deepStrictEqual(DEFAULT_FOOTER_SIMPLE_DATA.layout, { padding: '64px' });
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.brandName, 'COGNIA');
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.brandSubtitle, 'ATTORNEYS AT LAW');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.logoText, 'LOGO');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.brandName, 'LOGO');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.brandSubtitle, '');
       assert.strictEqual(
         DEFAULT_FOOTER_SIMPLE_DATA.description,
-        'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into.'
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
       );
 
       assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.socialLinks?.length, 5);
       assert.deepStrictEqual(
         DEFAULT_FOOTER_SIMPLE_DATA.socialLinks.map((item) => item.platform),
-        ['facebook', 'linkedin', 'pinterest', 'twitter', 'instagram']
+        ['facebook', 'twitter', 'instagram', 'linkedin', 'github']
       );
 
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.contactTitle, 'Contact Info');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.contactTitle, 'Contact Us');
       assert.strictEqual(
         DEFAULT_FOOTER_SIMPLE_DATA.address,
-        'Level 4, Heritage Plaza\nBabarmahal, Ramshah Path\nKathmandu 44600, Nepal'
+        '123 Business Avenue, Suite 100\nCity, State 12345'
       );
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.phone, '+977 1-4256789');
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.email, 'contact@cognialaw.com.np');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.phone, '+1 (555) 000-0000');
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.email, 'contact@example.com');
 
       assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.linkColumns?.length, 2);
-      const [practiceCol, secondaryCol] = DEFAULT_FOOTER_SIMPLE_DATA.linkColumns;
-      assert.ok(practiceCol);
-      assert.strictEqual(practiceCol.title, 'Practice Areas');
+      const [quickLinksCol, resourcesCol] = DEFAULT_FOOTER_SIMPLE_DATA.linkColumns;
+      assert.ok(quickLinksCol);
+      assert.strictEqual(quickLinksCol.title, 'Quick Links');
       assert.deepStrictEqual(
-        practiceCol.links.map((link) => link.label),
-        [
-          'Family Violence',
-          'Car Accident Insurance',
-          'Public Company Fraud',
-          'Privacy Matter',
-          'Failure of Apple Acquisition',
-        ]
+        quickLinksCol.links.map((link) => link.label),
+        ['Home', 'About Us', 'Services', 'Products', 'Contact']
       );
 
-      assert.ok(secondaryCol);
-      assert.strictEqual(secondaryCol.title, '');
+      assert.ok(resourcesCol);
+      assert.strictEqual(resourcesCol.title, 'Resources');
       assert.deepStrictEqual(
-        secondaryCol.links.map((link) => link.label),
-        [
-          'Giving Million Air Its Wings',
-          "Making Sure It's Closed",
-          'Nightmare on Wall Street',
-          'Matrix Tax Invation',
-        ]
+        resourcesCol.links.map((link) => link.label),
+        ['Blog', 'Documentation', 'Help Center', 'FAQs']
       );
 
       assert.strictEqual(
         DEFAULT_FOOTER_SIMPLE_DATA.copyrightNotice,
-        'Copyright 2026 Cognia, All Right Reserved'
+        '© 2026 Company Name. All rights reserved.'
       );
 
-      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.bottomLinks?.length, 5);
+      assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.bottomLinks?.length, 4);
       assert.deepStrictEqual(
         DEFAULT_FOOTER_SIMPLE_DATA.bottomLinks.map((link) => link.label),
-        ['Home', 'Cases', 'About', 'Legal', 'Privacy & Policy']
+        ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Support']
       );
     });
   });
@@ -230,41 +221,41 @@ void describe('footer-simple helpers', () => {
       }
 
       assert.deepStrictEqual(resolved.layout, { padding: '64px' });
-      assert.strictEqual(resolved.brandName, 'COGNIA');
-      assert.strictEqual(resolved.brandSubtitle, 'ATTORNEYS AT LAW');
+      assert.strictEqual(resolved.logoText, 'LOGO');
+      assert.strictEqual(resolved.brandName, 'LOGO');
+      assert.strictEqual(resolved.brandSubtitle, undefined);
       assert.strictEqual(resolved.description, DEFAULT_FOOTER_SIMPLE_DATA.description);
-      assert.strictEqual(resolved.contactTitle, 'Contact Info');
+      assert.strictEqual(resolved.contactTitle, 'Contact Us');
 
       assert.deepStrictEqual(resolved.addressLines, [
-        'Level 4, Heritage Plaza',
-        'Babarmahal, Ramshah Path',
-        'Kathmandu 44600, Nepal',
+        '123 Business Avenue, Suite 100',
+        'City, State 12345',
       ]);
-      assert.strictEqual(resolved.phone, '+977 1-4256789');
-      assert.strictEqual(resolved.phoneHref, 'tel:+97714256789');
-      assert.strictEqual(resolved.email, 'contact@cognialaw.com.np');
-      assert.strictEqual(resolved.emailHref, 'mailto:contact@cognialaw.com.np');
+      assert.strictEqual(resolved.phone, '+1 (555) 000-0000');
+      assert.strictEqual(resolved.phoneHref, 'tel:+15550000000');
+      assert.strictEqual(resolved.email, 'contact@example.com');
+      assert.strictEqual(resolved.emailHref, 'mailto:contact@example.com');
 
       assert.strictEqual(resolved.socialLinks.length, 5);
       assert.deepStrictEqual(
         resolved.socialLinks.map((item) => item.icon),
-        [Facebook, Linkedin, Pinterest, Twitter, Instagram]
+        [Facebook, Twitter, Instagram, Linkedin, Github]
       );
 
       assert.strictEqual(resolved.linkColumns.length, 2);
       const [col1, col2] = resolved.linkColumns;
       assert.ok(col1);
-      assert.strictEqual(col1.title, 'Practice Areas');
+      assert.strictEqual(col1.title, 'Quick Links');
       assert.strictEqual(col1.links.length, 5);
       assert.ok(col2);
-      assert.strictEqual(col2.title, '');
+      assert.strictEqual(col2.title, 'Resources');
       assert.strictEqual(col2.links.length, 4);
 
-      assert.strictEqual(resolved.copyrightNotice, 'Copyright 2026 Cognia, All Right Reserved');
-      assert.strictEqual(resolved.bottomLinks.length, 5);
+      assert.strictEqual(resolved.copyrightNotice, '© 2026 Company Name. All rights reserved.');
+      assert.strictEqual(resolved.bottomLinks.length, 4);
       assert.deepStrictEqual(
         resolved.bottomLinks.map((link) => link.label),
-        ['Home', 'Cases', 'About', 'Legal', 'Privacy & Policy']
+        ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Support']
       );
     });
 
@@ -307,7 +298,8 @@ void describe('footer-simple helpers', () => {
 
       assert.strictEqual(resolved.theme, 'dark');
       assert.deepStrictEqual(resolved.layout, { padding: '64px' });
-      assert.strictEqual(resolved.brandName, DEFAULT_FOOTER_SIMPLE_DATA.brandName);
+      assert.strictEqual(resolved.logoText, 'LOGO');
+      assert.strictEqual(resolved.brandName, 'LOGO');
       assert.strictEqual(resolved.brandSubtitle, undefined);
       assert.strictEqual(resolved.logoUrl, undefined);
       assert.strictEqual(resolved.description, undefined);

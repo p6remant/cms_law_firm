@@ -1,4 +1,3 @@
-import { Landmark } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { type FooterSimpleProps } from '@/features/editor/types';
 import { resolveFooterSimpleProps } from '@/features/editor/utils/footer-utils';
@@ -15,42 +14,40 @@ export function FooterSimple(props: FooterSimpleProps) {
 
   return (
     <footer
-      aria-label={`${resolved.brandName} footer`}
+      aria-label={`${resolved.logoText} footer`}
       className={`w-full border-t ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Column 1: Brand / Identity */}
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-1">
               {resolved.logoUrl ? (
                 <img
                   src={resolved.logoUrl}
-                  alt={resolved.brandName}
-                  className="h-9 w-9 shrink-0 object-contain"
+                  alt={resolved.logoText}
+                  className="h-8 max-w-[160px] object-contain"
                 />
               ) : (
-                <Landmark
-                  className={`h-8 w-8 shrink-0 stroke-[1.5] ${resolved.themeClasses.text}`}
-                  aria-hidden="true"
-                />
+                <span
+                  className={`text-2xl font-bold tracking-normal ${resolved.themeClasses.heading}`}
+                >
+                  {resolved.logoText}
+                </span>
               )}
-              <div>
-                <h2 className={`text-xl leading-tight font-bold ${resolved.themeClasses.heading}`}>
-                  {resolved.brandName}
-                </h2>
-                {resolved.brandSubtitle && (
-                  <p
-                    className={`mt-0.5 text-xs font-medium uppercase ${resolved.themeClasses.mutedText}`}
-                  >
-                    {resolved.brandSubtitle}
-                  </p>
-                )}
-              </div>
+              {resolved.brandSubtitle && (
+                <p
+                  className={`text-xs font-medium uppercase tracking-normal ${resolved.themeClasses.mutedText}`}
+                >
+                  {resolved.brandSubtitle}
+                </p>
+              )}
             </div>
 
             {resolved.description && (
-              <p className={`mt-5 text-sm leading-relaxed ${resolved.themeClasses.mutedText}`}>
+              <p
+                className={`mt-4 text-sm leading-relaxed tracking-normal ${resolved.themeClasses.mutedText}`}
+              >
                 {resolved.description}
               </p>
             )}
