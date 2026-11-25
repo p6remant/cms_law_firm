@@ -497,6 +497,9 @@ void describe('cta-utils', () => {
       assert.ok(DEFAULT_CTA2_DATA.heading.length > 0);
       assert.ok((DEFAULT_CTA2_DATA.description ?? '').length > 0);
       assert.strictEqual(DEFAULT_CTA2_DATA.features?.length, 3);
+      for (const feature of DEFAULT_CTA2_DATA.features ?? []) {
+        assert.ok(feature.text.trim().length > 0);
+      }
       assert.strictEqual(DEFAULT_CTA2_DATA.primaryButton?.text, 'Schedule a Call');
       assert.strictEqual(DEFAULT_CTA2_DATA.secondaryButton?.text, 'Explore Services');
     });
@@ -510,7 +513,10 @@ void describe('cta-utils', () => {
       assert.strictEqual(resolved.badge, DEFAULT_CTA2_DATA.badge);
       assert.strictEqual(resolved.heading, DEFAULT_CTA2_DATA.heading);
       assert.strictEqual(resolved.description, DEFAULT_CTA2_DATA.description);
-      assert.deepStrictEqual(resolved.features, DEFAULT_CTA2_DATA.features);
+      assert.deepStrictEqual(
+        resolved.features,
+        DEFAULT_CTA2_DATA.features?.map((feature) => feature.text)
+      );
       assert.deepStrictEqual(resolved.primaryButton, {
         text: 'Schedule a Call',
         href: '/contact',
@@ -573,6 +579,30 @@ void describe('cta-utils', () => {
       assert.strictEqual(emptyFeaturesAndInvalidTheme.theme, 'light');
       assert.strictEqual(emptyFeaturesAndInvalidTheme.heading, DEFAULT_CTA2_DATA.heading);
       assert.deepStrictEqual(emptyFeaturesAndInvalidTheme.features, []);
+    });
+
+    void it('normalizes CTAFeatureItem object arrays and mixed string/object feature arrays', () => {
+      const objectFeatures = resolveCTA2Props({
+        features: [
+          { text: '  Fixed fee clarity  ' },
+          { text: '   ' },
+          { text: '  Direct partner access  ' },
+        ],
+      });
+      assert.deepStrictEqual(objectFeatures.features, [
+        'Fixed fee clarity',
+        'Direct partner access',
+      ]);
+
+      const mixedFeatures = resolveCTA2Props({
+        features: [
+          '  Fast onboarding  ',
+          { text: '   ' },
+          { text: '  Dedicated support  ' },
+          '   ',
+        ],
+      });
+      assert.deepStrictEqual(mixedFeatures.features, ['Fast onboarding', 'Dedicated support']);
     });
   });
 });

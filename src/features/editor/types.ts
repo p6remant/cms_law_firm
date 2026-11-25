@@ -327,12 +327,16 @@ export type CTA1Props = WithLayout<{
   secondaryButton?: CTAButtonProps;
 }>;
 
+export type CTAFeatureItem = {
+  text: string;
+};
+
 export type CTA2Props = WithLayout<{
   theme: 'dark' | 'light';
   badge?: string;
   heading: string;
   description?: string;
-  features?: string[];
+  features?: CTAFeatureItem[];
   primaryButton?: CTAButtonProps;
   secondaryButton?: CTAButtonProps;
 }>;

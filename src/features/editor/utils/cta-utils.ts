@@ -4,6 +4,7 @@ import type {
   CTA2Props,
   CTAButtonProps,
   CTAButtonVariant,
+  CTAFeatureItem,
   LayoutFieldProps,
 } from '../types.ts';
 
@@ -237,9 +238,9 @@ export const DEFAULT_CTA2_DATA: CTA2Props = {
   description:
     'Connect with our team to discuss your goals, explore tailored options, and take the next step with confidence.',
   features: [
-    'Clear communication at every stage',
-    'Tailored guidance for your objectives',
-    'Dedicated support from start to finish',
+    { text: 'Clear communication at every stage' },
+    { text: 'Tailored guidance for your objectives' },
+    { text: 'Dedicated support from start to finish' },
   ],
   primaryButton: {
     text: 'Schedule a Call',
@@ -401,7 +402,20 @@ export function resolveCTA1Props(props: Partial<CTA1Props>): ResolvedCTA1Props {
   return resolved;
 }
 
-export function resolveCTA2Props(props: Partial<CTA2Props>): ResolvedCTA2Props {
+function normalizeFeatureItemText(
+  feature: string | Partial<CTAFeatureItem> | null | undefined
+): string {
+  if (typeof feature === 'string') {
+    return feature.trim();
+  }
+  return typeof feature?.text === 'string' ? feature.text.trim() : '';
+}
+
+export function resolveCTA2Props(
+  props: Partial<Omit<CTA2Props, 'features'>> & {
+    features?: (string | CTAFeatureItem)[];
+  }
+): ResolvedCTA2Props {
   const theme = resolveCTATheme(props.theme, DEFAULT_CTA2_DATA.theme);
   const themeClasses = getCTAThemeClasses(theme);
   const layout: LayoutFieldProps = props.layout?.padding
@@ -418,7 +432,7 @@ export function resolveCTA2Props(props: Partial<CTA2Props>): ResolvedCTA2Props {
   const rawFeatures =
     props.features === undefined ? (DEFAULT_CTA2_DATA.features ?? []) : props.features;
   const features = rawFeatures
-    .map((feature) => feature.trim())
+    .map((feature) => normalizeFeatureItemText(feature))
     .filter((feature) => feature.length > 0);
 
   const primaryResolved = resolveOptionalCTAButton(
