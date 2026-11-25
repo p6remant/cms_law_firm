@@ -5,8 +5,11 @@ import {
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
   MAP_THEME_OPTIONS,
+  SCROLL_DIRECTION_OPTIONS,
+  TEAM_IMAGE_SHAPE_OPTIONS,
   getMapContainerClass,
-} from './field-options.ts';
+  getTeamImageShapeClass,
+} from '../config/field-options.ts';
 
 void describe('field-options map configurations', () => {
   void describe('MAP_LOCATION_MODE_OPTIONS', () => {
@@ -64,6 +67,24 @@ void describe('field-options map configurations', () => {
 
     void it('falls back to default md height when both height and aspectRatio are omitted', () => {
       assert.strictEqual(getMapContainerClass(), 'h-96 w-full');
+    });
+  });
+
+  void describe('SCROLL_DIRECTION_OPTIONS and TEAM_IMAGE_SHAPE_OPTIONS', () => {
+    void it('defines scroll direction options', () => {
+      const values = SCROLL_DIRECTION_OPTIONS.map((opt) => opt.value);
+      assert.deepStrictEqual(values, ['right', 'left']);
+    });
+
+    void it('defines team image shape options', () => {
+      const values = TEAM_IMAGE_SHAPE_OPTIONS.map((opt) => opt.value);
+      assert.deepStrictEqual(values, ['rounded', 'square', 'rectangle']);
+    });
+
+    void it('maps team image shapes to corresponding Tailwind classes', () => {
+      assert.ok(getTeamImageShapeClass('rounded').includes('rounded-full'));
+      assert.ok(getTeamImageShapeClass('square').includes('aspect-square'));
+      assert.ok(getTeamImageShapeClass('rectangle').includes('aspect-[3/4]'));
     });
   });
 });

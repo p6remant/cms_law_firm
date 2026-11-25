@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
-    "test": "node --test src/features/editor/utils/*.test.ts",
+    "test": "node --test src/features/editor/test/*.test.ts",
     "commit": "cz",
     "validate-branch": "validate-branch-name",
     "prepare": "husky",
