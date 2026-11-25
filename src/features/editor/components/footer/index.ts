@@ -1,0 +1,1 @@
+export { FooterMultiColumn } from './FooterMultiColumn';
