@@ -1,7 +1,7 @@
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
-import { FooterMultiColumn, FooterSimple } from '@/features/editor/components/footer';
+import { FooterSimple } from '@/features/editor/components/footer';
 import {
   FormButton,
   FormContainer,
@@ -31,10 +31,7 @@ import {
   SPACING_OPTIONS,
 } from '@/features/editor/config/field-options';
 import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
-import {
-  DEFAULT_FOOTER_MULTI_COLUMN_DATA,
-  DEFAULT_FOOTER_SIMPLE_DATA,
-} from '@/features/editor/utils/footer-utils';
+import { DEFAULT_FOOTER_SIMPLE_DATA } from '@/features/editor/utils/footer-utils';
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -86,7 +83,7 @@ export const puckConfig: PuckConfig = {
     },
     navigation: {
       title: 'Navigation & Footers',
-      components: ['FooterSimple', 'FooterMultiColumn'],
+      components: ['FooterSimple'],
     },
     other: {
       title: 'Other',
@@ -1606,123 +1603,6 @@ export const puckConfig: PuckConfig = {
         align: 'left',
       },
       render: (props) => <FormButton {...props} />,
-    },
-
-    FooterMultiColumn: {
-      label: 'Executive Multi-Column Footer',
-      fields: {
-        firmName: { type: 'text', label: 'Firm Name' },
-        tagline: { type: 'text', label: 'Tagline' },
-        logoUrl: { type: 'text', label: 'Logo URL (Optional)' },
-        description: { type: 'textarea', label: 'Firm Overview' },
-        offices: {
-          type: 'array',
-          label: 'Global Offices',
-          getItemSummary: (item) => item.city || 'Office Location',
-          defaultItemProps: {
-            city: 'Washington, D.C.',
-            address: '1450 Pennsylvania Avenue NW, Suite 800, Washington, DC 20004',
-            phone: '+1 (202) 555-0185',
-            email: 'dc@vanguardsterling.law',
-          },
-          arrayFields: {
-            city: { type: 'text', label: 'City' },
-            address: { type: 'textarea', label: 'Street Address' },
-            phone: { type: 'text', label: 'Telephone' },
-            email: { type: 'text', label: 'Email (Optional)' },
-          },
-        },
-        columns: {
-          type: 'array',
-          label: 'Directory Columns',
-          getItemSummary: (item) => item.title || 'Directory Column',
-          defaultItemProps: {
-            title: 'Governance',
-            links: [{ label: 'Ethics & Compliance', href: '/governance/ethics' }],
-          },
-          arrayFields: {
-            title: { type: 'text', label: 'Column Title' },
-            links: {
-              type: 'array',
-              label: 'Links',
-              getItemSummary: (item) => item.label || 'Link',
-              defaultItemProps: {
-                label: 'New Link',
-                href: '/practices',
-                isExternal: false,
-                badge: '',
-              },
-              arrayFields: {
-                label: { type: 'text', label: 'Link Label' },
-                href: { type: 'text', label: 'URL / Path' },
-                isExternal: {
-                  type: 'radio',
-                  label: 'Open in New Tab',
-                  options: [
-                    { label: 'Auto', value: false },
-                    { label: 'External', value: true },
-                  ],
-                },
-                badge: { type: 'text', label: 'Badge Label (Optional)' },
-              },
-            },
-          },
-        },
-        socialLinks: {
-          type: 'array',
-          label: 'Social Channels',
-          getItemSummary: (item) => item.label || item.platform,
-          defaultItemProps: {
-            platform: 'linkedin',
-            href: 'https://www.linkedin.com',
-            label: 'LinkedIn',
-          },
-          arrayFields: {
-            platform: {
-              type: 'select',
-              label: 'Platform',
-              options: SOCIAL_PLATFORM_OPTIONS,
-            },
-            href: { type: 'text', label: 'Profile URL' },
-            label: { type: 'text', label: 'Accessible Label (Optional)' },
-          },
-        },
-        copyrightNotice: { type: 'text', label: 'Copyright Notice' },
-        legalDisclaimer: { type: 'textarea', label: 'Attorney Advertising Disclaimer' },
-        regulatoryNotice: { type: 'textarea', label: 'Bar / SRA Regulatory Notice' },
-        theme: {
-          type: 'radio',
-          label: 'Theme',
-          options: FOOTER_THEME_OPTIONS,
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.firmName}
-              {fields.tagline}
-              {fields.logoUrl}
-              {fields.description}
-              {fields.offices}
-              {fields.columns}
-              {fields.socialLinks}
-              {fields.copyrightNotice}
-              {fields.legalDisclaimer}
-              {fields.regulatoryNotice}
-            </>
-          }
-          appearance={
-            <>
-              {fields.theme}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: DEFAULT_FOOTER_MULTI_COLUMN_DATA,
-      render: (props) => <FooterMultiColumn {...props} />,
     },
 
     FooterSimple: {

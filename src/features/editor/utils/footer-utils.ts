@@ -2,11 +2,9 @@ import { createLucideIcon, Globe, type LucideIcon } from 'lucide-react';
 import type {
   FooterColumn,
   FooterLinkItem,
-  FooterMultiColumnProps,
   FooterSimpleProps,
   FooterSplitProps,
   LayoutFieldProps,
-  OfficeLocationItem,
   SocialLinkItem,
   SocialPlatform,
 } from '../types';
@@ -178,100 +176,6 @@ export function isExternalLink(href?: string | null): boolean {
   return /^(?:https?:)?\/\//i.test(trimmed);
 }
 
-export const DEFAULT_FOOTER_MULTI_COLUMN_DATA: FooterMultiColumnProps = {
-  theme: 'dark',
-  layout: {
-    padding: '64px',
-  },
-  firmName: 'Vanguard & Sterling LLP',
-  tagline: 'Global Counsel. Uncompromising Excellence.',
-  description:
-    'Premier international legal counsel providing strategic representation in complex corporate transactions, high-stakes litigation, and regulatory compliance across global jurisdictions.',
-  offices: [
-    {
-      city: 'New York',
-      address: '767 Fifth Avenue, 38th Floor, New York, NY 10153',
-      phone: '+1 (212) 555-0190',
-      email: 'newyork@vanguardsterling.law',
-    },
-    {
-      city: 'London',
-      address: '100 Bishopsgate, Level 24, London EC2N 4AG, United Kingdom',
-      phone: '+44 20 7946 0910',
-      email: 'london@vanguardsterling.law',
-    },
-    {
-      city: 'San Francisco',
-      address: '555 California Street, Suite 4200, San Francisco, CA 94104',
-      phone: '+1 (415) 555-0142',
-      email: 'sanfrancisco@vanguardsterling.law',
-    },
-  ],
-  columns: [
-    {
-      title: 'Practices',
-      links: [
-        { label: 'Corporate & M&A', href: '/practices/corporate' },
-        { label: 'Securities & Capital Markets', href: '/practices/securities' },
-        { label: 'Antitrust & Competition', href: '/practices/antitrust' },
-        { label: 'Commercial Litigation', href: '/practices/litigation' },
-        { label: 'Intellectual Property', href: '/practices/ip' },
-      ],
-    },
-    {
-      title: 'Industries',
-      links: [
-        { label: 'Technology & AI', href: '/industries/technology', badge: 'Active' },
-        { label: 'Financial Institutions', href: '/industries/financial' },
-        { label: 'Life Sciences & Healthcare', href: '/industries/healthcare' },
-        { label: 'Energy & Infrastructure', href: '/industries/energy' },
-      ],
-    },
-    {
-      title: 'The Firm',
-      links: [
-        { label: 'About Vanguard & Sterling', href: '/about' },
-        { label: 'Partners & Counsel', href: '/attorneys' },
-        { label: 'Global Offices', href: '/locations' },
-        { label: 'Pro Bono & Community', href: '/pro-bono' },
-        { label: 'Diversity & Inclusion', href: '/diversity' },
-      ],
-    },
-    {
-      title: 'Client Resources',
-      links: [
-        { label: 'Legal Insights & Briefs', href: '/insights' },
-        { label: 'SEC Regulatory Briefings', href: '/briefings', isExternal: true },
-        { label: 'Client Portal', href: 'https://portal.vanguardsterling.law', isExternal: true },
-        { label: 'Careers & Summer Program', href: '/careers' },
-      ],
-    },
-  ],
-  socialLinks: [
-    {
-      platform: 'linkedin',
-      href: 'https://www.linkedin.com/company/vanguard-sterling',
-      label: 'LinkedIn',
-    },
-    { platform: 'twitter', href: 'https://x.com/vanguardlaw', label: 'X (Twitter)' },
-    {
-      platform: 'facebook',
-      href: 'https://facebook.com/vanguardsterling',
-      label: 'Facebook',
-    },
-    {
-      platform: 'youtube',
-      href: 'https://youtube.com/@vanguardsterling',
-      label: 'YouTube',
-    },
-  ],
-  copyrightNotice: '© 2026 Vanguard & Sterling LLP. All rights reserved.',
-  legalDisclaimer:
-    'ATTORNEY ADVERTISING. Prior results do not guarantee a similar outcome. The materials on this website are provided for general informational purposes only and do not constitute formal legal advice. No attorney-client relationship is formed through the use or transmission of information via this website.',
-  regulatoryNotice:
-    'Licensed by the State Bar of California and New York State Unified Court System. Authorized and regulated by the Solicitors Regulation Authority (SRA ID: 684201).',
-};
-
 export const DEFAULT_FOOTER_SPLIT_DATA: FooterSplitProps = {
   theme: 'dark',
   layout: {
@@ -373,15 +277,6 @@ export interface ResolvedFooterLink {
   badge?: string;
 }
 
-export interface ResolvedOfficeLocation {
-  city: string;
-  address: string;
-  phone: string;
-  email?: string;
-  phoneHref: string | null;
-  emailHref: string | null;
-}
-
 export interface ResolvedFooterColumn {
   title: string;
   links: ResolvedFooterLink[];
@@ -392,23 +287,6 @@ export interface ResolvedSocialLink {
   href: string;
   label: string;
   icon: LucideIcon;
-}
-
-export interface ResolvedFooterMultiColumn {
-  theme: 'dark' | 'light';
-  themeClasses: FooterThemeClasses;
-  layout: LayoutFieldProps;
-  firmName: string;
-  monogram: string;
-  tagline?: string;
-  logoUrl?: string;
-  description?: string;
-  offices: ResolvedOfficeLocation[];
-  columns: ResolvedFooterColumn[];
-  socialLinks: ResolvedSocialLink[];
-  copyrightNotice?: string;
-  legalDisclaimer?: string;
-  regulatoryNotice?: string;
 }
 
 export interface ResolvedFooterSimple {
@@ -430,21 +308,6 @@ export interface ResolvedFooterSimple {
   copyrightNotice?: string;
   bottomLinks: ResolvedFooterLink[];
 }
-
-const FIRM_NAME_STOP_WORDS = new Set([
-  '&',
-  'and',
-  'of',
-  'the',
-  'llp',
-  'llc',
-  'pllc',
-  'pc',
-  'pa',
-  'lp',
-  'inc',
-  'ltd',
-]);
 
 function normalizeOptionalText(value?: string | null): string | undefined {
   if (!value) {
@@ -512,63 +375,6 @@ export function formatEmailHref(email?: string | null): string | null {
   return `mailto:${trimmed}`;
 }
 
-export function getFirmMonogram(firmName?: string | null): string {
-  if (!firmName) {
-    return 'LF';
-  }
-
-  const rawWords = firmName
-    .trim()
-    .split(/[\s,&/]+/)
-    .map((word) => word.replace(/[^a-zA-Z]/g, ''))
-    .filter((word) => word.length > 0);
-
-  if (rawWords.length === 0) {
-    return 'LF';
-  }
-
-  const meaningfulWords = rawWords.filter((word) => !FIRM_NAME_STOP_WORDS.has(word.toLowerCase()));
-  const words = meaningfulWords.length > 0 ? meaningfulWords : rawWords;
-
-  const first = words[0];
-  const second = words[1];
-
-  if (first && second) {
-    return `${first.charAt(0)}${second.charAt(0)}`.toUpperCase();
-  }
-
-  if (first) {
-    return first.slice(0, 2).toUpperCase();
-  }
-
-  return 'LF';
-}
-
-function resolveOfficeLocation(office: OfficeLocationItem): ResolvedOfficeLocation | null {
-  const city = office.city.trim();
-  const address = office.address.trim();
-  const phone = office.phone.trim();
-  const email = normalizeOptionalText(office.email);
-
-  if (!city && !address && !phone && email === undefined) {
-    return null;
-  }
-
-  const resolved: ResolvedOfficeLocation = {
-    city,
-    address,
-    phone,
-    phoneHref: formatPhoneHref(phone),
-    emailHref: formatEmailHref(email),
-  };
-
-  if (email !== undefined) {
-    resolved.email = email;
-  }
-
-  return resolved;
-}
-
 function resolveFooterLinks(links?: FooterLinkItem[]): ResolvedFooterLink[] {
   return (links ?? [])
     .filter((link) => link.label.trim().length > 0 || link.href.trim().length > 0)
@@ -613,62 +419,6 @@ function resolveSocialLinks(items?: SocialLinkItem[]): ResolvedSocialLink[] {
   return (items ?? [])
     .map(resolveSocialLink)
     .filter((item): item is ResolvedSocialLink => item !== null);
-}
-
-export function resolveFooterMultiColumnProps(
-  props: Partial<FooterMultiColumnProps>
-): ResolvedFooterMultiColumn {
-  const theme: 'dark' | 'light' = props.theme === 'light' ? 'light' : 'dark';
-  const themeClasses = getFooterThemeClasses(theme);
-  const layout = props.layout ?? DEFAULT_FOOTER_MULTI_COLUMN_DATA.layout;
-  const firmName = props.firmName?.trim() || DEFAULT_FOOTER_MULTI_COLUMN_DATA.firmName;
-  const monogram = getFirmMonogram(firmName);
-
-  const tagline = normalizeOptionalText(props.tagline);
-  const logoUrl = normalizeOptionalText(props.logoUrl);
-  const description = normalizeOptionalText(props.description);
-  const copyrightNotice = normalizeOptionalText(props.copyrightNotice);
-  const legalDisclaimer = normalizeOptionalText(props.legalDisclaimer);
-  const regulatoryNotice = normalizeOptionalText(props.regulatoryNotice);
-
-  const offices = (props.offices ?? [])
-    .map(resolveOfficeLocation)
-    .filter((office): office is ResolvedOfficeLocation => office !== null);
-
-  const columns = resolveFooterColumns(props.columns);
-  const socialLinks = resolveSocialLinks(props.socialLinks);
-
-  const resolved: ResolvedFooterMultiColumn = {
-    theme,
-    themeClasses,
-    layout,
-    firmName,
-    monogram,
-    offices,
-    columns,
-    socialLinks,
-  };
-
-  if (tagline !== undefined) {
-    resolved.tagline = tagline;
-  }
-  if (logoUrl !== undefined) {
-    resolved.logoUrl = logoUrl;
-  }
-  if (description !== undefined) {
-    resolved.description = description;
-  }
-  if (copyrightNotice !== undefined) {
-    resolved.copyrightNotice = copyrightNotice;
-  }
-  if (legalDisclaimer !== undefined) {
-    resolved.legalDisclaimer = legalDisclaimer;
-  }
-  if (regulatoryNotice !== undefined) {
-    resolved.regulatoryNotice = regulatoryNotice;
-  }
-
-  return resolved;
 }
 
 export function resolveFooterSimpleProps(props: Partial<FooterSimpleProps>): ResolvedFooterSimple {

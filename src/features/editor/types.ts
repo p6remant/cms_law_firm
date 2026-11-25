@@ -254,20 +254,6 @@ export type OfficeLocationItem = {
   email?: string;
 };
 
-export type FooterMultiColumnProps = WithLayout<{
-  theme: 'dark' | 'light';
-  firmName: string;
-  tagline?: string;
-  logoUrl?: string;
-  description?: string;
-  offices?: OfficeLocationItem[];
-  columns?: FooterColumn[];
-  socialLinks?: SocialLinkItem[];
-  copyrightNotice?: string;
-  legalDisclaimer?: string;
-  regulatoryNotice?: string;
-}>;
-
 export type FooterSplitProps = WithLayout<{
   theme: 'dark' | 'light';
   statementQuote: string;
@@ -325,7 +311,6 @@ export type EditorComponentProps = {
   TextareaField: TextareaFieldProps;
   SelectField: SelectFieldProps;
   FormButton: FormButtonProps;
-  FooterMultiColumn: FooterMultiColumnProps;
   FooterSimple: FooterSimpleProps;
 };
 

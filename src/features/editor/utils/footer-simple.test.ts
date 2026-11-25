@@ -3,10 +3,13 @@ import assert from 'node:assert/strict';
 import {
   DEFAULT_FOOTER_SIMPLE_DATA,
   Facebook,
+  formatEmailHref,
+  formatPhoneHref,
   Globe,
   Instagram,
   Linkedin,
   Pinterest,
+  resolveFooterLink,
   resolveFooterSimpleProps,
   Twitter,
 } from './footer-utils.ts';
@@ -34,6 +37,117 @@ const FORBIDDEN_THEME_PATTERNS = [
 ];
 
 void describe('footer-simple helpers', () => {
+  void describe('resolveFooterLink', () => {
+    void it('resolves internal paths without target or rel attributes', () => {
+      const resolved = resolveFooterLink({
+        label: '  Cases  ',
+        href: ' /cases ',
+      });
+
+      assert.deepStrictEqual(resolved, {
+        label: 'Cases',
+        href: '/cases',
+        isExternal: false,
+      });
+      assert.strictEqual('target' in resolved, false);
+      assert.strictEqual('rel' in resolved, false);
+      assert.strictEqual('badge' in resolved, false);
+    });
+
+    void it('detects external URLs automatically even when isExternal is omitted', () => {
+      const httpsLink = resolveFooterLink({
+        label: 'Client Portal',
+        href: 'https://example.com/portal',
+      });
+
+      assert.deepStrictEqual(httpsLink, {
+        label: 'Client Portal',
+        href: 'https://example.com/portal',
+        isExternal: true,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+
+      const protocolRelativeLink = resolveFooterLink({
+        label: 'Media Kit',
+        href: '//cdn.example.com/press',
+      });
+      assert.strictEqual(protocolRelativeLink.isExternal, true);
+      assert.strictEqual(protocolRelativeLink.target, '_blank');
+      assert.strictEqual(protocolRelativeLink.rel, 'noopener noreferrer');
+    });
+
+    void it('honors explicit isExternal true even on relative paths', () => {
+      const resolved = resolveFooterLink({
+        label: 'Briefings',
+        href: '/briefings',
+        isExternal: true,
+      });
+
+      assert.deepStrictEqual(resolved, {
+        label: 'Briefings',
+        href: '/briefings',
+        isExternal: true,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+    });
+
+    void it('preserves trimmed badges, omits empty badges, and defaults blank href to #', () => {
+      const withBadge = resolveFooterLink({
+        label: 'Technology & AI',
+        href: '/industries/technology',
+        badge: '  Active  ',
+      });
+
+      assert.strictEqual(withBadge.badge, 'Active');
+
+      const blankHrefAndBadge = resolveFooterLink({
+        label: 'Upcoming Practice',
+        href: '   ',
+        badge: '   ',
+      });
+
+      assert.deepStrictEqual(blankHrefAndBadge, {
+        label: 'Upcoming Practice',
+        href: '#',
+        isExternal: false,
+      });
+      assert.strictEqual('badge' in blankHrefAndBadge, false);
+    });
+  });
+
+  void describe('formatPhoneHref and formatEmailHref', () => {
+    void it('formats international phone numbers into tel: URIs', () => {
+      assert.strictEqual(formatPhoneHref('+977 1-4256789'), 'tel:+97714256789');
+      assert.strictEqual(formatPhoneHref('+1 (212) 555-0190'), 'tel:+12125550190');
+      assert.strictEqual(formatPhoneHref('  +1 415.555.0142  '), 'tel:+14155550142');
+    });
+
+    void it('handles local phone numbers without a leading plus and rejects invalid values', () => {
+      assert.strictEqual(formatPhoneHref('(212) 555-0190'), 'tel:2125550190');
+      assert.strictEqual(formatPhoneHref('212-555-0190'), 'tel:2125550190');
+      assert.strictEqual(formatPhoneHref(''), null);
+      assert.strictEqual(formatPhoneHref('   '), null);
+      assert.strictEqual(formatPhoneHref(null), null);
+      assert.strictEqual(formatPhoneHref(undefined), null);
+      assert.strictEqual(formatPhoneHref('+'), null);
+      assert.strictEqual(formatPhoneHref('Reception Desk'), null);
+    });
+
+    void it('formats valid trimmed email addresses into mailto: URIs and rejects invalid values', () => {
+      assert.strictEqual(
+        formatEmailHref('  contact@cognialaw.com.np  '),
+        'mailto:contact@cognialaw.com.np'
+      );
+      assert.strictEqual(formatEmailHref(''), null);
+      assert.strictEqual(formatEmailHref('   '), null);
+      assert.strictEqual(formatEmailHref(null), null);
+      assert.strictEqual(formatEmailHref(undefined), null);
+      assert.strictEqual(formatEmailHref('not-an-email'), null);
+    });
+  });
+
   void describe('DEFAULT_FOOTER_SIMPLE_DATA', () => {
     void it('supplies the 4-column reference layout content and bottom bar links', () => {
       assert.strictEqual(DEFAULT_FOOTER_SIMPLE_DATA.theme, 'dark');

@@ -1,7 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  DEFAULT_FOOTER_MULTI_COLUMN_DATA,
   DEFAULT_FOOTER_SPLIT_DATA,
   Facebook,
   getFooterThemeClasses,
@@ -176,30 +175,6 @@ void describe('footer-utils', () => {
   });
 
   void describe('Default Data Fixtures', () => {
-    void it('DEFAULT_FOOTER_MULTI_COLUMN_DATA has authentic legal content and structure', () => {
-      assert.ok(
-        DEFAULT_FOOTER_MULTI_COLUMN_DATA.firmName.length > 0,
-        'firmName should not be empty'
-      );
-      assert.strictEqual(DEFAULT_FOOTER_MULTI_COLUMN_DATA.firmName, 'Vanguard & Sterling LLP');
-      assert.ok(
-        (DEFAULT_FOOTER_MULTI_COLUMN_DATA.offices?.length ?? 0) >= 3,
-        'Should have at least 3 office locations'
-      );
-      assert.ok(
-        (DEFAULT_FOOTER_MULTI_COLUMN_DATA.columns?.length ?? 0) >= 3,
-        'Should have at least 3 columns'
-      );
-      assert.ok(
-        DEFAULT_FOOTER_MULTI_COLUMN_DATA.legalDisclaimer?.includes('ATTORNEY ADVERTISING'),
-        'Legal disclaimer must contain ATTORNEY ADVERTISING'
-      );
-      assert.ok(
-        (DEFAULT_FOOTER_MULTI_COLUMN_DATA.socialLinks?.length ?? 0) >= 3,
-        'Should provide social links'
-      );
-    });
-
     void it('DEFAULT_FOOTER_SPLIT_DATA has authentic editorial statement and direct coordinates', () => {
       assert.ok(
         DEFAULT_FOOTER_SPLIT_DATA.statementQuote.length > 0,
