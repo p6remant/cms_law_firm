@@ -148,7 +148,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'CTA', 'FAQ', 'Steps', 'FeatureSplit', 'Bento'],
+      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -449,78 +449,6 @@ export const puckConfig: PuckConfig = {
           </div>
         </BlockLayout>
       ),
-    },
-
-    CTA: {
-      label: 'CTA',
-      fields: {
-        heading: { type: 'text', label: 'Heading' },
-        description: { type: 'textarea', label: 'Description' },
-        buttonLabel: { type: 'text', label: 'Button label' },
-        theme: {
-          type: 'radio',
-          label: 'Theme',
-          options: [
-            { label: 'Dark', value: 'dark' },
-            { label: 'Light', value: 'light' },
-          ],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.heading}
-              {fields.description}
-              {fields.buttonLabel}
-            </>
-          }
-          appearance={
-            <>
-              {fields.theme}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        heading: 'Ready to launch your legal CMS?',
-        description: 'Build, preview, and manage structured pages effortlessly.',
-        buttonLabel: 'Try Puck Cloud →',
-        theme: 'dark',
-        layout: { padding: '24px' },
-      },
-      render: ({ heading, description, buttonLabel, theme, layout }) => {
-        const isDark = theme === 'dark';
-        return (
-          <BlockLayout layout={layout}>
-            <div
-              className={`rounded-2xl p-8 text-center ${
-                isDark
-                  ? 'bg-neutral-950 text-white'
-                  : 'border border-slate-200 bg-slate-50 text-slate-900'
-              }`}
-            >
-              <div className="mx-auto max-w-2xl space-y-3">
-                <h2 className="text-2xl font-bold">{heading}</h2>
-                <p className={isDark ? 'text-sm text-neutral-400' : 'text-sm text-slate-600'}>
-                  {description}
-                </p>
-                <div className="pt-2">
-                  <span
-                    className={`inline-flex items-center rounded-lg px-4 py-2 text-xs font-semibold ${
-                      isDark ? 'bg-white text-neutral-950' : 'bg-slate-900 text-white'
-                    }`}
-                  >
-                    {buttonLabel}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </BlockLayout>
-        );
-      },
     },
 
     FAQ: {

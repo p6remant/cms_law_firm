@@ -38,13 +38,6 @@ export type FeatureGridProps = WithLayout<{
   cards: Slot;
 }>;
 
-export type CTAProps = WithLayout<{
-  heading: string;
-  description: string;
-  buttonLabel: string;
-  theme: 'dark' | 'light';
-}>;
-
 export type FAQItem = {
   question: string;
   answer: string;
@@ -309,11 +302,45 @@ export type Footer2Props = WithLayout<{
   showBackToTop?: boolean;
 }>;
 
+export type CTAButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+
+export type CTAActionType = 'newsletter' | 'button';
+
+export type CTAButtonProps = {
+  text: string;
+  href?: string;
+  target?: '_self' | '_blank';
+  variant?: CTAButtonVariant;
+};
+
+export type CTA1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  actionType?: CTAActionType;
+  eyebrow?: string;
+  heading: string;
+  description?: string;
+  newsletterPlaceholder?: string;
+  newsletterButtonText?: string;
+  newsletterButtonVariant?: CTAButtonVariant;
+  disclaimer?: string;
+  primaryButton?: CTAButtonProps;
+  secondaryButton?: CTAButtonProps;
+}>;
+
+export type CTA2Props = WithLayout<{
+  theme: 'dark' | 'light';
+  badge?: string;
+  heading: string;
+  description?: string;
+  features?: string[];
+  primaryButton?: CTAButtonProps;
+  secondaryButton?: CTAButtonProps;
+}>;
+
 export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
   Card: CardProps;
-  CTA: CTAProps;
   FAQ: FAQProps;
   Steps: StepsProps;
   FeatureSplit: FeatureSplitProps;
