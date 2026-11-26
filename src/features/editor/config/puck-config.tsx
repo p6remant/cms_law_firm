@@ -13,6 +13,7 @@ import {
   TextareaField,
 } from '@/features/editor/components/form';
 import { MapBlock } from '@/features/editor/components/MapBlock';
+import { Stats1 } from '@/features/editor/components/stats';
 import {
   ALIGN_OPTIONS,
   BUTTON_WIDTH_OPTIONS,
@@ -46,6 +47,7 @@ import {
   type PuckConfig,
   type PuckPageData,
   type SocialLinkItem,
+  type StatItem,
 } from '@/features/editor/types';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
 import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
@@ -53,6 +55,7 @@ import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
 } from '@/features/editor/utils/footer-utils';
+import { DEFAULT_STATS1_DATA } from '@/features/editor/utils/stats-utils';
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -242,6 +245,30 @@ const faqContactCtaField: ObjectField<FAQContactCTAProps> = {
   },
 };
 
+const STATS_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const statItemsField: ArrayField<StatItem[]> = {
+  type: 'array',
+  label: 'Metrics',
+  getItemSummary: (item) =>
+    item.value && item.label
+      ? `${item.value} — ${item.label}`
+      : item.label || item.value || 'Metric',
+  defaultItemProps: {
+    value: '95%',
+    label: 'New Metric',
+    description: 'Brief supporting context for this figure.',
+  },
+  arrayFields: {
+    value: { type: 'text', label: 'Metric Value' },
+    label: { type: 'text', label: 'Metric Label' },
+    description: { type: 'textarea', label: 'Supporting Note (Optional)' },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     introduction: {
@@ -264,7 +291,7 @@ export const puckConfig: PuckConfig = {
     },
     socialProof: {
       title: 'Social Proof',
-      components: ['Logos'],
+      components: ['Logos', 'Stats1'],
     },
     layout: {
       title: 'Layout',
@@ -1911,6 +1938,38 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FAQ2_DATA,
       render: (props) => <FAQ2 {...props} />,
+    },
+
+    Stats1: {
+      label: 'Stats 1 (Metric Strip)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: statItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_STATS1_DATA,
+      render: (props) => <Stats1 {...props} />,
     },
   },
 };
