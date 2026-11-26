@@ -1944,22 +1944,12 @@ export const puckConfig: PuckConfig = {
       label: 'Stats 1 (Metric Strip)',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
-        eyebrow: { type: 'text', label: 'Eyebrow' },
-        heading: { type: 'text', label: 'Heading' },
-        description: { type: 'textarea', label: 'Description' },
         items: statItemsField,
         layout: layoutField,
       },
       renderFields: ({ fields }) => (
         <FieldTabs
-          content={
-            <>
-              {fields.eyebrow}
-              {fields.heading}
-              {fields.description}
-              {fields.items}
-            </>
-          }
+          content={fields.items}
           appearance={
             <>
               {fields.theme}
