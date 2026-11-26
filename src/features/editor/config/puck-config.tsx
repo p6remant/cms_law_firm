@@ -264,7 +264,7 @@ export const puckConfig: PuckConfig = {
     },
     socialProof: {
       title: 'Social Proof',
-      components: ['Logos', 'Stats'],
+      components: ['Logos'],
     },
     layout: {
       title: 'Layout',
@@ -837,64 +837,6 @@ export const puckConfig: PuckConfig = {
                 >
                   {logo.name}
                 </span>
-              ))}
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    Stats: {
-      label: 'Stats',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        items: {
-          type: 'array',
-          label: 'Metrics',
-          getItemSummary: (item) => `${item.value} - ${item.label}`,
-          defaultItemProps: { label: 'Metric', value: '100%' },
-          arrayFields: {
-            value: { type: 'text', label: 'Value' },
-            label: { type: 'text', label: 'Label' },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.items}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'Impact in Numbers',
-        items: [
-          { value: '99.9%', label: 'Uptime SLA' },
-          { value: '500+', label: 'Published Pages' },
-          { value: '24/7', label: 'Global Support' },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, items, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
-            {title && (
-              <h3 className="mb-4 text-center text-sm font-semibold text-slate-500">{title}</h3>
-            )}
-            <div className="grid gap-4 sm:grid-cols-3">
-              {items.map((stat, idx) => (
-                <div
-                  key={`${stat.label}-${String(idx)}`}
-                  className="rounded-lg bg-slate-50 p-4 text-center"
-                >
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                  <p className="mt-1 text-xs text-slate-600">{stat.label}</p>
-                </div>
               ))}
             </div>
           </div>
