@@ -203,7 +203,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'FAQ', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2'],
+      components: ['FeatureGrid', 'Card', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -501,73 +501,6 @@ export const puckConfig: PuckConfig = {
             >
               {description}
             </p>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    FAQ: {
-      label: 'FAQ',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        items: {
-          type: 'array',
-          label: 'Questions',
-          getItemSummary: (item) => item.question || 'Question',
-          defaultItemProps: {
-            question: 'How does the visual editor work?',
-            answer: 'Drag blocks from the left sidebar and configure them in the right panel.',
-          },
-          arrayFields: {
-            question: { type: 'text', label: 'Question' },
-            answer: { type: 'textarea', label: 'Answer' },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.items}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'Frequently Asked Questions',
-        description: 'Common questions about managing content and layouts.',
-        items: [
-          {
-            question: 'Can I customize every block?',
-            answer: 'Yes, each block exposes Content and Appearance settings on the right sidebar.',
-          },
-          {
-            question: 'Are changes responsive?',
-            answer: 'Yes, use the viewport switcher in the editor to preview mobile and desktop.',
-          },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, description, items, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="mx-auto max-w-3xl space-y-6">
-            <div className="space-y-2 text-center">
-              <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="text-sm text-slate-600">{description}</p>
-            </div>
-            <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-              {items.map((item, idx) => (
-                <div key={`${item.question}-${String(idx)}`} className="space-y-1.5 p-5">
-                  <h3 className="text-sm font-semibold text-slate-900">{item.question}</h3>
-                  <p className="text-sm text-slate-600">{item.answer}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </BlockLayout>
       ),

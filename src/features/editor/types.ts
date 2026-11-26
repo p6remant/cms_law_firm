@@ -43,10 +43,34 @@ export type FAQItem = {
   answer: string;
 };
 
-export type FAQProps = WithLayout<{
-  title: string;
-  description: string;
+export type FAQContactCTAProps = {
+  title?: string;
+  description?: string;
+  buttonText: string;
+  buttonHref: string;
+  buttonTarget?: '_self' | '_blank';
+  buttonVariant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+};
+
+export type FAQ1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  eyebrow?: string;
+  heading: string;
+  description?: string;
   items: FAQItem[];
+  defaultOpenIndex?: number;
+  allowMultipleOpen?: boolean;
+}>;
+
+export type FAQ2Props = WithLayout<{
+  theme: 'dark' | 'light';
+  badge?: string;
+  heading: string;
+  description?: string;
+  items: FAQItem[];
+  contactCta?: FAQContactCTAProps;
+  defaultOpenIndex?: number;
+  allowMultipleOpen?: boolean;
 }>;
 
 export type StepItem = {
@@ -345,7 +369,6 @@ export type EditorComponentProps = {
   Hero: HeroProps;
   FeatureGrid: FeatureGridProps;
   Card: CardProps;
-  FAQ: FAQProps;
   Steps: StepsProps;
   FeatureSplit: FeatureSplitProps;
   Bento: BentoProps;
