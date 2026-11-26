@@ -119,27 +119,13 @@ export type StatItem = {
   description?: string;
 };
 
-export type StatsActionCTAProps = {
-  text: string;
-  href?: string;
-  target?: '_self' | '_blank';
-  variant?: CTAButtonVariant;
-};
-
 export type Stats1Props = WithLayout<{
   theme: 'dark' | 'light';
-  eyebrow?: string;
-  heading?: string;
-  description?: string;
   items: StatItem[];
 }>;
 
 export type Stats2Props = WithLayout<{
   theme: 'dark' | 'light';
-  badge?: string;
-  heading: string;
-  description?: string;
-  actionCta?: StatsActionCTAProps;
   items: StatItem[];
 }>;
 
