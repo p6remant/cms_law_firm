@@ -13,7 +13,7 @@ import {
   TextareaField,
 } from '@/features/editor/components/form';
 import { MapBlock } from '@/features/editor/components/MapBlock';
-import { Stats1 } from '@/features/editor/components/stats';
+import { Stats1, Stats2 } from '@/features/editor/components/stats';
 import {
   ALIGN_OPTIONS,
   BUTTON_WIDTH_OPTIONS,
@@ -55,7 +55,7 @@ import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
 } from '@/features/editor/utils/footer-utils';
-import { DEFAULT_STATS1_DATA } from '@/features/editor/utils/stats-utils';
+import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '@/features/editor/utils/stats-utils';
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -291,7 +291,7 @@ export const puckConfig: PuckConfig = {
     },
     socialProof: {
       title: 'Social Proof',
-      components: ['Logos', 'Stats1'],
+      components: ['Logos', 'Stats1', 'Stats2'],
     },
     layout: {
       title: 'Layout',
@@ -1960,6 +1960,28 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_STATS1_DATA,
       render: (props) => <Stats1 {...props} />,
+    },
+
+    Stats2: {
+      label: 'Stats 2 (Metric Cards)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        items: statItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={fields.items}
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_STATS2_DATA,
+      render: (props) => <Stats2 {...props} />,
     },
   },
 };
