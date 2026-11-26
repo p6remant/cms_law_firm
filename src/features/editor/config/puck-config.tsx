@@ -2,6 +2,7 @@ import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
+import { FAQ1 } from '@/features/editor/components/faq';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
@@ -38,6 +39,7 @@ import {
   type CTAButtonProps,
   type CTAButtonVariant,
   type CTAFeatureItem,
+  type FAQItem,
   type FooterColumn,
   type FooterLinkItem,
   type PuckConfig,
@@ -45,6 +47,7 @@ import {
   type SocialLinkItem,
 } from '@/features/editor/types';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
+import { DEFAULT_FAQ1_DATA } from '@/features/editor/utils/faq-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -195,6 +198,30 @@ const ctaFeaturesField: ArrayField<CTAFeatureItem[]> = {
   },
 };
 
+const FAQ_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const FAQ_ALLOW_MULTIPLE_OPTIONS: { label: string; value: boolean }[] = [
+  { label: 'Single', value: false },
+  { label: 'Multiple', value: true },
+];
+
+const faqItemsField: ArrayField<FAQItem[]> = {
+  type: 'array',
+  label: 'FAQ Items',
+  getItemSummary: (item) => item.question || 'FAQ Item',
+  defaultItemProps: {
+    question: 'New question?',
+    answer: 'Provide a clear, concise answer here.',
+  },
+  arrayFields: {
+    question: { type: 'text', label: 'Question' },
+    answer: { type: 'textarea', label: 'Answer' },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     introduction: {
@@ -203,7 +230,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2'],
+      components: ['FeatureGrid', 'Card', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2', 'FAQ1'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1822,6 +1849,50 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_CTA2_DATA,
       render: (props) => <CTA2 {...props} />,
+    },
+
+    FAQ1: {
+      label: 'FAQ 1 (Centered Accordion)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: faqItemsField,
+        defaultOpenIndex: {
+          type: 'number',
+          label: 'Default Open Index (-1 for none)',
+          min: -1,
+        },
+        allowMultipleOpen: {
+          type: 'radio',
+          label: 'Open Mode',
+          options: FAQ_ALLOW_MULTIPLE_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.defaultOpenIndex}
+              {fields.allowMultipleOpen}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FAQ1_DATA,
+      render: (props) => <FAQ1 {...props} />,
     },
   },
 };
