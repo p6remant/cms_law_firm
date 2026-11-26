@@ -2,7 +2,7 @@ import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
-import { FAQ1 } from '@/features/editor/components/faq';
+import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
@@ -39,6 +39,7 @@ import {
   type CTAButtonProps,
   type CTAButtonVariant,
   type CTAFeatureItem,
+  type FAQContactCTAProps,
   type FAQItem,
   type FooterColumn,
   type FooterLinkItem,
@@ -47,7 +48,7 @@ import {
   type SocialLinkItem,
 } from '@/features/editor/types';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
-import { DEFAULT_FAQ1_DATA } from '@/features/editor/utils/faq-utils';
+import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -222,6 +223,25 @@ const faqItemsField: ArrayField<FAQItem[]> = {
   },
 };
 
+const faqContactCtaField: ObjectField<FAQContactCTAProps> = {
+  type: 'object',
+  label: 'Contact Card CTA',
+  collapsible: true,
+  defaultExpanded: true,
+  objectFields: {
+    title: { type: 'text', label: 'Card Title' },
+    description: { type: 'textarea', label: 'Card Description' },
+    buttonText: { type: 'text', label: 'Button Text' },
+    buttonHref: { type: 'text', label: 'Button URL / Path' },
+    buttonTarget: { type: 'radio', label: 'Open Target', options: CTA_TARGET_OPTIONS },
+    buttonVariant: {
+      type: 'select',
+      label: 'Button Variant',
+      options: CTA_BUTTON_VARIANT_OPTIONS,
+    },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     introduction: {
@@ -230,7 +250,17 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['FeatureGrid', 'Card', 'Steps', 'FeatureSplit', 'Bento', 'CTA1', 'CTA2', 'FAQ1'],
+      components: [
+        'FeatureGrid',
+        'Card',
+        'Steps',
+        'FeatureSplit',
+        'Bento',
+        'CTA1',
+        'CTA2',
+        'FAQ1',
+        'FAQ2',
+      ],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1893,6 +1923,52 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FAQ1_DATA,
       render: (props) => <FAQ1 {...props} />,
+    },
+
+    FAQ2: {
+      label: 'FAQ 2 (Split Editorial)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge Pill' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: faqItemsField,
+        contactCta: faqContactCtaField,
+        defaultOpenIndex: {
+          type: 'number',
+          label: 'Default Open Index (-1 for none)',
+          min: -1,
+        },
+        allowMultipleOpen: {
+          type: 'radio',
+          label: 'Open Mode',
+          options: FAQ_ALLOW_MULTIPLE_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+              {fields.contactCta}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.defaultOpenIndex}
+              {fields.allowMultipleOpen}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FAQ2_DATA,
+      render: (props) => <FAQ2 {...props} />,
     },
   },
 };

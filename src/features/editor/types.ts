@@ -393,6 +393,7 @@ export type EditorComponentProps = {
   CTA1: CTA1Props;
   CTA2: CTA2Props;
   FAQ1: FAQ1Props;
+  FAQ2: FAQ2Props;
 };
 
 export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {
