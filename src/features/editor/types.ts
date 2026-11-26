@@ -21,23 +21,6 @@ export type HeroProps = WithLayout<{
   theme: 'dark' | 'light';
 }>;
 
-export type CardIconName = 'sparkles' | 'lock' | 'cloud' | 'git-branch' | 'users' | 'book-open';
-
-export type CardProps = WithLayout<{
-  title: string;
-  description: string;
-  icon: CardIconName;
-  mode: 'card' | 'flat';
-}>;
-
-export type FeatureGridProps = WithLayout<{
-  title: string;
-  description: string;
-  columns: 2 | 3 | 4;
-  cardMode: 'card' | 'flat';
-  cards: Slot;
-}>;
-
 export type FAQItem = {
   question: string;
   answer: string;
@@ -71,37 +54,6 @@ export type FAQ2Props = WithLayout<{
   contactCta?: FAQContactCTAProps;
   defaultOpenIndex?: number;
   allowMultipleOpen?: boolean;
-}>;
-
-export type StepItem = {
-  title: string;
-  description: string;
-};
-
-export type StepsProps = WithLayout<{
-  title: string;
-  description: string;
-  steps: StepItem[];
-}>;
-
-export type FeatureSplitProps = WithLayout<{
-  eyebrow: string;
-  title: string;
-  description: string;
-  ctaLabel: string;
-  imagePosition: 'left' | 'right';
-}>;
-
-export type BentoItem = {
-  title: string;
-  description: string;
-  span: 'normal' | 'wide';
-};
-
-export type BentoProps = WithLayout<{
-  title: string;
-  description: string;
-  items: BentoItem[];
 }>;
 
 export type LogoItem = {
@@ -168,11 +120,6 @@ export type ButtonProps = WithLayout<{
   href: string;
   variant: 'primary' | 'secondary' | 'outline';
   align: TextAlign;
-}>;
-
-export type TemplateProps = WithLayout<{
-  templateName: string;
-  children: Slot;
 }>;
 
 export type MapLocationMode = 'coordinates' | 'link';
@@ -373,11 +320,6 @@ export type CTA2Props = WithLayout<{
 
 export type EditorComponentProps = {
   Hero: HeroProps;
-  FeatureGrid: FeatureGridProps;
-  Card: CardProps;
-  Steps: StepsProps;
-  FeatureSplit: FeatureSplitProps;
-  Bento: BentoProps;
   Logos: LogosProps;
   Grid: GridProps;
   Flex: FlexProps;
@@ -387,7 +329,6 @@ export type EditorComponentProps = {
   RichText: RichTextProps;
   Button: ButtonProps;
   Map: MapProps;
-  Template: TemplateProps;
   Form: FormProps;
   InputField: InputFieldProps;
   TextareaField: TextareaFieldProps;
