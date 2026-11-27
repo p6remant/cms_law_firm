@@ -143,57 +143,34 @@ export type MapProps = WithLayout<{
   theme: 'dark' | 'light';
 }>;
 
-export type FormFieldWidth = 'full' | 'half';
-export type InputFieldType = 'text' | 'email' | 'tel' | 'number';
-export type FormButtonVariant = 'primary' | 'secondary' | 'outline';
-export type SelectOption = { label: string; value: string };
-
-export type InputFieldProps = {
-  name: string;
-  label: string;
-  type: InputFieldType;
-  placeholder?: string;
-  required?: boolean;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type TextareaFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  rows?: number;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type SelectFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  options: string;
-  required?: boolean;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type FormButtonProps = {
-  label: string;
-  variant: FormButtonVariant;
-  width: FormFieldWidth | 'auto';
-  align: TextAlign;
-};
-
-export type FormProps = WithLayout<{
-  title?: string;
+export type Contact1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  eyebrow?: string;
+  heading: string;
   description?: string;
-  submitEndpoint?: string;
-  submitMethod: 'POST' | 'GET';
+  nameLabel?: string;
+  emailLabel?: string;
+  messageLabel?: string;
+  submitLabel?: string;
   successMessage?: string;
   errorMessage?: string;
+}>;
+
+export type Contact2Props = WithLayout<{
   theme: 'dark' | 'light';
-  fields: Slot;
+  badge?: string;
+  heading: string;
+  description?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  hours?: string;
+  nameLabel?: string;
+  emailLabel?: string;
+  messageLabel?: string;
+  submitLabel?: string;
+  successMessage?: string;
+  errorMessage?: string;
 }>;
 
 export type SocialPlatform =
@@ -387,12 +364,124 @@ export type ClientPartnerProps = WithLayout<{
   theme: 'light' | 'dark';
 }>;
 
+export type MediaType = 'video' | 'image' | 'pdf';
+
+export type VideoAspectRatio = '16/9' | '4/3' | '21/9' | '1/1';
+
+export type VideoBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  videoUrl: string;
+  posterUrl?: string;
+  caption?: string;
+  autoPlayOnScroll: boolean;
+  loop: boolean;
+  muted: boolean;
+  showControls: boolean;
+  aspectRatio: VideoAspectRatio;
+  theme: 'light' | 'dark';
+}>;
+
+export type ImageAspectRatio = 'auto' | '16/9' | '4/3' | '1/1' | '3/4';
+export type ImageObjectFit = 'cover' | 'contain';
+
+export type ImageMediaItem = {
+  imageUrl: string;
+  alt: string;
+  caption?: string;
+  category?: string;
+};
+
+export type ImageBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  items: ImageMediaItem[];
+  columns: 1 | 2 | 3;
+  aspectRatio: ImageAspectRatio;
+  objectFit: ImageObjectFit;
+  rounded: boolean;
+  showCaptions: boolean;
+  enableLightbox: boolean;
+  theme: 'light' | 'dark';
+}>;
+
+/*
+export type PdfDisplayMode = 'viewer' | 'card';
+export type PdfPreviewHeight = 'sm' | 'md' | 'lg';
+
+export type PdfBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  pdfUrl: string;
+  fileName: string;
+  fileSize?: string;
+  pageCount?: string;
+  displayMode: PdfDisplayMode;
+  previewHeight: PdfPreviewHeight;
+  showDownloadButton: boolean;
+  downloadButtonLabel: string;
+  theme: 'light' | 'dark';
+}>;
+*/
+
+export type FeatureIconName =
+  | 'sparkles'
+  | 'shield'
+  | 'zap'
+  | 'layers'
+  | 'globe'
+  | 'lock'
+  | 'users'
+  | 'bar-chart'
+  | 'check-circle';
+
+export type FeatureItem = {
+  icon?: FeatureIconName;
+  title: string;
+  description: string;
+};
+
+export type Feature1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  eyebrow?: string;
+  heading: string;
+  description?: string;
+  columns: 2 | 3 | 4;
+  cardMode: 'card' | 'flat';
+  items: FeatureItem[];
+}>;
+
+export type Feature2Props = WithLayout<{
+  theme: 'dark' | 'light';
+  badge?: string;
+  heading: string;
+  description?: string;
+  items: FeatureItem[];
+  mediaPosition: 'left' | 'right';
+  imageUrl?: string;
+  imageAlt?: string;
+  ctaButton?: CTAButtonProps;
+}>;
+
 export type EditorComponentProps = {
   Header: HeaderProps;
   Hero: HeroProps;
   HeroSlider: HeroSliderProps;
   TeamSection: TeamSliderProps;
   ClientPartnerSection: ClientPartnerProps;
+  VideoUpload: VideoBlockProps;
+  ImageUpload: ImageBlockProps;
+  // PdfUpload: PdfBlockProps;
+  // FeatureGrid: FeatureGridProps;
+  // Card: CardProps;
+  // CTA: CTAProps;
+  // FAQ: FAQProps;
+  // Steps: StepsProps;
+  // FeatureSplit: FeatureSplitProps;
+  // Bento: BentoProps;
   Logos: LogosProps;
   Grid: GridProps;
   Flex: FlexProps;
@@ -402,11 +491,6 @@ export type EditorComponentProps = {
   RichText: RichTextProps;
   Button: ButtonProps;
   Map: MapProps;
-  Form: FormProps;
-  InputField: InputFieldProps;
-  TextareaField: TextareaFieldProps;
-  SelectField: SelectFieldProps;
-  FormButton: FormButtonProps;
   FooterSimple: FooterSimpleProps;
   Footer2: Footer2Props;
   CTA1: CTA1Props;
@@ -415,6 +499,9 @@ export type EditorComponentProps = {
   FAQ2: FAQ2Props;
   Stats1: Stats1Props;
   Stats2: Stats2Props;
+  Feature1: Feature1Props;
+  Feature2: Feature2Props;
+  Contact1: Contact1Props;
 };
 
 export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {

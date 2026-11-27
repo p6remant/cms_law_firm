@@ -1,17 +1,19 @@
 import type { ObjectField, SelectField } from '@puckeditor/core';
 import type {
-  FormButtonVariant,
-  FormFieldWidth,
-  InputFieldType,
+  ImageAspectRatio,
+  ImageObjectFit,
   LayoutFieldProps,
   MapAspectRatio,
   MapHeight,
   MapLocationMode,
+  // PdfDisplayMode,
+  // PdfPreviewHeight,
   SocialPlatform,
   ScrollDirection,
   SpacingValue,
   TeamImageShape,
   TextAlign,
+  VideoAspectRatio,
 } from '../types.ts';
 
 export const SPACING_OPTIONS: { label: string; value: SpacingValue }[] = [
@@ -55,38 +57,9 @@ export const MAP_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
   { label: 'Dark', value: 'dark' },
 ];
 
-export const INPUT_TYPE_OPTIONS: { label: string; value: InputFieldType }[] = [
-  { label: 'Text', value: 'text' },
-  { label: 'Email', value: 'email' },
-  { label: 'Phone (Tel)', value: 'tel' },
-  { label: 'Number', value: 'number' },
-];
-
-export const FIELD_WIDTH_OPTIONS: { label: string; value: FormFieldWidth }[] = [
-  { label: 'Full Width (100%)', value: 'full' },
-  { label: 'Half Width (50%)', value: 'half' },
-];
-
-export const BUTTON_WIDTH_OPTIONS: { label: string; value: FormFieldWidth | 'auto' }[] = [
-  { label: 'Auto', value: 'auto' },
-  { label: 'Full Width', value: 'full' },
-  { label: 'Half Width', value: 'half' },
-];
-
-export const FORM_BUTTON_VARIANT_OPTIONS: { label: string; value: FormButtonVariant }[] = [
-  { label: 'Primary', value: 'primary' },
-  { label: 'Secondary', value: 'secondary' },
-  { label: 'Outline', value: 'outline' },
-];
-
 export const FORM_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = [
   { label: 'Light', value: 'light' },
   { label: 'Dark', value: 'dark' },
-];
-
-export const FORM_METHOD_OPTIONS: { label: string; value: 'POST' | 'GET' }[] = [
-  { label: 'POST', value: 'POST' },
-  { label: 'GET', value: 'GET' },
 ];
 
 export const FOOTER_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = [
@@ -137,6 +110,45 @@ export const CLIENT_COLUMNS_OPTIONS: { label: string; value: 3 | 4 }[] = [
   { label: '3 Columns', value: 3 },
   { label: '4 Columns', value: 4 },
 ];
+
+export const VIDEO_ASPECT_RATIO_OPTIONS: { label: string; value: VideoAspectRatio }[] = [
+  { label: '16:9 (Widescreen)', value: '16/9' },
+  { label: '21:9 (Cinematic)', value: '21/9' },
+  { label: '4:3 (Standard)', value: '4/3' },
+  { label: '1:1 (Square)', value: '1/1' },
+];
+
+export const IMAGE_COLUMNS_OPTIONS: { label: string; value: 1 | 2 | 3 }[] = [
+  { label: '1 Column (Featured)', value: 1 },
+  { label: '2 Columns', value: 2 },
+  { label: '3 Columns', value: 3 },
+];
+
+export const IMAGE_ASPECT_RATIO_OPTIONS: { label: string; value: ImageAspectRatio }[] = [
+  { label: '16:9 (Landscape)', value: '16/9' },
+  { label: '4:3 (Standard)', value: '4/3' },
+  { label: '1:1 (Square)', value: '1/1' },
+  { label: '3:4 (Portrait)', value: '3/4' },
+  { label: 'Auto (Original Ratio)', value: 'auto' },
+];
+
+export const IMAGE_OBJECT_FIT_OPTIONS: { label: string; value: ImageObjectFit }[] = [
+  { label: 'Cover (Fill Frame)', value: 'cover' },
+  { label: 'Contain (Full Image)', value: 'contain' },
+];
+
+/*
+export const PDF_DISPLAY_MODE_OPTIONS: { label: string; value: PdfDisplayMode }[] = [
+  { label: 'Embedded Viewer + Card', value: 'viewer' },
+  { label: 'Compact Document Card', value: 'card' },
+];
+
+export const PDF_PREVIEW_HEIGHT_OPTIONS: { label: string; value: PdfPreviewHeight }[] = [
+  { label: 'Compact (384px)', value: 'sm' },
+  { label: 'Standard (512px)', value: 'md' },
+  { label: 'Expanded (672px)', value: 'lg' },
+];
+*/
 
 export function getTeamImageShapeClass(shape: TeamImageShape): string {
   switch (shape) {

@@ -1,4 +1,5 @@
-import type { FormFieldWidth, SelectOption } from '../types.ts';
+export type FormFieldWidth = 'full' | 'half';
+export type SelectOption = { label: string; value: string };
 
 /**
  * Parses raw option strings or arrays into a structured SelectOption array.

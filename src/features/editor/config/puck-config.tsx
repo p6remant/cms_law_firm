@@ -1,49 +1,48 @@
+import type { CustomField } from '@puckeditor/core';
 import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
+import { Contact1 } from '@/features/editor/components/contact';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
+import { Feature1, Feature2 } from '@/features/editor/components/feature';
 import {
   ClientPartnerBlock,
   HeaderBlock,
   HeroSliderBlock,
+  ImageBlock,
+  // PdfBlock,
   TeamSliderBlock,
+  VideoBlock,
 } from '@/features/editor/components/blocks';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import { MediaUploadInput } from '@/features/editor/components/MediaUploadField';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
-import {
-  FormButton,
-  FormContainer,
-  InputField,
-  SelectField,
-  TextareaField,
-} from '@/features/editor/components/form';
 import { MapBlock } from '@/features/editor/components/MapBlock';
 import { Stats1, Stats2 } from '@/features/editor/components/stats';
 import {
   ALIGN_OPTIONS,
   AUTO_SCROLL_INTERVAL_OPTIONS,
   BOOLEAN_RADIO_OPTIONS,
-  BUTTON_WIDTH_OPTIONS,
   CLIENT_COLUMNS_OPTIONS,
   DEFAULT_LAYOUT,
-  FIELD_WIDTH_OPTIONS,
-  FOOTER_THEME_OPTIONS,
-  FORM_BUTTON_VARIANT_OPTIONS,
-  FORM_METHOD_OPTIONS,
-  FORM_THEME_OPTIONS,
+  MAP_THEME_OPTIONS,
   getGridColumnsClass,
   getTextAlignClass,
-  INPUT_TYPE_OPTIONS,
+  IMAGE_ASPECT_RATIO_OPTIONS,
+  IMAGE_COLUMNS_OPTIONS,
+  IMAGE_OBJECT_FIT_OPTIONS,
   layoutField,
   MAP_ASPECT_RATIO_OPTIONS,
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
-  MAP_THEME_OPTIONS,
-  SOCIAL_PLATFORM_OPTIONS,
+  // PDF_DISPLAY_MODE_OPTIONS,
+  // PDF_PREVIEW_HEIGHT_OPTIONS,
   SCROLL_DIRECTION_OPTIONS,
+  SOCIAL_PLATFORM_OPTIONS,
   SPACING_OPTIONS,
   TEAM_CARDS_PER_VIEW_OPTIONS,
   TEAM_IMAGE_SHAPE_OPTIONS,
+  VIDEO_ASPECT_RATIO_OPTIONS,
 } from '@/features/editor/config/field-options';
 import {
   type CTAActionType,
@@ -52,20 +51,49 @@ import {
   type CTAFeatureItem,
   type FAQContactCTAProps,
   type FAQItem,
+  type FeatureIconName,
+  type FeatureItem,
   type FooterColumn,
   type FooterLinkItem,
+  type MediaType,
   type PuckConfig,
   type PuckPageData,
   type SocialLinkItem,
   type StatItem,
 } from '@/features/editor/types';
-import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
-import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
+import { DEFAULT_FOOTER_2_DATA, DEFAULT_FOOTER_SIMPLE_DATA } from '../utils/footer-utils';
+import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '../utils/cta-utils';
+import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '../utils/faq-utils';
+import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '../utils/stats-utils';
 import {
-  DEFAULT_FOOTER_2_DATA,
-  DEFAULT_FOOTER_SIMPLE_DATA,
-} from '@/features/editor/utils/footer-utils';
-import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '@/features/editor/utils/stats-utils';
+  DEFAULT_FEATURE1_DATA,
+  DEFAULT_FEATURE2_DATA,
+  FEATURE_ICON_NAMES,
+} from '../utils/feature-utils';
+import { DEFAULT_CONTACT1_DATA } from '../utils/contact-utils';
+
+function createMediaUploadField<T extends string | undefined = string>(options: {
+  label: string;
+  mediaType: MediaType;
+  placeholder?: string;
+}): CustomField<T> {
+  return {
+    type: 'custom',
+    label: options.label,
+    render: ({ value, onChange, readOnly }) => (
+      <MediaUploadInput
+        label={options.label}
+        mediaType={options.mediaType}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(nextValue) => {
+          onChange(nextValue as T);
+        }}
+        placeholder={options.placeholder}
+        readOnly={readOnly}
+      />
+    ),
+  };
+}
 
 const footerSocialLinksField: ArrayField<SocialLinkItem[]> = {
   type: 'array',
@@ -145,11 +173,6 @@ const footerBottomLinksField: ArrayField<FooterLinkItem[]> = {
   },
 };
 
-const CTA_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const CTA_ACTION_TYPE_OPTIONS: { label: string; value: CTAActionType }[] = [
   { label: 'Newsletter', value: 'newsletter' },
   { label: 'Buttons', value: 'button' },
@@ -194,11 +217,6 @@ const ctaFeaturesField: ArrayField<CTAFeatureItem[]> = {
   },
 };
 
-const FAQ_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const FAQ_ALLOW_MULTIPLE_OPTIONS: { label: string; value: boolean }[] = [
   { label: 'Single', value: false },
   { label: 'Multiple', value: true },
@@ -237,11 +255,6 @@ const faqContactCtaField: ObjectField<FAQContactCTAProps> = {
   },
 };
 
-const STATS_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const statItemsField: ArrayField<StatItem[]> = {
   type: 'array',
   label: 'Metrics',
@@ -261,6 +274,61 @@ const statItemsField: ArrayField<StatItem[]> = {
   },
 };
 
+const FEATURE_COLUMNS_OPTIONS: { label: string; value: 2 | 3 | 4 }[] = [
+  { label: '2 Columns', value: 2 },
+  { label: '3 Columns', value: 3 },
+  { label: '4 Columns', value: 4 },
+];
+
+const FEATURE_CARD_MODE_OPTIONS: { label: string; value: 'card' | 'flat' }[] = [
+  { label: 'Card (Bordered)', value: 'card' },
+  { label: 'Flat (Hairline)', value: 'flat' },
+];
+
+const FEATURE_MEDIA_POSITION_OPTIONS: { label: string; value: 'left' | 'right' }[] = [
+  { label: 'Left', value: 'left' },
+  { label: 'Right', value: 'right' },
+];
+
+const FEATURE_ICON_LABELS: Record<FeatureIconName, string> = {
+  sparkles: 'Sparkles',
+  shield: 'Shield',
+  zap: 'Zap',
+  layers: 'Layers',
+  globe: 'Globe',
+  lock: 'Lock',
+  users: 'Users',
+  'bar-chart': 'Bar Chart',
+  'check-circle': 'Check Circle',
+};
+
+const FEATURE_ICON_OPTIONS: { label: string; value: FeatureIconName }[] = FEATURE_ICON_NAMES.map(
+  (icon) => ({
+    label: FEATURE_ICON_LABELS[icon],
+    value: icon,
+  })
+);
+
+const featureItemsField: ArrayField<FeatureItem[]> = {
+  type: 'array',
+  label: 'Feature Items',
+  getItemSummary: (item) => item.title || 'Feature Item',
+  defaultItemProps: {
+    icon: 'check-circle',
+    title: 'New Feature',
+    description: 'Describe how this capability supports clear execution.',
+  },
+  arrayFields: {
+    icon: {
+      type: 'select',
+      label: 'Icon',
+      options: FEATURE_ICON_OPTIONS,
+    },
+    title: { type: 'text', label: 'Title' },
+    description: { type: 'textarea', label: 'Description' },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     navigation: {
@@ -273,7 +341,11 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+      components: ['Feature1', 'Feature2', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+    },
+    forms: {
+      title: 'Contact',
+      components: ['Contact1'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -293,6 +365,14 @@ export const puckConfig: PuckConfig = {
     //   title: 'Social Proof',
     //   components: ['ClientPartnerSection', 'Logos', 'Stats1', 'Stats2'],
     // },
+    media: {
+      title: 'Media & Documents',
+      components: [
+        'VideoUpload',
+        'ImageUpload',
+        // 'PdfUpload',
+      ],
+    },
     layout: {
       title: 'Layout',
       components: ['Grid', 'Flex', 'Space'],
@@ -304,10 +384,6 @@ export const puckConfig: PuckConfig = {
     interactive: {
       title: 'Actions',
       components: ['Button', 'Map'],
-    },
-    forms: {
-      title: 'Forms',
-      components: ['Form', 'InputField', 'SelectField', 'TextareaField', 'FormButton'],
     },
     footer: {
       title: 'Footers',
@@ -345,7 +421,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -570,7 +646,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -672,7 +748,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -715,6 +791,311 @@ export const puckConfig: PuckConfig = {
       },
       render: (props) => <ClientPartnerBlock {...props} />,
     },
+
+    VideoUpload: {
+      label: 'Video Media',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        videoUrl: createMediaUploadField({
+          label: 'Video File / URL',
+          mediaType: 'video',
+          placeholder: 'Paste MP4, WebM, YouTube, or Vimeo URL...',
+        }),
+        posterUrl: createMediaUploadField({
+          label: 'Poster Thumbnail (Optional)',
+          mediaType: 'image',
+          placeholder: 'Paste poster thumbnail image URL...',
+        }),
+        caption: { type: 'text', label: 'Video Caption', contentEditable: true },
+        autoPlayOnScroll: {
+          type: 'radio',
+          label: 'Play When Scrolled Into View',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        loop: {
+          type: 'radio',
+          label: 'Loop Video',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        muted: {
+          type: 'radio',
+          label: 'Start Muted',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showControls: {
+          type: 'radio',
+          label: 'Show Player Controls',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Aspect Ratio',
+          options: VIDEO_ASPECT_RATIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.videoUrl}
+              {fields.posterUrl}
+              {fields.caption}
+            </>
+          }
+          appearance={
+            <>
+              {fields.autoPlayOnScroll}
+              {fields.loop}
+              {fields.muted}
+              {fields.showControls}
+              {fields.aspectRatio}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'FIRM OVERVIEW',
+        title: 'Inside Our Global Litigation & Advisory Practice',
+        description:
+          'Watch how our multidisciplinary legal teams navigate high-stakes corporate transactions and courtroom advocacy. Video automatically plays as visitors scroll to this section.',
+        videoUrl:
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        posterUrl:
+          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80',
+        caption: 'Vanguard Legal LLP — Annual Practice Overview & Client Impact Briefing',
+        autoPlayOnScroll: true,
+        loop: true,
+        muted: true,
+        showControls: true,
+        aspectRatio: '16/9',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <VideoBlock {...props} />,
+    },
+    ImageUpload: {
+      label: 'Image Gallery & Upload',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        items: {
+          type: 'array',
+          label: 'Images',
+          getItemSummary: (item) => item.alt || 'Image Item',
+          defaultItemProps: {
+            imageUrl: '',
+            alt: 'Law Firm Office',
+            caption: 'Executive conference suite and legal research library.',
+            category: 'Office',
+          },
+          arrayFields: {
+            imageUrl: createMediaUploadField({
+              label: 'Image File / URL',
+              mediaType: 'image',
+              placeholder: 'Paste image URL or upload file...',
+            }),
+            alt: { type: 'text', label: 'Title / Alt Text', contentEditable: true },
+            caption: { type: 'textarea', label: 'Caption (Optional)', contentEditable: true },
+            category: { type: 'text', label: 'Badge / Category (Optional)' },
+          },
+        },
+        columns: {
+          type: 'select',
+          label: 'Grid Columns',
+          options: IMAGE_COLUMNS_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Image Aspect Ratio',
+          options: IMAGE_ASPECT_RATIO_OPTIONS,
+        },
+        objectFit: {
+          type: 'radio',
+          label: 'Image Fit',
+          options: IMAGE_OBJECT_FIT_OPTIONS,
+        },
+        rounded: {
+          type: 'radio',
+          label: 'Rounded Corners',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showCaptions: {
+          type: 'radio',
+          label: 'Show Captions',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        enableLightbox: {
+          type: 'radio',
+          label: 'Fullscreen Lightbox on Click',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.columns}
+              {fields.aspectRatio}
+              {fields.objectFit}
+              {fields.rounded}
+              {fields.showCaptions}
+              {fields.enableLightbox}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'VISUAL GALLERY',
+        title: 'Our Offices & Legal Chambers',
+        description:
+          'Explore our global headquarters, arbitration chambers, and client briefing centers.',
+        columns: 3,
+        aspectRatio: '4/3',
+        objectFit: 'cover',
+        rounded: true,
+        showCaptions: true,
+        enableLightbox: true,
+        items: [
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Manhattan Executive Boardroom',
+            caption: 'Primary arbitration and cross-border M&A briefing suite in New York.',
+            category: 'Headquarters',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=80',
+            alt: ' Appellate Litigation Practice',
+            caption: 'Dedicated trial preparation and appellate strategy team.',
+            category: 'Litigation',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Financial District Tower',
+            caption: 'Serving institutional clients across North America, Europe, and Asia.',
+            category: 'Global Presence',
+          },
+        ],
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <ImageBlock {...props} />,
+    },
+
+    /*
+    PdfUpload: {
+      label: 'PDF Document',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Section Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        pdfUrl: createMediaUploadField({
+          label: 'PDF File / URL',
+          mediaType: 'pdf',
+          placeholder: 'Upload a .pdf file or paste document URL...',
+        }),
+        fileName: { type: 'text', label: 'Document File Name', contentEditable: true },
+        fileSize: { type: 'text', label: 'File Size Label (e.g. 2.4 MB)' },
+        pageCount: { type: 'text', label: 'Page Count Label (e.g. 18 Pages)' },
+        showDownloadButton: {
+          type: 'radio',
+          label: 'Show Download Button',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        downloadButtonLabel: { type: 'text', label: 'Download Button Label' },
+        displayMode: {
+          type: 'radio',
+          label: 'Display Mode',
+          options: PDF_DISPLAY_MODE_OPTIONS,
+        },
+        previewHeight: {
+          type: 'select',
+          label: 'Embedded Viewer Height',
+          options: PDF_PREVIEW_HEIGHT_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.pdfUrl}
+              {fields.fileName}
+              {fields.fileSize}
+              {fields.pageCount}
+              {fields.downloadButtonLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.displayMode}
+              {fields.previewHeight}
+              {fields.showDownloadButton}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'LEGAL PUBLICATIONS & FILINGS',
+        title: '2026 Corporate Governance & Regulatory Compliance Guide',
+        description:
+          'Review or download our comprehensive legal briefing covering SEC disclosure standards, fiduciary duties, and cross-border compliance frameworks.',
+        pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileName: 'Corporate-Governance-Compliance-Guide-2026.pdf',
+        fileSize: '1.8 MB',
+        pageCount: '12 Pages',
+        displayMode: 'viewer',
+        previewHeight: 'md',
+        showDownloadButton: true,
+        downloadButtonLabel: 'Download PDF',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <PdfBlock {...props} />,
+    },
+    */
 
     Hero: {
       label: 'Hero',
@@ -1277,330 +1658,6 @@ export const puckConfig: PuckConfig = {
       render: (props) => <MapBlock {...props} />,
     },
 
-    Form: {
-      label: 'Form Container',
-      fields: {
-        title: { type: 'text', label: 'Form Title' },
-        description: { type: 'textarea', label: 'Description' },
-        submitEndpoint: { type: 'text', label: 'Submit Endpoint (URL)' },
-        submitMethod: {
-          type: 'radio',
-          label: 'Submit Method',
-          options: FORM_METHOD_OPTIONS,
-        },
-        successMessage: { type: 'text', label: 'Success Message' },
-        errorMessage: { type: 'text', label: 'Error Message' },
-        theme: {
-          type: 'radio',
-          label: 'Theme',
-          options: FORM_THEME_OPTIONS,
-        },
-        fields: {
-          type: 'slot',
-          allow: ['InputField', 'SelectField', 'TextareaField', 'FormButton'],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.fields}
-              {fields.submitEndpoint}
-              {fields.successMessage}
-            </>
-          }
-          appearance={
-            <>
-              {fields.theme}
-              {fields.submitMethod}
-              {fields.errorMessage}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        title: 'Request a Legal Consultation',
-        description:
-          'Fill out the form below to connect with an experienced attorney for a confidential case evaluation.',
-        submitEndpoint: '',
-        submitMethod: 'POST',
-        successMessage: 'Thank you! Your consultation request has been submitted.',
-        errorMessage: 'Unable to submit your request. Please try again or contact us directly.',
-        theme: 'light',
-        layout: { padding: '32px' },
-        fields: [
-          {
-            type: 'InputField',
-            props: {
-              name: 'full_name',
-              label: 'Full Name',
-              type: 'text',
-              placeholder: 'e.g. John Doe',
-              required: true,
-              helperText: '',
-              width: 'half',
-            },
-          },
-          {
-            type: 'InputField',
-            props: {
-              name: 'email',
-              label: 'Email Address',
-              type: 'email',
-              placeholder: 'e.g. john@example.com',
-              required: true,
-              helperText: '',
-              width: 'half',
-            },
-          },
-          {
-            type: 'SelectField',
-            props: {
-              name: 'practice_area',
-              label: 'Practice Area',
-              placeholder: 'Select practice area...',
-              options:
-                'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
-              required: false,
-              helperText: '',
-              width: 'full',
-            },
-          },
-          {
-            type: 'TextareaField',
-            props: {
-              name: 'message',
-              label: 'Case Details',
-              placeholder: 'Please briefly describe your legal inquiry...',
-              rows: 4,
-              required: true,
-              helperText: '',
-              width: 'full',
-            },
-          },
-          {
-            type: 'FormButton',
-            props: {
-              label: 'Submit Consultation Request',
-              variant: 'primary',
-              width: 'full',
-              align: 'left',
-            },
-          },
-        ],
-      },
-      render: (props) => <FormContainer {...props} />,
-    },
-
-    InputField: {
-      label: 'Input Field',
-      fields: {
-        name: { type: 'text', label: 'Field Name (HTML attribute)' },
-        label: { type: 'text', label: 'Field Label' },
-        type: {
-          type: 'select',
-          label: 'Input Type',
-          options: INPUT_TYPE_OPTIONS,
-        },
-        placeholder: { type: 'text', label: 'Placeholder' },
-        required: {
-          type: 'radio',
-          label: 'Required',
-          options: [
-            { label: 'Yes', value: true },
-            { label: 'No', value: false },
-          ],
-        },
-        helperText: { type: 'text', label: 'Helper Text' },
-        width: {
-          type: 'radio',
-          label: 'Width',
-          options: FIELD_WIDTH_OPTIONS,
-        },
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.label}
-              {fields.name}
-              {fields.placeholder}
-              {fields.helperText}
-            </>
-          }
-          appearance={
-            <>
-              {fields.type}
-              {fields.required}
-              {fields.width}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        name: 'full_name',
-        label: 'Full Name',
-        type: 'text',
-        placeholder: 'e.g. John Doe',
-        required: true,
-        helperText: '',
-        width: 'full',
-      },
-      render: (props) => <InputField {...props} />,
-    },
-
-    TextareaField: {
-      label: 'Textarea Field',
-      fields: {
-        name: { type: 'text', label: 'Field Name (HTML attribute)' },
-        label: { type: 'text', label: 'Field Label' },
-        placeholder: { type: 'text', label: 'Placeholder' },
-        rows: { type: 'number', label: 'Number of Rows', min: 2, max: 20 },
-        required: {
-          type: 'radio',
-          label: 'Required',
-          options: [
-            { label: 'Yes', value: true },
-            { label: 'No', value: false },
-          ],
-        },
-        helperText: { type: 'text', label: 'Helper Text' },
-        width: {
-          type: 'radio',
-          label: 'Width',
-          options: FIELD_WIDTH_OPTIONS,
-        },
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.label}
-              {fields.name}
-              {fields.placeholder}
-              {fields.helperText}
-            </>
-          }
-          appearance={
-            <>
-              {fields.rows}
-              {fields.required}
-              {fields.width}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        name: 'message',
-        label: 'Case Details',
-        placeholder: 'Please briefly describe your legal inquiry...',
-        rows: 4,
-        required: true,
-        helperText: '',
-        width: 'full',
-      },
-      render: (props) => <TextareaField {...props} />,
-    },
-
-    SelectField: {
-      label: 'Select Dropdown',
-      fields: {
-        name: { type: 'text', label: 'Field Name (HTML attribute)' },
-        label: { type: 'text', label: 'Field Label' },
-        placeholder: { type: 'text', label: 'Placeholder' },
-        options: { type: 'textarea', label: 'Options (Label | value per line)' },
-        required: {
-          type: 'radio',
-          label: 'Required',
-          options: [
-            { label: 'Yes', value: true },
-            { label: 'No', value: false },
-          ],
-        },
-        helperText: { type: 'text', label: 'Helper Text' },
-        width: {
-          type: 'radio',
-          label: 'Width',
-          options: FIELD_WIDTH_OPTIONS,
-        },
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.label}
-              {fields.name}
-              {fields.placeholder}
-              {fields.options}
-              {fields.helperText}
-            </>
-          }
-          appearance={
-            <>
-              {fields.required}
-              {fields.width}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        name: 'practice_area',
-        label: 'Practice Area',
-        placeholder: 'Select practice area...',
-        options:
-          'Corporate Law | corporate\nCommercial Litigation | litigation\nReal Estate & Land Use | real_estate\nEmployment & Labor | employment',
-        required: false,
-        helperText: '',
-        width: 'full',
-      },
-      render: (props) => <SelectField {...props} />,
-    },
-
-    FormButton: {
-      label: 'Form Submit Button',
-      fields: {
-        label: { type: 'text', label: 'Button Label' },
-        variant: {
-          type: 'radio',
-          label: 'Variant',
-          options: FORM_BUTTON_VARIANT_OPTIONS,
-        },
-        width: {
-          type: 'radio',
-          label: 'Width',
-          options: BUTTON_WIDTH_OPTIONS,
-        },
-        align: {
-          type: 'radio',
-          label: 'Alignment',
-          options: ALIGN_OPTIONS,
-        },
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={<>{fields.label}</>}
-          appearance={
-            <>
-              {fields.variant}
-              {fields.width}
-              {fields.align}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        label: 'Submit Consultation Request',
-        variant: 'primary',
-        width: 'full',
-        align: 'left',
-      },
-      render: (props) => <FormButton {...props} />,
-    },
-
     FooterSimple: {
       label: 'Footer 1 (Simple)',
       fields: {
@@ -1619,7 +1676,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FOOTER_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -1675,7 +1732,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FOOTER_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         showNewsletter: {
           type: 'radio',
@@ -1734,7 +1791,7 @@ export const puckConfig: PuckConfig = {
     CTA1: {
       label: 'CTA 1 (Newsletter / Action)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         actionType: { type: 'radio', label: 'Action Mode', options: CTA_ACTION_TYPE_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
@@ -1782,7 +1839,7 @@ export const puckConfig: PuckConfig = {
     CTA2: {
       label: 'CTA 2 (Dual Action & Features)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge Pill' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1818,7 +1875,7 @@ export const puckConfig: PuckConfig = {
     FAQ1: {
       label: 'FAQ 1 (Centered Accordion)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1862,7 +1919,7 @@ export const puckConfig: PuckConfig = {
     FAQ2: {
       label: 'FAQ 2 (Split Editorial)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge Pill' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1908,7 +1965,7 @@ export const puckConfig: PuckConfig = {
     Stats1: {
       label: 'Stats 1 (Metric Strip)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
         layout: layoutField,
       },
@@ -1930,7 +1987,7 @@ export const puckConfig: PuckConfig = {
     Stats2: {
       label: 'Stats 2 (Metric Cards)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
         layout: layoutField,
       },
@@ -1947,6 +2004,128 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_STATS2_DATA,
       render: (props) => <Stats2 {...props} />,
+    },
+
+    Feature1: {
+      label: 'Feature 1 (Feature Grid)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        columns: { type: 'radio', label: 'Grid Columns', options: FEATURE_COLUMNS_OPTIONS },
+        cardMode: { type: 'radio', label: 'Card Style', options: FEATURE_CARD_MODE_OPTIONS },
+        items: featureItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.columns}
+              {fields.cardMode}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FEATURE1_DATA,
+      render: (props) => <Feature1 {...props} />,
+    },
+
+    Feature2: {
+      label: 'Feature 2 (Split Showcase)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: featureItemsField,
+        mediaPosition: {
+          type: 'radio',
+          label: 'Media Position',
+          options: FEATURE_MEDIA_POSITION_OPTIONS,
+        },
+        imageUrl: { type: 'text', label: 'Image URL (Optional)' },
+        imageAlt: { type: 'text', label: 'Image Alt Text (Optional)' },
+        ctaButton: createCTAButtonField('CTA Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+              {fields.ctaButton}
+              {fields.imageUrl}
+              {fields.imageAlt}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.mediaPosition}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FEATURE2_DATA,
+      render: (props) => <Feature2 {...props} />,
+    },
+
+    Contact1: {
+      label: 'Contact 1 (Centered Form)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        nameLabel: { type: 'text', label: 'Name Field Label' },
+        emailLabel: { type: 'text', label: 'Email Field Label' },
+        messageLabel: { type: 'text', label: 'Message Field Label' },
+        submitLabel: { type: 'text', label: 'Submit Button Label' },
+        successMessage: { type: 'textarea', label: 'Success Message' },
+        errorMessage: { type: 'textarea', label: 'Error Message' },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.nameLabel}
+              {fields.emailLabel}
+              {fields.messageLabel}
+              {fields.submitLabel}
+              {fields.successMessage}
+              {fields.errorMessage}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CONTACT1_DATA,
+      render: (props) => <Contact1 {...props} />,
     },
   },
 };
