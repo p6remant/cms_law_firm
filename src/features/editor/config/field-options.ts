@@ -7,6 +7,7 @@ import type {
   MapAspectRatio,
   MapHeight,
   MapLocationMode,
+  SocialPlatform,
   ScrollDirection,
   SpacingValue,
   TeamImageShape,
@@ -86,6 +87,21 @@ export const FORM_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = 
 export const FORM_METHOD_OPTIONS: { label: string; value: 'POST' | 'GET' }[] = [
   { label: 'POST', value: 'POST' },
   { label: 'GET', value: 'GET' },
+];
+
+export const FOOTER_THEME_OPTIONS: { label: string; value: 'light' | 'dark' }[] = [
+  { label: 'Dark (Black)', value: 'dark' },
+  { label: 'Light (White)', value: 'light' },
+];
+
+export const SOCIAL_PLATFORM_OPTIONS: { label: string; value: SocialPlatform }[] = [
+  { label: 'LinkedIn', value: 'linkedin' },
+  { label: 'X (Twitter)', value: 'twitter' },
+  { label: 'Facebook', value: 'facebook' },
+  { label: 'YouTube', value: 'youtube' },
+  { label: 'Instagram', value: 'instagram' },
+  { label: 'GitHub', value: 'github' },
+  { label: 'Pinterest', value: 'pinterest' },
 ];
 
 export const BOOLEAN_RADIO_OPTIONS: { label: string; value: boolean }[] = [

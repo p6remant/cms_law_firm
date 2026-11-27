@@ -1,5 +1,7 @@
-import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
+import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
+import { CTA1, CTA2 } from '@/features/editor/components/cta';
+import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
 import {
   ClientPartnerBlock,
   HeaderBlock,
@@ -7,6 +9,7 @@ import {
   TeamSliderBlock,
 } from '@/features/editor/components/blocks';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
   FormButton,
   FormContainer,
@@ -15,6 +18,7 @@ import {
   TextareaField,
 } from '@/features/editor/components/form';
 import { MapBlock } from '@/features/editor/components/MapBlock';
+import { Stats1, Stats2 } from '@/features/editor/components/stats';
 import {
   ALIGN_OPTIONS,
   AUTO_SCROLL_INTERVAL_OPTIONS,
@@ -23,6 +27,7 @@ import {
   CLIENT_COLUMNS_OPTIONS,
   DEFAULT_LAYOUT,
   FIELD_WIDTH_OPTIONS,
+  FOOTER_THEME_OPTIONS,
   FORM_BUTTON_VARIANT_OPTIONS,
   FORM_METHOD_OPTIONS,
   FORM_THEME_OPTIONS,
@@ -34,30 +39,227 @@ import {
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
   MAP_THEME_OPTIONS,
+  SOCIAL_PLATFORM_OPTIONS,
   SCROLL_DIRECTION_OPTIONS,
   SPACING_OPTIONS,
   TEAM_CARDS_PER_VIEW_OPTIONS,
   TEAM_IMAGE_SHAPE_OPTIONS,
 } from '@/features/editor/config/field-options';
-import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
+import {
+  type CTAActionType,
+  type CTAButtonProps,
+  type CTAButtonVariant,
+  type CTAFeatureItem,
+  type FAQContactCTAProps,
+  type FAQItem,
+  type FooterColumn,
+  type FooterLinkItem,
+  type PuckConfig,
+  type PuckPageData,
+  type SocialLinkItem,
+  type StatItem,
+} from '@/features/editor/types';
+import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
+import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
+import {
+  DEFAULT_FOOTER_2_DATA,
+  DEFAULT_FOOTER_SIMPLE_DATA,
+} from '@/features/editor/utils/footer-utils';
+import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '@/features/editor/utils/stats-utils';
 
-function renderCardIcon(icon: CardIconName) {
-  const iconClass = 'h-4 w-4 text-slate-900';
-  switch (icon) {
-    case 'lock':
-      return <Lock className={iconClass} />;
-    case 'cloud':
-      return <Cloud className={iconClass} />;
-    case 'git-branch':
-      return <GitBranch className={iconClass} />;
-    case 'users':
-      return <Users className={iconClass} />;
-    case 'book-open':
-      return <BookOpen className={iconClass} />;
-    default:
-      return <Sparkles className={iconClass} />;
-  }
+const footerSocialLinksField: ArrayField<SocialLinkItem[]> = {
+  type: 'array',
+  label: 'Social Icons',
+  getItemSummary: (item) => item.label || item.platform,
+  defaultItemProps: {
+    platform: 'facebook',
+    href: 'https://facebook.com',
+    label: 'Facebook',
+  },
+  arrayFields: {
+    platform: {
+      type: 'select',
+      label: 'Platform',
+      options: SOCIAL_PLATFORM_OPTIONS,
+    },
+    href: { type: 'text', label: 'Profile URL' },
+    label: { type: 'text', label: 'Accessible Label (Optional)' },
+  },
+};
+
+const footerLinkColumnsField: ArrayField<FooterColumn[]> = {
+  type: 'array',
+  label: 'Link Columns',
+  getItemSummary: (item) => item.title || 'Link Column',
+  defaultItemProps: {
+    title: 'Links',
+    links: [{ label: 'New Link', href: '#', isExternal: false }],
+  },
+  arrayFields: {
+    title: { type: 'text', label: 'Column Title (Optional)' },
+    links: {
+      type: 'array',
+      label: 'Links',
+      getItemSummary: (item) => item.label || 'Link',
+      defaultItemProps: {
+        label: 'New Link',
+        href: '#',
+        isExternal: false,
+      },
+      arrayFields: {
+        label: { type: 'text', label: 'Link Label' },
+        href: { type: 'text', label: 'URL / Path' },
+        isExternal: {
+          type: 'radio',
+          label: 'Open in New Tab',
+          options: [
+            { label: 'Auto', value: false },
+            { label: 'External', value: true },
+          ],
+        },
+      },
+    },
+  },
+};
+
+const footerBottomLinksField: ArrayField<FooterLinkItem[]> = {
+  type: 'array',
+  label: 'Bottom Bar Links',
+  getItemSummary: (item) => item.label || 'Link',
+  defaultItemProps: {
+    label: 'Link',
+    href: '#',
+    isExternal: false,
+  },
+  arrayFields: {
+    label: { type: 'text', label: 'Link Label' },
+    href: { type: 'text', label: 'URL / Path' },
+    isExternal: {
+      type: 'radio',
+      label: 'Open in New Tab',
+      options: [
+        { label: 'Auto', value: false },
+        { label: 'External', value: true },
+      ],
+    },
+  },
+};
+
+const CTA_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const CTA_ACTION_TYPE_OPTIONS: { label: string; value: CTAActionType }[] = [
+  { label: 'Newsletter', value: 'newsletter' },
+  { label: 'Buttons', value: 'button' },
+];
+
+const CTA_BUTTON_VARIANT_OPTIONS: { label: string; value: CTAButtonVariant }[] = [
+  { label: 'Primary', value: 'primary' },
+  { label: 'Secondary', value: 'secondary' },
+  { label: 'Outline', value: 'outline' },
+  { label: 'Ghost', value: 'ghost' },
+];
+
+const CTA_TARGET_OPTIONS: { label: string; value: '_self' | '_blank' }[] = [
+  { label: 'Same Tab (_self)', value: '_self' },
+  { label: 'New Tab (_blank)', value: '_blank' },
+];
+
+function createCTAButtonField(label: string): ObjectField<CTAButtonProps> {
+  return {
+    type: 'object',
+    label,
+    collapsible: true,
+    defaultExpanded: true,
+    objectFields: {
+      text: { type: 'text', label: 'Button Text' },
+      href: { type: 'text', label: 'Link URL / Path' },
+      target: { type: 'radio', label: 'Open Target', options: CTA_TARGET_OPTIONS },
+      variant: { type: 'select', label: 'Button Variant', options: CTA_BUTTON_VARIANT_OPTIONS },
+    },
+  };
 }
+
+const ctaFeaturesField: ArrayField<CTAFeatureItem[]> = {
+  type: 'array',
+  label: 'Feature Highlights',
+  getItemSummary: (item) => item.text || 'Feature',
+  defaultItemProps: {
+    text: 'Dedicated support from start to finish',
+  },
+  arrayFields: {
+    text: { type: 'text', label: 'Feature Text' },
+  },
+};
+
+const FAQ_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const FAQ_ALLOW_MULTIPLE_OPTIONS: { label: string; value: boolean }[] = [
+  { label: 'Single', value: false },
+  { label: 'Multiple', value: true },
+];
+
+const faqItemsField: ArrayField<FAQItem[]> = {
+  type: 'array',
+  label: 'FAQ Items',
+  getItemSummary: (item) => item.question || 'FAQ Item',
+  defaultItemProps: {
+    question: 'New question?',
+    answer: 'Provide a clear, concise answer here.',
+  },
+  arrayFields: {
+    question: { type: 'text', label: 'Question' },
+    answer: { type: 'textarea', label: 'Answer' },
+  },
+};
+
+const faqContactCtaField: ObjectField<FAQContactCTAProps> = {
+  type: 'object',
+  label: 'Contact Card CTA',
+  collapsible: true,
+  defaultExpanded: true,
+  objectFields: {
+    title: { type: 'text', label: 'Card Title' },
+    description: { type: 'textarea', label: 'Card Description' },
+    buttonText: { type: 'text', label: 'Button Text' },
+    buttonHref: { type: 'text', label: 'Button URL / Path' },
+    buttonTarget: { type: 'radio', label: 'Open Target', options: CTA_TARGET_OPTIONS },
+    buttonVariant: {
+      type: 'select',
+      label: 'Button Variant',
+      options: CTA_BUTTON_VARIANT_OPTIONS,
+    },
+  },
+};
+
+const STATS_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const statItemsField: ArrayField<StatItem[]> = {
+  type: 'array',
+  label: 'Metrics',
+  getItemSummary: (item) =>
+    item.value && item.label
+      ? `${item.value} — ${item.label}`
+      : item.label || item.value || 'Metric',
+  defaultItemProps: {
+    value: '95%',
+    label: 'New Metric',
+    description: 'Brief supporting context for this figure.',
+  },
+  arrayFields: {
+    value: { type: 'text', label: 'Metric Value' },
+    label: { type: 'text', label: 'Metric Label' },
+    description: { type: 'textarea', label: 'Supporting Note (Optional)' },
+  },
+};
 
 export const puckConfig: PuckConfig = {
   categories: {
@@ -71,6 +273,11 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
+      components: ['CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+    },
+    socialProof: {
+      title: 'Social Proof',
+      components: ['Logos', 'Stats1', 'Stats2'],
       components: [
         'TeamSection',
         'FeatureGrid',
@@ -102,9 +309,9 @@ export const puckConfig: PuckConfig = {
       title: 'Forms',
       components: ['Form', 'InputField', 'SelectField', 'TextareaField', 'FormButton'],
     },
-    other: {
-      title: 'Other',
-      components: ['Template'],
+    navigation: {
+      title: 'Navigation & Footers',
+      components: ['FooterSimple', 'Footer2'],
     },
   },
   components: {
@@ -602,547 +809,6 @@ export const puckConfig: PuckConfig = {
       },
     },
 
-    FeatureGrid: {
-      label: 'Feature Grid',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        cards: { type: 'slot', allow: ['Card'] },
-        columns: {
-          type: 'select',
-          label: 'Columns',
-          options: [
-            { label: '2 Columns', value: 2 },
-            { label: '3 Columns', value: 3 },
-            { label: '4 Columns', value: 4 },
-          ],
-        },
-        cardMode: {
-          type: 'radio',
-          label: 'Card style',
-          options: [
-            { label: 'Card', value: 'card' },
-            { label: 'Flat', value: 'flat' },
-          ],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.cards}
-            </>
-          }
-          appearance={
-            <>
-              {fields.columns}
-              {fields.cardMode}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        title: 'Deploy instantly with Puck Cloud',
-        description:
-          'A modular, purpose-built backend for Puck, designed to get you into production. Use as much of it as you need.',
-        columns: 3,
-        cardMode: 'card',
-        layout: { padding: '48px' },
-        cards: [
-          {
-            type: 'Card',
-            props: {
-              title: 'AI',
-              description:
-                "Generate predictable pages with AI that's constrained to your components.",
-              icon: 'sparkles',
-              mode: 'card',
-              layout: DEFAULT_LAYOUT,
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              title: 'Auth (Coming Soon)',
-              description: 'Add managed authentication with access control, or integrate your own.',
-              icon: 'lock',
-              mode: 'card',
-              layout: DEFAULT_LAYOUT,
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              title: 'Assets (Coming Soon)',
-              description:
-                "A purpose-built asset store, powered by Cloudflare's best-in-class CDN.",
-              icon: 'cloud',
-              mode: 'card',
-              layout: DEFAULT_LAYOUT,
-            },
-          },
-        ],
-      },
-      render: ({ title, description, columns, cards: Cards, layout }) => (
-        <BlockLayout layout={layout} className="rounded-2xl bg-neutral-950 px-8 py-12 text-white">
-          <div className="mx-auto max-w-6xl space-y-10">
-            {(title || description) && (
-              <div className="mx-auto max-w-2xl space-y-3 text-center">
-                {title && (
-                  <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-                )}
-                {description && <p className="text-base text-neutral-400">{description}</p>}
-              </div>
-            )}
-            <Cards className={`grid gap-4 ${getGridColumnsClass(columns)}`} />
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    Card: {
-      label: 'Card',
-      fields: {
-        title: { type: 'text', label: 'Title', contentEditable: true },
-        description: { type: 'textarea', label: 'Description', contentEditable: true },
-        icon: {
-          type: 'select',
-          label: 'Icon',
-          options: [
-            { label: 'Sparkles (AI)', value: 'sparkles' },
-            { label: 'Lock (Auth)', value: 'lock' },
-            { label: 'Cloud (Assets)', value: 'cloud' },
-            { label: 'Branch (Branching)', value: 'git-branch' },
-            { label: 'Users (Multiplayer)', value: 'users' },
-            { label: 'Book (Pages)', value: 'book-open' },
-          ],
-        },
-        mode: {
-          type: 'radio',
-          label: 'Mode',
-          options: [
-            { label: 'Card', value: 'card' },
-            { label: 'Flat', value: 'flat' },
-          ],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.icon}
-            </>
-          }
-          appearance={
-            <>
-              {fields.mode}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        title: 'Assets (Coming Soon)',
-        description: "A purpose-built asset store, powered by Cloudflare's best-in-class CDN.",
-        icon: 'cloud',
-        mode: 'card',
-        layout: DEFAULT_LAYOUT,
-      },
-      render: ({ title, description, icon, mode, layout }) => (
-        <BlockLayout layout={layout}>
-          <div
-            className={
-              mode === 'card'
-                ? 'h-full rounded-xl border border-neutral-800 bg-neutral-900/90 p-6 text-white shadow-xs'
-                : 'h-full rounded-xl bg-transparent p-6 text-slate-900'
-            }
-          >
-            <div className="mb-5 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white">
-              {renderCardIcon(icon)}
-            </div>
-            <h3 className="text-base font-semibold">{title}</h3>
-            <p
-              className={`mt-2 text-xs leading-relaxed ${
-                mode === 'card' ? 'text-neutral-400' : 'text-slate-600'
-              }`}
-            >
-              {description}
-            </p>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    CTA: {
-      label: 'CTA',
-      fields: {
-        heading: { type: 'text', label: 'Heading' },
-        description: { type: 'textarea', label: 'Description' },
-        buttonLabel: { type: 'text', label: 'Button label' },
-        theme: {
-          type: 'radio',
-          label: 'Theme',
-          options: [
-            { label: 'Dark', value: 'dark' },
-            { label: 'Light', value: 'light' },
-          ],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.heading}
-              {fields.description}
-              {fields.buttonLabel}
-            </>
-          }
-          appearance={
-            <>
-              {fields.theme}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        heading: 'Ready to launch your legal CMS?',
-        description: 'Build, preview, and manage structured pages effortlessly.',
-        buttonLabel: 'Try Puck Cloud →',
-        theme: 'dark',
-        layout: { padding: '24px' },
-      },
-      render: ({ heading, description, buttonLabel, theme, layout }) => {
-        const isDark = theme === 'dark';
-        return (
-          <BlockLayout layout={layout}>
-            <div
-              className={`rounded-2xl p-8 text-center ${
-                isDark
-                  ? 'bg-neutral-950 text-white'
-                  : 'border border-slate-200 bg-slate-50 text-slate-900'
-              }`}
-            >
-              <div className="mx-auto max-w-2xl space-y-3">
-                <h2 className="text-2xl font-bold">{heading}</h2>
-                <p className={isDark ? 'text-sm text-neutral-400' : 'text-sm text-slate-600'}>
-                  {description}
-                </p>
-                <div className="pt-2">
-                  <span
-                    className={`inline-flex items-center rounded-lg px-4 py-2 text-xs font-semibold ${
-                      isDark ? 'bg-white text-neutral-950' : 'bg-slate-900 text-white'
-                    }`}
-                  >
-                    {buttonLabel}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </BlockLayout>
-        );
-      },
-    },
-
-    FAQ: {
-      label: 'FAQ',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        items: {
-          type: 'array',
-          label: 'Questions',
-          getItemSummary: (item) => item.question || 'Question',
-          defaultItemProps: {
-            question: 'How does the visual editor work?',
-            answer: 'Drag blocks from the left sidebar and configure them in the right panel.',
-          },
-          arrayFields: {
-            question: { type: 'text', label: 'Question' },
-            answer: { type: 'textarea', label: 'Answer' },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.items}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'Frequently Asked Questions',
-        description: 'Common questions about managing content and layouts.',
-        items: [
-          {
-            question: 'Can I customize every block?',
-            answer: 'Yes, each block exposes Content and Appearance settings on the right sidebar.',
-          },
-          {
-            question: 'Are changes responsive?',
-            answer: 'Yes, use the viewport switcher in the editor to preview mobile and desktop.',
-          },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, description, items, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="mx-auto max-w-3xl space-y-6">
-            <div className="space-y-2 text-center">
-              <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="text-sm text-slate-600">{description}</p>
-            </div>
-            <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-              {items.map((item, idx) => (
-                <div key={`${item.question}-${String(idx)}`} className="space-y-1.5 p-5">
-                  <h3 className="text-sm font-semibold text-slate-900">{item.question}</h3>
-                  <p className="text-sm text-slate-600">{item.answer}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    Steps: {
-      label: 'Steps',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        steps: {
-          type: 'array',
-          label: 'Steps',
-          getItemSummary: (item) => item.title || 'Step',
-          defaultItemProps: {
-            title: 'New Step',
-            description: 'Describe this step in your workflow.',
-          },
-          arrayFields: {
-            title: { type: 'text', label: 'Title' },
-            description: { type: 'textarea', label: 'Description' },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.steps}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'How It Works',
-        description: 'Get from draft to published page in three simple steps.',
-        steps: [
-          { title: 'Select a Block', description: 'Drag any section from the Blocks drawer.' },
-          { title: 'Customize Content', description: 'Edit copy and layout in the right panel.' },
-          { title: 'Publish Page', description: 'Preview and publish your page instantly.' },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, description, steps, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="space-y-6">
-            <div className="space-y-1 text-center">
-              <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="text-sm text-slate-600">{description}</p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {steps.map((step, index) => (
-                <div
-                  key={`${step.title}-${String(index)}`}
-                  className="rounded-xl border border-slate-200 bg-white p-6"
-                >
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
-                    {index + 1}
-                  </span>
-                  <h3 className="mt-3 text-base font-semibold text-slate-900">{step.title}</h3>
-                  <p className="mt-1 text-sm text-slate-600">{step.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    FeatureSplit: {
-      label: 'Feature Split',
-      fields: {
-        eyebrow: { type: 'text', label: 'Eyebrow' },
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        ctaLabel: { type: 'text', label: 'CTA label' },
-        imagePosition: {
-          type: 'radio',
-          label: 'Media position',
-          options: [
-            { label: 'Left', value: 'left' },
-            { label: 'Right', value: 'right' },
-          ],
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.eyebrow}
-              {fields.title}
-              {fields.description}
-              {fields.ctaLabel}
-            </>
-          }
-          appearance={
-            <>
-              {fields.imagePosition}
-              {fields.layout}
-            </>
-          }
-        />
-      ),
-      defaultProps: {
-        eyebrow: 'WORKFLOW',
-        title: 'Structured Legal Content at Scale',
-        description:
-          'Combine reusable design tokens with strict TypeScript components so editors stay on brand.',
-        ctaLabel: 'Learn More',
-        imagePosition: 'right',
-        layout: { padding: '24px' },
-      },
-      render: ({ eyebrow, title, description, ctaLabel, imagePosition, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="grid items-center gap-8 rounded-2xl border border-slate-200 bg-white p-8 md:grid-cols-2">
-            <div className={imagePosition === 'left' ? 'md:order-2' : 'md:order-1'}>
-              <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                {eyebrow}
-              </p>
-              <h2 className="mt-2 text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">{description}</p>
-              {ctaLabel && (
-                <div className="mt-5">
-                  <span className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white">
-                    {ctaLabel}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div
-              className={`flex h-52 items-center justify-center rounded-xl bg-slate-100 text-xs font-medium text-slate-500 ${
-                imagePosition === 'left' ? 'md:order-1' : 'md:order-2'
-              }`}
-            >
-              Feature Media Preview
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    Bento: {
-      label: 'Bento',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        description: { type: 'textarea', label: 'Description' },
-        items: {
-          type: 'array',
-          label: 'Bento cards',
-          getItemSummary: (item) => item.title || 'Bento item',
-          defaultItemProps: {
-            title: 'Bento Feature',
-            description: 'Highlight key platform capabilities.',
-            span: 'normal',
-          },
-          arrayFields: {
-            title: { type: 'text', label: 'Title' },
-            description: { type: 'textarea', label: 'Description' },
-            span: {
-              type: 'radio',
-              label: 'Column span',
-              options: [
-                { label: '1 Column', value: 'normal' },
-                { label: '2 Columns', value: 'wide' },
-              ],
-            },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.description}
-              {fields.items}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'Platform Highlights',
-        description: 'Everything needed to manage modern legal publications.',
-        items: [
-          {
-            title: 'Visual Drag & Drop',
-            description: 'Compose complex layouts without writing markup.',
-            span: 'wide',
-          },
-          {
-            title: 'Type-Safe Config',
-            description: 'Backed by strict TypeScript schemas.',
-            span: 'normal',
-          },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, description, items, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="text-sm text-slate-600">{description}</p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {items.map((item, idx) => (
-                <div
-                  key={`${item.title}-${String(idx)}`}
-                  className={`rounded-xl border border-slate-200 bg-slate-50 p-6 ${
-                    item.span === 'wide' ? 'md:col-span-2' : 'md:col-span-1'
-                  }`}
-                >
-                  <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
     Logos: {
       label: 'Logos',
       fields: {
@@ -1193,64 +859,6 @@ export const puckConfig: PuckConfig = {
                 >
                   {logo.name}
                 </span>
-              ))}
-            </div>
-          </div>
-        </BlockLayout>
-      ),
-    },
-
-    Stats: {
-      label: 'Stats',
-      fields: {
-        title: { type: 'text', label: 'Title' },
-        items: {
-          type: 'array',
-          label: 'Metrics',
-          getItemSummary: (item) => `${item.value} - ${item.label}`,
-          defaultItemProps: { label: 'Metric', value: '100%' },
-          arrayFields: {
-            value: { type: 'text', label: 'Value' },
-            label: { type: 'text', label: 'Label' },
-          },
-        },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.title}
-              {fields.items}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        title: 'Impact in Numbers',
-        items: [
-          { value: '99.9%', label: 'Uptime SLA' },
-          { value: '500+', label: 'Published Pages' },
-          { value: '24/7', label: 'Global Support' },
-        ],
-        layout: { padding: '24px' },
-      },
-      render: ({ title, items, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
-            {title && (
-              <h3 className="mb-4 text-center text-sm font-semibold text-slate-500">{title}</h3>
-            )}
-            <div className="grid gap-4 sm:grid-cols-3">
-              {items.map((stat, idx) => (
-                <div
-                  key={`${stat.label}-${String(idx)}`}
-                  className="rounded-lg bg-slate-50 p-4 text-center"
-                >
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                  <p className="mt-1 text-xs text-slate-600">{stat.label}</p>
-                </div>
               ))}
             </div>
           </div>
@@ -1669,36 +1277,6 @@ export const puckConfig: PuckConfig = {
       render: (props) => <MapBlock {...props} />,
     },
 
-    Template: {
-      label: 'Template',
-      fields: {
-        templateName: { type: 'text', label: 'Template name' },
-        children: { type: 'slot' },
-        layout: layoutField,
-      },
-      renderFields: ({ fields }) => (
-        <FieldTabs
-          content={
-            <>
-              {fields.templateName}
-              {fields.children}
-            </>
-          }
-          appearance={fields.layout}
-        />
-      ),
-      defaultProps: {
-        templateName: 'Custom Section Template',
-        children: [],
-        layout: DEFAULT_LAYOUT,
-      },
-      render: ({ children: ChildrenSlot, layout }) => (
-        <BlockLayout layout={layout}>
-          <ChildrenSlot className="space-y-4" />
-        </BlockLayout>
-      ),
-    },
-
     Form: {
       label: 'Form Container',
       fields: {
@@ -2022,6 +1600,354 @@ export const puckConfig: PuckConfig = {
       },
       render: (props) => <FormButton {...props} />,
     },
+
+    FooterSimple: {
+      label: 'Footer 1 (Simple)',
+      fields: {
+        logoText: { type: 'text', label: 'Logo Text (Default)' },
+        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
+        description: { type: 'textarea', label: 'Description / About' },
+        socialLinks: footerSocialLinksField,
+        contactTitle: { type: 'text', label: 'Contact Section Title' },
+        address: { type: 'textarea', label: 'Address (Multiline)' },
+        phone: { type: 'text', label: 'Telephone' },
+        email: { type: 'text', label: 'Email' },
+        linkColumns: footerLinkColumnsField,
+        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        bottomLinks: footerBottomLinksField,
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FOOTER_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.logoText}
+              {fields.logoUrl}
+              {fields.brandSubtitle}
+              {fields.description}
+              {fields.socialLinks}
+              {fields.contactTitle}
+              {fields.address}
+              {fields.phone}
+              {fields.email}
+              {fields.linkColumns}
+              {fields.copyrightNotice}
+              {fields.bottomLinks}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FOOTER_SIMPLE_DATA,
+      render: (props) => <FooterSimple {...props} />,
+    },
+
+    Footer2: {
+      label: 'Footer 2',
+      fields: {
+        logoText: { type: 'text', label: 'Logo Text (Default)' },
+        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
+        description: { type: 'textarea', label: 'Description / About' },
+        newsletterHeading: { type: 'text', label: 'Newsletter Heading' },
+        newsletterDescription: { type: 'textarea', label: 'Newsletter Description' },
+        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Newsletter Button Label' },
+        linkColumns: footerLinkColumnsField,
+        contactTitle: { type: 'text', label: 'Contact Section Title' },
+        address: { type: 'textarea', label: 'Address (Multiline)' },
+        phone: { type: 'text', label: 'Telephone' },
+        email: { type: 'text', label: 'Email' },
+        socialLinks: footerSocialLinksField,
+        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        bottomLinks: footerBottomLinksField,
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FOOTER_THEME_OPTIONS,
+        },
+        showNewsletter: {
+          type: 'radio',
+          label: 'Newsletter Strip',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        showBackToTop: {
+          type: 'radio',
+          label: 'Back to Top Button',
+          options: [
+            { label: 'Show', value: true },
+            { label: 'Hide', value: false },
+          ],
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.logoText}
+              {fields.logoUrl}
+              {fields.brandSubtitle}
+              {fields.description}
+              {fields.newsletterHeading}
+              {fields.newsletterDescription}
+              {fields.newsletterPlaceholder}
+              {fields.newsletterButtonText}
+              {fields.linkColumns}
+              {fields.contactTitle}
+              {fields.address}
+              {fields.phone}
+              {fields.email}
+              {fields.socialLinks}
+              {fields.copyrightNotice}
+              {fields.bottomLinks}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.showNewsletter}
+              {fields.showBackToTop}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FOOTER_2_DATA,
+      render: (props) => <Footer2 {...props} />,
+    },
+
+    CTA1: {
+      label: 'CTA 1 (Newsletter / Action)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        actionType: { type: 'radio', label: 'Action Mode', options: CTA_ACTION_TYPE_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Newsletter Submit Label' },
+        newsletterButtonVariant: {
+          type: 'select',
+          label: 'Newsletter Button Variant',
+          options: CTA_BUTTON_VARIANT_OPTIONS,
+        },
+        disclaimer: { type: 'text', label: 'Newsletter Disclaimer' },
+        primaryButton: createCTAButtonField('Primary Button'),
+        secondaryButton: createCTAButtonField('Secondary Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.actionType}
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.newsletterPlaceholder}
+              {fields.newsletterButtonText}
+              {fields.disclaimer}
+              {fields.primaryButton}
+              {fields.secondaryButton}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.newsletterButtonVariant}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CTA1_DATA,
+      render: (props) => <CTA1 {...props} />,
+    },
+
+    CTA2: {
+      label: 'CTA 2 (Dual Action & Features)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge Pill' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        features: ctaFeaturesField,
+        primaryButton: createCTAButtonField('Primary Button'),
+        secondaryButton: createCTAButtonField('Secondary Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.features}
+              {fields.primaryButton}
+              {fields.secondaryButton}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CTA2_DATA,
+      render: (props) => <CTA2 {...props} />,
+    },
+
+    FAQ1: {
+      label: 'FAQ 1 (Centered Accordion)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: faqItemsField,
+        defaultOpenIndex: {
+          type: 'number',
+          label: 'Default Open Index (-1 for none)',
+          min: -1,
+        },
+        allowMultipleOpen: {
+          type: 'radio',
+          label: 'Open Mode',
+          options: FAQ_ALLOW_MULTIPLE_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.defaultOpenIndex}
+              {fields.allowMultipleOpen}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FAQ1_DATA,
+      render: (props) => <FAQ1 {...props} />,
+    },
+
+    FAQ2: {
+      label: 'FAQ 2 (Split Editorial)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge Pill' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: faqItemsField,
+        contactCta: faqContactCtaField,
+        defaultOpenIndex: {
+          type: 'number',
+          label: 'Default Open Index (-1 for none)',
+          min: -1,
+        },
+        allowMultipleOpen: {
+          type: 'radio',
+          label: 'Open Mode',
+          options: FAQ_ALLOW_MULTIPLE_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+              {fields.contactCta}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.defaultOpenIndex}
+              {fields.allowMultipleOpen}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FAQ2_DATA,
+      render: (props) => <FAQ2 {...props} />,
+    },
+
+    Stats1: {
+      label: 'Stats 1 (Metric Strip)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        items: statItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={fields.items}
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_STATS1_DATA,
+      render: (props) => <Stats1 {...props} />,
+    },
+
+    Stats2: {
+      label: 'Stats 2 (Metric Cards)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        items: statItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={fields.items}
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_STATS2_DATA,
+      render: (props) => <Stats2 {...props} />,
+    },
   },
 };
 
@@ -2031,111 +1957,5 @@ export const initialPageData: PuckPageData = {
       title: 'Puck Example',
     },
   },
-  content: [
-    {
-      type: 'FeatureGrid',
-      props: {
-        id: 'FeatureGrid-initial-1',
-        title: 'Deploy instantly with Puck Cloud',
-        description:
-          'A modular, purpose-built backend for Puck, designed to get you into production. Use as much of it as you need.',
-        columns: 3,
-        cardMode: 'card',
-        layout: { padding: '48px' },
-        cards: [
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-1',
-              title: 'AI',
-              description:
-                "Generate predictable pages with AI that's constrained to your components.",
-              icon: 'sparkles',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-2',
-              title: 'Auth (Coming Soon)',
-              description: 'Add managed authentication with access control, or integrate your own.',
-              icon: 'lock',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-3',
-              title: 'Assets (Coming Soon)',
-              description:
-                "A purpose-built asset store, powered by Cloudflare's best-in-class CDN.",
-              icon: 'cloud',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-4',
-              title: 'Branching (Coming Soon)',
-              description:
-                'Isolated environments to iterate on your Puck config without breaking production data.',
-              icon: 'git-branch',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-5',
-              title: 'Multiplayer (Coming Soon)',
-              description: 'Bring real-time collaborative editing to your Puck instance.',
-              icon: 'users',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-          {
-            type: 'Card',
-            props: {
-              id: 'Card-initial-6',
-              title: 'Pages (Coming Soon)',
-              description: 'Store pages with built-in version history and data migration.',
-              icon: 'book-open',
-              mode: 'card',
-              layout: { padding: '0px' },
-            },
-          },
-        ],
-      },
-    },
-    {
-      type: 'Map',
-      props: {
-        id: 'Map-initial-1',
-        title: 'New York Headquarters',
-        eyebrow: 'Our Office',
-        description:
-          'Visit our central office in Manhattan for partner consultations, corporate litigation, and client meetings.',
-        address: '120 Broadway, Suite 300, New York, NY 10271',
-        locationMode: 'coordinates',
-        latitude: 40.7081,
-        longitude: -74.0109,
-        googleMapsUrl: '',
-        zoom: 15,
-        height: 'md',
-        aspectRatio: '16/9',
-        showDirectionsButton: true,
-        directionsButtonLabel: 'Get Directions',
-        theme: 'light',
-        layout: { padding: '48px' },
-      },
-    },
-  ],
+  content: [],
 };
