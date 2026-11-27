@@ -23,7 +23,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# GSD Workflow documentation
 .gsd/
-
