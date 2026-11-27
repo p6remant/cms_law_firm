@@ -316,6 +316,7 @@ export type CTA2Props = WithLayout<{
   features?: CTAFeatureItem[];
   primaryButton?: CTAButtonProps;
   secondaryButton?: CTAButtonProps;
+}>;
 export type ScrollDirection = 'left' | 'right';
 export type TeamImageShape = 'rounded' | 'square' | 'rectangle';
 
@@ -392,13 +393,6 @@ export type EditorComponentProps = {
   HeroSlider: HeroSliderProps;
   TeamSection: TeamSliderProps;
   ClientPartnerSection: ClientPartnerProps;
-  FeatureGrid: FeatureGridProps;
-  Card: CardProps;
-  CTA: CTAProps;
-  FAQ: FAQProps;
-  Steps: StepsProps;
-  FeatureSplit: FeatureSplitProps;
-  Bento: BentoProps;
   Logos: LogosProps;
   Grid: GridProps;
   Flex: FlexProps;
