@@ -296,12 +296,78 @@ export type ClientPartnerProps = WithLayout<{
   theme: 'light' | 'dark';
 }>;
 
+export type MediaType = 'video' | 'image' | 'pdf';
+
+export type VideoAspectRatio = '16/9' | '4/3' | '21/9' | '1/1';
+
+export type VideoBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  videoUrl: string;
+  posterUrl?: string;
+  caption?: string;
+  autoPlayOnScroll: boolean;
+  loop: boolean;
+  muted: boolean;
+  showControls: boolean;
+  aspectRatio: VideoAspectRatio;
+  theme: 'light' | 'dark';
+}>;
+
+export type ImageAspectRatio = 'auto' | '16/9' | '4/3' | '1/1' | '3/4';
+export type ImageObjectFit = 'cover' | 'contain';
+
+export type ImageMediaItem = {
+  imageUrl: string;
+  alt: string;
+  caption?: string;
+  category?: string;
+};
+
+export type ImageBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  items: ImageMediaItem[];
+  columns: 1 | 2 | 3;
+  aspectRatio: ImageAspectRatio;
+  objectFit: ImageObjectFit;
+  rounded: boolean;
+  showCaptions: boolean;
+  enableLightbox: boolean;
+  theme: 'light' | 'dark';
+}>;
+
+/*
+export type PdfDisplayMode = 'viewer' | 'card';
+export type PdfPreviewHeight = 'sm' | 'md' | 'lg';
+
+export type PdfBlockProps = WithLayout<{
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  pdfUrl: string;
+  fileName: string;
+  fileSize?: string;
+  pageCount?: string;
+  displayMode: PdfDisplayMode;
+  previewHeight: PdfPreviewHeight;
+  showDownloadButton: boolean;
+  downloadButtonLabel: string;
+  theme: 'light' | 'dark';
+}>;
+*/
+
 export type EditorComponentProps = {
   Header: HeaderProps;
   Hero: HeroProps;
   HeroSlider: HeroSliderProps;
   TeamSection: TeamSliderProps;
   ClientPartnerSection: ClientPartnerProps;
+  VideoUpload: VideoBlockProps;
+  ImageUpload: ImageBlockProps;
+  // PdfUpload: PdfBlockProps;
   FeatureGrid: FeatureGridProps;
   Card: CardProps;
   CTA: CTAProps;
