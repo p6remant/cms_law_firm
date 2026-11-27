@@ -2,6 +2,7 @@ import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
+import { Feature1 } from '@/features/editor/components/feature';
 import {
   ClientPartnerBlock,
   HeaderBlock,
@@ -52,6 +53,8 @@ import {
   type CTAFeatureItem,
   type FAQContactCTAProps,
   type FAQItem,
+  type FeatureIconName,
+  type FeatureItem,
   type FooterColumn,
   type FooterLinkItem,
   type PuckConfig,
@@ -61,6 +64,7 @@ import {
 } from '@/features/editor/types';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
 import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
+import { DEFAULT_FEATURE1_DATA, FEATURE_ICON_NAMES } from '@/features/editor/utils/feature-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -261,6 +265,61 @@ const statItemsField: ArrayField<StatItem[]> = {
   },
 };
 
+const FEATURE_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Dark', value: 'dark' },
+  { label: 'Light', value: 'light' },
+];
+
+const FEATURE_COLUMNS_OPTIONS: { label: string; value: 2 | 3 | 4 }[] = [
+  { label: '2 Columns', value: 2 },
+  { label: '3 Columns', value: 3 },
+  { label: '4 Columns', value: 4 },
+];
+
+const FEATURE_CARD_MODE_OPTIONS: { label: string; value: 'card' | 'flat' }[] = [
+  { label: 'Card (Bordered)', value: 'card' },
+  { label: 'Flat (Hairline)', value: 'flat' },
+];
+
+const FEATURE_ICON_LABELS: Record<FeatureIconName, string> = {
+  sparkles: 'Sparkles',
+  shield: 'Shield',
+  zap: 'Zap',
+  layers: 'Layers',
+  globe: 'Globe',
+  lock: 'Lock',
+  users: 'Users',
+  'bar-chart': 'Bar Chart',
+  'check-circle': 'Check Circle',
+};
+
+const FEATURE_ICON_OPTIONS: { label: string; value: FeatureIconName }[] = FEATURE_ICON_NAMES.map(
+  (icon) => ({
+    label: FEATURE_ICON_LABELS[icon],
+    value: icon,
+  })
+);
+
+const featureItemsField: ArrayField<FeatureItem[]> = {
+  type: 'array',
+  label: 'Feature Items',
+  getItemSummary: (item) => item.title || 'Feature Item',
+  defaultItemProps: {
+    icon: 'check-circle',
+    title: 'New Feature',
+    description: 'Describe how this capability supports clear execution.',
+  },
+  arrayFields: {
+    icon: {
+      type: 'select',
+      label: 'Icon',
+      options: FEATURE_ICON_OPTIONS,
+    },
+    title: { type: 'text', label: 'Title' },
+    description: { type: 'textarea', label: 'Description' },
+  },
+};
+
 export const puckConfig: PuckConfig = {
   categories: {
     navigation: {
@@ -273,7 +332,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+      components: ['Feature1', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1947,6 +2006,42 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_STATS2_DATA,
       render: (props) => <Stats2 {...props} />,
+    },
+
+    Feature1: {
+      label: 'Feature 1 (Feature Grid)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FEATURE_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        columns: { type: 'radio', label: 'Grid Columns', options: FEATURE_COLUMNS_OPTIONS },
+        cardMode: { type: 'radio', label: 'Card Style', options: FEATURE_CARD_MODE_OPTIONS },
+        items: featureItemsField,
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.columns}
+              {fields.cardMode}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FEATURE1_DATA,
+      render: (props) => <Feature1 {...props} />,
     },
   },
 };
