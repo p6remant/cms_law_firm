@@ -1,5 +1,6 @@
 import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
+import { Contact1 } from '@/features/editor/components/contact';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
 import { Feature1, Feature2 } from '@/features/editor/components/feature';
@@ -50,6 +51,7 @@ import {
   type SocialLinkItem,
   type StatItem,
 } from '@/features/editor/types';
+import { DEFAULT_CONTACT1_DATA } from '@/features/editor/utils/contact-utils';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
 import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
 import {
@@ -317,6 +319,11 @@ const featureItemsField: ArrayField<FeatureItem[]> = {
   },
 };
 
+const CONTACT_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+];
+
 export const puckConfig: PuckConfig = {
   categories: {
     navigation: {
@@ -330,6 +337,10 @@ export const puckConfig: PuckConfig = {
     content: {
       title: 'Content',
       components: ['Feature1', 'Feature2', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+    },
+    forms: {
+      title: 'Contact',
+      components: ['Contact1'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -1755,6 +1766,48 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FEATURE2_DATA,
       render: (props) => <Feature2 {...props} />,
+    },
+
+    Contact1: {
+      label: 'Contact 1 (Centered Form)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: CONTACT_THEME_OPTIONS },
+        eyebrow: { type: 'text', label: 'Eyebrow' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        nameLabel: { type: 'text', label: 'Name Field Label' },
+        emailLabel: { type: 'text', label: 'Email Field Label' },
+        messageLabel: { type: 'text', label: 'Message Field Label' },
+        submitLabel: { type: 'text', label: 'Submit Button Label' },
+        successMessage: { type: 'textarea', label: 'Success Message' },
+        errorMessage: { type: 'textarea', label: 'Error Message' },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.heading}
+              {fields.description}
+              {fields.nameLabel}
+              {fields.emailLabel}
+              {fields.messageLabel}
+              {fields.submitLabel}
+              {fields.successMessage}
+              {fields.errorMessage}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_CONTACT1_DATA,
+      render: (props) => <Contact1 {...props} />,
     },
   },
 };
