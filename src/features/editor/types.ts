@@ -455,6 +455,7 @@ export type EditorComponentProps = {
   Stats1: Stats1Props;
   Stats2: Stats2Props;
   Feature1: Feature1Props;
+  Feature2: Feature2Props;
 };
 
 export type PuckConfig = Omit<Config<EditorComponentProps>, 'components'> & {
