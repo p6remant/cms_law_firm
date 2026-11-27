@@ -143,57 +143,34 @@ export type MapProps = WithLayout<{
   theme: 'dark' | 'light';
 }>;
 
-export type FormFieldWidth = 'full' | 'half';
-export type InputFieldType = 'text' | 'email' | 'tel' | 'number';
-export type FormButtonVariant = 'primary' | 'secondary' | 'outline';
-export type SelectOption = { label: string; value: string };
-
-export type InputFieldProps = {
-  name: string;
-  label: string;
-  type: InputFieldType;
-  placeholder?: string;
-  required?: boolean;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type TextareaFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  rows?: number;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type SelectFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  options: string;
-  required?: boolean;
-  helperText?: string;
-  width: FormFieldWidth;
-};
-
-export type FormButtonProps = {
-  label: string;
-  variant: FormButtonVariant;
-  width: FormFieldWidth | 'auto';
-  align: TextAlign;
-};
-
-export type FormProps = WithLayout<{
-  title?: string;
+export type Contact1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  eyebrow?: string;
+  heading: string;
   description?: string;
-  submitEndpoint?: string;
-  submitMethod: 'POST' | 'GET';
+  nameLabel?: string;
+  emailLabel?: string;
+  messageLabel?: string;
+  submitLabel?: string;
   successMessage?: string;
   errorMessage?: string;
+}>;
+
+export type Contact2Props = WithLayout<{
   theme: 'dark' | 'light';
-  fields: Slot;
+  badge?: string;
+  heading: string;
+  description?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  hours?: string;
+  nameLabel?: string;
+  emailLabel?: string;
+  messageLabel?: string;
+  submitLabel?: string;
+  successMessage?: string;
+  errorMessage?: string;
 }>;
 
 export type SocialPlatform =
@@ -441,11 +418,6 @@ export type EditorComponentProps = {
   RichText: RichTextProps;
   Button: ButtonProps;
   Map: MapProps;
-  Form: FormProps;
-  InputField: InputFieldProps;
-  TextareaField: TextareaFieldProps;
-  SelectField: SelectFieldProps;
-  FormButton: FormButtonProps;
   FooterSimple: FooterSimpleProps;
   Footer2: Footer2Props;
   CTA1: CTA1Props;
