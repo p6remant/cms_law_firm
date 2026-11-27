@@ -387,6 +387,45 @@ export type ClientPartnerProps = WithLayout<{
   theme: 'light' | 'dark';
 }>;
 
+export type FeatureIconName =
+  | 'sparkles'
+  | 'shield'
+  | 'zap'
+  | 'layers'
+  | 'globe'
+  | 'lock'
+  | 'users'
+  | 'bar-chart'
+  | 'check-circle';
+
+export type FeatureItem = {
+  icon?: FeatureIconName;
+  title: string;
+  description: string;
+};
+
+export type Feature1Props = WithLayout<{
+  theme: 'dark' | 'light';
+  eyebrow?: string;
+  heading: string;
+  description?: string;
+  columns: 2 | 3 | 4;
+  cardMode: 'card' | 'flat';
+  items: FeatureItem[];
+}>;
+
+export type Feature2Props = WithLayout<{
+  theme: 'dark' | 'light';
+  badge?: string;
+  heading: string;
+  description?: string;
+  items: FeatureItem[];
+  mediaPosition: 'left' | 'right';
+  imageUrl?: string;
+  imageAlt?: string;
+  ctaButton?: CTAButtonProps;
+}>;
+
 export type EditorComponentProps = {
   Header: HeaderProps;
   Hero: HeroProps;
