@@ -2,7 +2,7 @@ import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
-import { Feature1 } from '@/features/editor/components/feature';
+import { Feature1, Feature2 } from '@/features/editor/components/feature';
 import {
   ClientPartnerBlock,
   HeaderBlock,
@@ -64,7 +64,11 @@ import {
 } from '@/features/editor/types';
 import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
 import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
-import { DEFAULT_FEATURE1_DATA, FEATURE_ICON_NAMES } from '@/features/editor/utils/feature-utils';
+import {
+  DEFAULT_FEATURE1_DATA,
+  DEFAULT_FEATURE2_DATA,
+  FEATURE_ICON_NAMES,
+} from '@/features/editor/utils/feature-utils';
 import {
   DEFAULT_FOOTER_2_DATA,
   DEFAULT_FOOTER_SIMPLE_DATA,
@@ -281,6 +285,11 @@ const FEATURE_CARD_MODE_OPTIONS: { label: string; value: 'card' | 'flat' }[] = [
   { label: 'Flat (Hairline)', value: 'flat' },
 ];
 
+const FEATURE_MEDIA_POSITION_OPTIONS: { label: string; value: 'left' | 'right' }[] = [
+  { label: 'Left', value: 'left' },
+  { label: 'Right', value: 'right' },
+];
+
 const FEATURE_ICON_LABELS: Record<FeatureIconName, string> = {
   sparkles: 'Sparkles',
   shield: 'Shield',
@@ -332,7 +341,7 @@ export const puckConfig: PuckConfig = {
     },
     content: {
       title: 'Content',
-      components: ['Feature1', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
+      components: ['Feature1', 'Feature2', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
     },
     socialProof: {
       title: 'Social Proof',
@@ -2042,6 +2051,50 @@ export const puckConfig: PuckConfig = {
       ),
       defaultProps: DEFAULT_FEATURE1_DATA,
       render: (props) => <Feature1 {...props} />,
+    },
+
+    Feature2: {
+      label: 'Feature 2 (Split Showcase)',
+      fields: {
+        theme: { type: 'radio', label: 'Theme', options: FEATURE_THEME_OPTIONS },
+        badge: { type: 'text', label: 'Badge' },
+        heading: { type: 'text', label: 'Heading' },
+        description: { type: 'textarea', label: 'Description' },
+        items: featureItemsField,
+        mediaPosition: {
+          type: 'radio',
+          label: 'Media Position',
+          options: FEATURE_MEDIA_POSITION_OPTIONS,
+        },
+        imageUrl: { type: 'text', label: 'Image URL (Optional)' },
+        imageAlt: { type: 'text', label: 'Image Alt Text (Optional)' },
+        ctaButton: createCTAButtonField('CTA Button'),
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.badge}
+              {fields.heading}
+              {fields.description}
+              {fields.items}
+              {fields.ctaButton}
+              {fields.imageUrl}
+              {fields.imageAlt}
+            </>
+          }
+          appearance={
+            <>
+              {fields.theme}
+              {fields.mediaPosition}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: DEFAULT_FEATURE2_DATA,
+      render: (props) => <Feature2 {...props} />,
     },
   },
 };
