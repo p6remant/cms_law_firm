@@ -278,21 +278,21 @@ export const puckConfig: PuckConfig = {
     socialProof: {
       title: 'Social Proof',
       components: ['Logos', 'Stats1', 'Stats2'],
-      components: [
-        'TeamSection',
-        'FeatureGrid',
-        'Card',
-        'CTA',
-        'FAQ',
-        'Steps',
-        'FeatureSplit',
-        'Bento',
-      ],
+      // components: [
+      //   'TeamSection',
+      //   'FeatureGrid',
+      //   'Card',
+      //   'CTA',
+      //   'FAQ',
+      //   'Steps',
+      //   'FeatureSplit',
+      //   'Bento',
+      // ],
     },
-    socialProof: {
-      title: 'Social Proof',
-      components: ['ClientPartnerSection', 'Logos', 'Stats'],
-    },
+    // socialProof: {
+    //   title: 'Social Proof',
+    //   components: ['ClientPartnerSection', 'Logos', 'Stats1', 'Stats2'],
+    // },
     layout: {
       title: 'Layout',
       components: ['Grid', 'Flex', 'Space'],
@@ -309,8 +309,8 @@ export const puckConfig: PuckConfig = {
       title: 'Forms',
       components: ['Form', 'InputField', 'SelectField', 'TextareaField', 'FormButton'],
     },
-    navigation: {
-      title: 'Navigation & Footers',
+    footer: {
+      title: 'Footers',
       components: ['FooterSimple', 'Footer2'],
     },
   },
