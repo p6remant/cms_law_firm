@@ -2,6 +2,12 @@ import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { CTA1, CTA2 } from '@/features/editor/components/cta';
 import { FAQ1, FAQ2 } from '@/features/editor/components/faq';
+import {
+  ClientPartnerBlock,
+  HeaderBlock,
+  HeroSliderBlock,
+  TeamSliderBlock,
+} from '@/features/editor/components/blocks';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import {
@@ -15,7 +21,10 @@ import { MapBlock } from '@/features/editor/components/MapBlock';
 import { Stats1, Stats2 } from '@/features/editor/components/stats';
 import {
   ALIGN_OPTIONS,
+  AUTO_SCROLL_INTERVAL_OPTIONS,
+  BOOLEAN_RADIO_OPTIONS,
   BUTTON_WIDTH_OPTIONS,
+  CLIENT_COLUMNS_OPTIONS,
   DEFAULT_LAYOUT,
   FIELD_WIDTH_OPTIONS,
   FOOTER_THEME_OPTIONS,
@@ -31,7 +40,10 @@ import {
   MAP_LOCATION_MODE_OPTIONS,
   MAP_THEME_OPTIONS,
   SOCIAL_PLATFORM_OPTIONS,
+  SCROLL_DIRECTION_OPTIONS,
   SPACING_OPTIONS,
+  TEAM_CARDS_PER_VIEW_OPTIONS,
+  TEAM_IMAGE_SHAPE_OPTIONS,
 } from '@/features/editor/config/field-options';
 import {
   type CTAActionType,
@@ -251,9 +263,13 @@ const statItemsField: ArrayField<StatItem[]> = {
 
 export const puckConfig: PuckConfig = {
   categories: {
+    navigation: {
+      title: 'Navigation',
+      components: ['Header'],
+    },
     introduction: {
       title: 'Introduction',
-      components: ['Hero'],
+      components: ['HeroSlider', 'Hero'],
     },
     content: {
       title: 'Content',
@@ -262,6 +278,20 @@ export const puckConfig: PuckConfig = {
     socialProof: {
       title: 'Social Proof',
       components: ['Logos', 'Stats1', 'Stats2'],
+      components: [
+        'TeamSection',
+        'FeatureGrid',
+        'Card',
+        'CTA',
+        'FAQ',
+        'Steps',
+        'FeatureSplit',
+        'Bento',
+      ],
+    },
+    socialProof: {
+      title: 'Social Proof',
+      components: ['ClientPartnerSection', 'Logos', 'Stats'],
     },
     layout: {
       title: 'Layout',
@@ -285,6 +315,407 @@ export const puckConfig: PuckConfig = {
     },
   },
   components: {
+    Header: {
+      label: 'Header',
+      fields: {
+        brandName: { type: 'text', label: 'Brand Name', contentEditable: true },
+        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        navItems: {
+          type: 'array',
+          label: 'Navigation Links',
+          getItemSummary: (item) => item.label || 'Nav Item',
+          defaultItemProps: {
+            label: 'Practice Areas',
+          },
+          arrayFields: {
+            label: { type: 'text', label: 'Label', contentEditable: true },
+          },
+        },
+        ctaLabel: { type: 'text', label: 'CTA Button Label', contentEditable: true },
+        showCta: {
+          type: 'radio',
+          label: 'Show CTA Button',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        sticky: {
+          type: 'radio',
+          label: 'Sticky Header',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.brandName}
+              {fields.logoUrl}
+              {fields.navItems}
+              {fields.ctaLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.showCta}
+              {fields.sticky}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        brandName: 'Vanguard Legal LLP',
+        logoUrl: '',
+        navItems: [
+          { label: 'Practice Areas' },
+          { label: 'Our Attorneys' },
+          { label: 'Case Results' },
+          { label: 'Insights' },
+          { label: 'Contact' },
+        ],
+        ctaLabel: 'Book Consultation',
+        showCta: true,
+        sticky: false,
+        theme: 'light',
+        layout: { padding: '16px' },
+      },
+      render: (props) => <HeaderBlock {...props} />,
+    },
+
+    HeroSlider: {
+      label: 'Hero Slider',
+      fields: {
+        slides: {
+          type: 'array',
+          label: 'Hero Slides',
+          getItemSummary: (item) => item.title || 'Slide',
+          defaultItemProps: {
+            badge: 'LEGAL EXCELLENCE',
+            title: 'Strategic Legal Counsel for Complex Challenges',
+            description:
+              'Trusted representation in corporate law, commercial litigation, and international arbitration.',
+            ctaLabel: 'Schedule a Consultation',
+            bgImage: '',
+          },
+          arrayFields: {
+            badge: { type: 'text', label: 'Badge', contentEditable: true },
+            title: { type: 'text', label: 'Title', contentEditable: true },
+            description: { type: 'textarea', label: 'Description', contentEditable: true },
+            ctaLabel: { type: 'text', label: 'CTA Button', contentEditable: true },
+            bgImage: { type: 'text', label: 'Background Image URL' },
+          },
+        },
+        showArrows: {
+          type: 'radio',
+          label: 'Prev / Next Buttons',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showDots: {
+          type: 'radio',
+          label: 'Dots Indicator',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        autoScroll: {
+          type: 'radio',
+          label: 'Auto Scroll',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        autoScrollInterval: {
+          type: 'select',
+          label: 'Scroll Speed',
+          options: AUTO_SCROLL_INTERVAL_OPTIONS,
+        },
+        scrollDirection: {
+          type: 'radio',
+          label: 'Scroll Direction',
+          options: SCROLL_DIRECTION_OPTIONS,
+        },
+        align: {
+          type: 'radio',
+          label: 'Text Alignment',
+          options: ALIGN_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: [
+            { label: 'Dark', value: 'dark' },
+            { label: 'Light', value: 'light' },
+          ],
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={<>{fields.slides}</>}
+          appearance={
+            <>
+              {fields.align}
+              {fields.theme}
+              {fields.showArrows}
+              {fields.showDots}
+              {fields.autoScroll}
+              {fields.autoScrollInterval}
+              {fields.scrollDirection}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        slides: [
+          {
+            badge: 'CORPORATE & LITIGATION',
+            title: 'Defending Your Interests with Precision and Integrity',
+            description:
+              'Decades of proven courtroom and boardroom experience guiding Fortune 500 enterprises and emerging leaders.',
+            ctaLabel: 'Request Case Evaluation',
+            bgImage:
+              'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80',
+          },
+          {
+            badge: 'GLOBAL REACH',
+            title: 'Cross-Border Transactions & Regulatory Compliance',
+            description:
+              'Navigating international frameworks with dedicated multidisciplinary legal teams across major financial hubs.',
+            ctaLabel: 'Explore Practice Areas',
+            bgImage:
+              'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80',
+          },
+          {
+            badge: 'CLIENT FIRST',
+            title: 'Modern Legal Solutions Tailored to Your Business',
+            description:
+              'Proactive risk management and strategic advisory designed to protect your organization at every stage.',
+            ctaLabel: 'Speak With a Partner',
+            bgImage: '',
+          },
+        ],
+        showArrows: true,
+        showDots: true,
+        autoScroll: true,
+        autoScrollInterval: 5000,
+        scrollDirection: 'right',
+        align: 'center',
+        theme: 'dark',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <HeroSliderBlock {...props} />,
+    },
+
+    TeamSection: {
+      label: 'Team Section',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        members: {
+          type: 'array',
+          label: 'Team Members',
+          getItemSummary: (item) => item.name || 'Team Member',
+          defaultItemProps: {
+            name: 'Alex Morgan',
+            role: 'Senior Partner',
+            bio: 'Specializes in corporate mergers, acquisitions, and securities law.',
+            imageUrl: '',
+          },
+          arrayFields: {
+            name: { type: 'text', label: 'Name', contentEditable: true },
+            role: { type: 'text', label: 'Role', contentEditable: true },
+            bio: { type: 'textarea', label: 'Bio', contentEditable: true },
+            imageUrl: { type: 'text', label: 'Image URL' },
+          },
+        },
+        imageShape: {
+          type: 'radio',
+          label: 'Image Shape',
+          options: TEAM_IMAGE_SHAPE_OPTIONS,
+        },
+        cardsPerView: {
+          type: 'select',
+          label: 'Cards Per View',
+          options: TEAM_CARDS_PER_VIEW_OPTIONS,
+        },
+        showArrows: {
+          type: 'radio',
+          label: 'Prev / Next Buttons',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showDots: {
+          type: 'radio',
+          label: 'Dots Indicator',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        autoScroll: {
+          type: 'radio',
+          label: 'Auto Scroll',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        autoScrollInterval: {
+          type: 'select',
+          label: 'Scroll Speed',
+          options: AUTO_SCROLL_INTERVAL_OPTIONS,
+        },
+        scrollDirection: {
+          type: 'radio',
+          label: 'Scroll Direction',
+          options: SCROLL_DIRECTION_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.members}
+            </>
+          }
+          appearance={
+            <>
+              {fields.imageShape}
+              {fields.cardsPerView}
+              {fields.theme}
+              {fields.showArrows}
+              {fields.showDots}
+              {fields.autoScroll}
+              {fields.autoScrollInterval}
+              {fields.scrollDirection}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'OUR ATTORNEYS',
+        title: 'Experienced Legal Leadership',
+        description:
+          'Meet the dedicated partners and attorneys committed to delivering exceptional outcomes for our clients.',
+        imageShape: 'rounded',
+        cardsPerView: 3,
+        members: [
+          {
+            name: 'Eleanor Vance, Esq.',
+            role: 'Managing Partner — Corporate Law',
+            bio: 'Over 20 years advising global enterprises on cross-border M&A and corporate governance.',
+            imageUrl:
+              'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+          },
+          {
+            name: 'Marcus Sterling, Esq.',
+            role: 'Head of Commercial Litigation',
+            bio: 'Trial lawyer with an extensive track record in high-stakes commercial disputes and arbitration.',
+            imageUrl:
+              'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
+          },
+          {
+            name: 'Sophia Chen, Esq.',
+            role: 'Partner — Intellectual Property',
+            bio: 'Protects technology portfolios, patents, and brand assets for leading innovators.',
+            imageUrl:
+              'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80',
+          },
+          {
+            name: 'David Thorne, Esq.',
+            role: 'Partner — Real Estate & Finance',
+            bio: 'Represents institutional investors and developers in complex commercial real estate transactions.',
+            imageUrl:
+              'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
+          },
+        ],
+        showArrows: true,
+        showDots: true,
+        autoScroll: false,
+        autoScrollInterval: 5000,
+        scrollDirection: 'right',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <TeamSliderBlock {...props} />,
+    },
+
+    ClientPartnerSection: {
+      label: 'Clients & Partners',
+      fields: {
+        title: { type: 'text', label: 'Heading', contentEditable: true },
+        items: {
+          type: 'array',
+          label: 'Clients & Partners',
+          getItemSummary: (item) => item.name || 'Partner',
+          defaultItemProps: {
+            name: 'New Partner',
+            imageUrl: '',
+          },
+          arrayFields: {
+            name: { type: 'text', label: 'Name', contentEditable: true },
+            imageUrl: { type: 'text', label: 'Logo / Image URL (Optional)' },
+          },
+        },
+        columns: {
+          type: 'radio',
+          label: 'Columns per Row',
+          options: CLIENT_COLUMNS_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.title}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.columns}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        title: 'Trusted by our customers & partners',
+        columns: 4,
+        items: [
+          { name: 'Google', imageUrl: '' },
+          { name: 'prismic', imageUrl: '' },
+          { name: 'netlify', imageUrl: '' },
+          { name: 'Lattice', imageUrl: '' },
+          { name: 'attio', imageUrl: '' },
+          { name: 'Clearbit', imageUrl: '' },
+          { name: 'hotjar', imageUrl: '' },
+          { name: 'draftbit', imageUrl: '' },
+          { name: 'Gem', imageUrl: '' },
+          { name: 'hopin', imageUrl: '' },
+          { name: 'outline', imageUrl: '' },
+          { name: 'Help Scout', imageUrl: '' },
+        ],
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <ClientPartnerBlock {...props} />,
+    },
+
     Hero: {
       label: 'Hero',
       fields: {

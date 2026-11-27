@@ -7,7 +7,7 @@ import {
   parseGoogleMapsUrl,
   resolveDirectionsUrl,
   resolveMapEmbedUrl,
-} from './map-location.ts';
+} from '../utils/map-location.ts';
 
 void describe('map-location utils', () => {
   void describe('DEFAULT_MAP_COORDINATES', () => {
@@ -257,7 +257,6 @@ void describe('map-location utils', () => {
     });
 
     void it('respects fallback precedence (coordinates > address > null)', () => {
-      // 1. Both coordinates and address -> coordinates win
       const coordWins = resolveDirectionsUrl({
         locationMode: 'coordinates',
         latitude: 40.7128,
@@ -269,7 +268,6 @@ void describe('map-location utils', () => {
         'https://www.google.com/maps/dir/?api=1&destination=40.7128,-74.006'
       );
 
-      // 2. Only address available -> address wins
       const addressWins = resolveDirectionsUrl({
         locationMode: 'coordinates',
         address: '123 Main St, New York, NY',
@@ -279,7 +277,6 @@ void describe('map-location utils', () => {
         'https://www.google.com/maps/dir/?api=1&destination=123%20Main%20St%2C%20New%20York%2C%20NY'
       );
 
-      // 3. Neither -> null
       const neither = resolveDirectionsUrl({
         locationMode: 'coordinates',
       });
