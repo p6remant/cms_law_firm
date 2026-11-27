@@ -1,3 +1,4 @@
+import type { CustomField } from '@puckeditor/core';
 import { type ArrayField, type ObjectField } from '@puckeditor/core';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { Contact1 } from '@/features/editor/components/contact';
@@ -8,9 +9,13 @@ import {
   ClientPartnerBlock,
   HeaderBlock,
   HeroSliderBlock,
+  ImageBlock,
+  // PdfBlock,
   TeamSliderBlock,
+  VideoBlock,
 } from '@/features/editor/components/blocks';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import { MediaUploadInput } from '@/features/editor/components/MediaUploadField';
 import { Footer2, FooterSimple } from '@/features/editor/components/footer';
 import { MapBlock } from '@/features/editor/components/MapBlock';
 import { Stats1, Stats2 } from '@/features/editor/components/stats';
@@ -20,20 +25,24 @@ import {
   BOOLEAN_RADIO_OPTIONS,
   CLIENT_COLUMNS_OPTIONS,
   DEFAULT_LAYOUT,
-  FOOTER_THEME_OPTIONS,
-  FORM_THEME_OPTIONS,
+  MAP_THEME_OPTIONS,
   getGridColumnsClass,
   getTextAlignClass,
+  IMAGE_ASPECT_RATIO_OPTIONS,
+  IMAGE_COLUMNS_OPTIONS,
+  IMAGE_OBJECT_FIT_OPTIONS,
   layoutField,
   MAP_ASPECT_RATIO_OPTIONS,
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
-  MAP_THEME_OPTIONS,
-  SOCIAL_PLATFORM_OPTIONS,
+  // PDF_DISPLAY_MODE_OPTIONS,
+  // PDF_PREVIEW_HEIGHT_OPTIONS,
   SCROLL_DIRECTION_OPTIONS,
+  SOCIAL_PLATFORM_OPTIONS,
   SPACING_OPTIONS,
   TEAM_CARDS_PER_VIEW_OPTIONS,
   TEAM_IMAGE_SHAPE_OPTIONS,
+  VIDEO_ASPECT_RATIO_OPTIONS,
 } from '@/features/editor/config/field-options';
 import {
   type CTAActionType,
@@ -46,24 +55,45 @@ import {
   type FeatureItem,
   type FooterColumn,
   type FooterLinkItem,
+  type MediaType,
   type PuckConfig,
   type PuckPageData,
   type SocialLinkItem,
   type StatItem,
 } from '@/features/editor/types';
-import { DEFAULT_CONTACT1_DATA } from '@/features/editor/utils/contact-utils';
-import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '@/features/editor/utils/cta-utils';
-import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '@/features/editor/utils/faq-utils';
+import { DEFAULT_FOOTER_2_DATA, DEFAULT_FOOTER_SIMPLE_DATA } from '../utils/footer-utils';
+import { DEFAULT_CTA1_DATA, DEFAULT_CTA2_DATA } from '../utils/cta-utils';
+import { DEFAULT_FAQ1_DATA, DEFAULT_FAQ2_DATA } from '../utils/faq-utils';
+import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '../utils/stats-utils';
 import {
   DEFAULT_FEATURE1_DATA,
   DEFAULT_FEATURE2_DATA,
   FEATURE_ICON_NAMES,
-} from '@/features/editor/utils/feature-utils';
-import {
-  DEFAULT_FOOTER_2_DATA,
-  DEFAULT_FOOTER_SIMPLE_DATA,
-} from '@/features/editor/utils/footer-utils';
-import { DEFAULT_STATS1_DATA, DEFAULT_STATS2_DATA } from '@/features/editor/utils/stats-utils';
+} from '../utils/feature-utils';
+import { DEFAULT_CONTACT1_DATA } from '../utils/contact-utils';
+
+function createMediaUploadField<T extends string | undefined = string>(options: {
+  label: string;
+  mediaType: MediaType;
+  placeholder?: string;
+}): CustomField<T> {
+  return {
+    type: 'custom',
+    label: options.label,
+    render: ({ value, onChange, readOnly }) => (
+      <MediaUploadInput
+        label={options.label}
+        mediaType={options.mediaType}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(nextValue) => {
+          onChange(nextValue as T);
+        }}
+        placeholder={options.placeholder}
+        readOnly={readOnly}
+      />
+    ),
+  };
+}
 
 const footerSocialLinksField: ArrayField<SocialLinkItem[]> = {
   type: 'array',
@@ -143,11 +173,6 @@ const footerBottomLinksField: ArrayField<FooterLinkItem[]> = {
   },
 };
 
-const CTA_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const CTA_ACTION_TYPE_OPTIONS: { label: string; value: CTAActionType }[] = [
   { label: 'Newsletter', value: 'newsletter' },
   { label: 'Buttons', value: 'button' },
@@ -192,11 +217,6 @@ const ctaFeaturesField: ArrayField<CTAFeatureItem[]> = {
   },
 };
 
-const FAQ_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const FAQ_ALLOW_MULTIPLE_OPTIONS: { label: string; value: boolean }[] = [
   { label: 'Single', value: false },
   { label: 'Multiple', value: true },
@@ -235,11 +255,6 @@ const faqContactCtaField: ObjectField<FAQContactCTAProps> = {
   },
 };
 
-const STATS_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
-
 const statItemsField: ArrayField<StatItem[]> = {
   type: 'array',
   label: 'Metrics',
@@ -258,11 +273,6 @@ const statItemsField: ArrayField<StatItem[]> = {
     description: { type: 'textarea', label: 'Supporting Note (Optional)' },
   },
 };
-
-const FEATURE_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Dark', value: 'dark' },
-  { label: 'Light', value: 'light' },
-];
 
 const FEATURE_COLUMNS_OPTIONS: { label: string; value: 2 | 3 | 4 }[] = [
   { label: '2 Columns', value: 2 },
@@ -319,11 +329,6 @@ const featureItemsField: ArrayField<FeatureItem[]> = {
   },
 };
 
-const CONTACT_THEME_OPTIONS: { label: string; value: 'dark' | 'light' }[] = [
-  { label: 'Light', value: 'light' },
-  { label: 'Dark', value: 'dark' },
-];
-
 export const puckConfig: PuckConfig = {
   categories: {
     navigation: {
@@ -360,6 +365,14 @@ export const puckConfig: PuckConfig = {
     //   title: 'Social Proof',
     //   components: ['ClientPartnerSection', 'Logos', 'Stats1', 'Stats2'],
     // },
+    media: {
+      title: 'Media & Documents',
+      components: [
+        'VideoUpload',
+        'ImageUpload',
+        // 'PdfUpload',
+      ],
+    },
     layout: {
       title: 'Layout',
       components: ['Grid', 'Flex', 'Space'],
@@ -408,7 +421,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -633,7 +646,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -735,7 +748,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FORM_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -778,6 +791,311 @@ export const puckConfig: PuckConfig = {
       },
       render: (props) => <ClientPartnerBlock {...props} />,
     },
+
+    VideoUpload: {
+      label: 'Video Media',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        videoUrl: createMediaUploadField({
+          label: 'Video File / URL',
+          mediaType: 'video',
+          placeholder: 'Paste MP4, WebM, YouTube, or Vimeo URL...',
+        }),
+        posterUrl: createMediaUploadField({
+          label: 'Poster Thumbnail (Optional)',
+          mediaType: 'image',
+          placeholder: 'Paste poster thumbnail image URL...',
+        }),
+        caption: { type: 'text', label: 'Video Caption', contentEditable: true },
+        autoPlayOnScroll: {
+          type: 'radio',
+          label: 'Play When Scrolled Into View',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        loop: {
+          type: 'radio',
+          label: 'Loop Video',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        muted: {
+          type: 'radio',
+          label: 'Start Muted',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showControls: {
+          type: 'radio',
+          label: 'Show Player Controls',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Aspect Ratio',
+          options: VIDEO_ASPECT_RATIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.videoUrl}
+              {fields.posterUrl}
+              {fields.caption}
+            </>
+          }
+          appearance={
+            <>
+              {fields.autoPlayOnScroll}
+              {fields.loop}
+              {fields.muted}
+              {fields.showControls}
+              {fields.aspectRatio}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'FIRM OVERVIEW',
+        title: 'Inside Our Global Litigation & Advisory Practice',
+        description:
+          'Watch how our multidisciplinary legal teams navigate high-stakes corporate transactions and courtroom advocacy. Video automatically plays as visitors scroll to this section.',
+        videoUrl:
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        posterUrl:
+          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80',
+        caption: 'Vanguard Legal LLP — Annual Practice Overview & Client Impact Briefing',
+        autoPlayOnScroll: true,
+        loop: true,
+        muted: true,
+        showControls: true,
+        aspectRatio: '16/9',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <VideoBlock {...props} />,
+    },
+    ImageUpload: {
+      label: 'Image Gallery & Upload',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        items: {
+          type: 'array',
+          label: 'Images',
+          getItemSummary: (item) => item.alt || 'Image Item',
+          defaultItemProps: {
+            imageUrl: '',
+            alt: 'Law Firm Office',
+            caption: 'Executive conference suite and legal research library.',
+            category: 'Office',
+          },
+          arrayFields: {
+            imageUrl: createMediaUploadField({
+              label: 'Image File / URL',
+              mediaType: 'image',
+              placeholder: 'Paste image URL or upload file...',
+            }),
+            alt: { type: 'text', label: 'Title / Alt Text', contentEditable: true },
+            caption: { type: 'textarea', label: 'Caption (Optional)', contentEditable: true },
+            category: { type: 'text', label: 'Badge / Category (Optional)' },
+          },
+        },
+        columns: {
+          type: 'select',
+          label: 'Grid Columns',
+          options: IMAGE_COLUMNS_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Image Aspect Ratio',
+          options: IMAGE_ASPECT_RATIO_OPTIONS,
+        },
+        objectFit: {
+          type: 'radio',
+          label: 'Image Fit',
+          options: IMAGE_OBJECT_FIT_OPTIONS,
+        },
+        rounded: {
+          type: 'radio',
+          label: 'Rounded Corners',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showCaptions: {
+          type: 'radio',
+          label: 'Show Captions',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        enableLightbox: {
+          type: 'radio',
+          label: 'Fullscreen Lightbox on Click',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.columns}
+              {fields.aspectRatio}
+              {fields.objectFit}
+              {fields.rounded}
+              {fields.showCaptions}
+              {fields.enableLightbox}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'VISUAL GALLERY',
+        title: 'Our Offices & Legal Chambers',
+        description:
+          'Explore our global headquarters, arbitration chambers, and client briefing centers.',
+        columns: 3,
+        aspectRatio: '4/3',
+        objectFit: 'cover',
+        rounded: true,
+        showCaptions: true,
+        enableLightbox: true,
+        items: [
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Manhattan Executive Boardroom',
+            caption: 'Primary arbitration and cross-border M&A briefing suite in New York.',
+            category: 'Headquarters',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=80',
+            alt: ' Appellate Litigation Practice',
+            caption: 'Dedicated trial preparation and appellate strategy team.',
+            category: 'Litigation',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Financial District Tower',
+            caption: 'Serving institutional clients across North America, Europe, and Asia.',
+            category: 'Global Presence',
+          },
+        ],
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <ImageBlock {...props} />,
+    },
+
+    /*
+    PdfUpload: {
+      label: 'PDF Document',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Section Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        pdfUrl: createMediaUploadField({
+          label: 'PDF File / URL',
+          mediaType: 'pdf',
+          placeholder: 'Upload a .pdf file or paste document URL...',
+        }),
+        fileName: { type: 'text', label: 'Document File Name', contentEditable: true },
+        fileSize: { type: 'text', label: 'File Size Label (e.g. 2.4 MB)' },
+        pageCount: { type: 'text', label: 'Page Count Label (e.g. 18 Pages)' },
+        showDownloadButton: {
+          type: 'radio',
+          label: 'Show Download Button',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        downloadButtonLabel: { type: 'text', label: 'Download Button Label' },
+        displayMode: {
+          type: 'radio',
+          label: 'Display Mode',
+          options: PDF_DISPLAY_MODE_OPTIONS,
+        },
+        previewHeight: {
+          type: 'select',
+          label: 'Embedded Viewer Height',
+          options: PDF_PREVIEW_HEIGHT_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: MAP_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.pdfUrl}
+              {fields.fileName}
+              {fields.fileSize}
+              {fields.pageCount}
+              {fields.downloadButtonLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.displayMode}
+              {fields.previewHeight}
+              {fields.showDownloadButton}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'LEGAL PUBLICATIONS & FILINGS',
+        title: '2026 Corporate Governance & Regulatory Compliance Guide',
+        description:
+          'Review or download our comprehensive legal briefing covering SEC disclosure standards, fiduciary duties, and cross-border compliance frameworks.',
+        pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileName: 'Corporate-Governance-Compliance-Guide-2026.pdf',
+        fileSize: '1.8 MB',
+        pageCount: '12 Pages',
+        displayMode: 'viewer',
+        previewHeight: 'md',
+        showDownloadButton: true,
+        downloadButtonLabel: 'Download PDF',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <PdfBlock {...props} />,
+    },
+    */
 
     Hero: {
       label: 'Hero',
@@ -1358,7 +1676,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FOOTER_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         layout: layoutField,
       },
@@ -1414,7 +1732,7 @@ export const puckConfig: PuckConfig = {
         theme: {
           type: 'radio',
           label: 'Theme',
-          options: FOOTER_THEME_OPTIONS,
+          options: MAP_THEME_OPTIONS,
         },
         showNewsletter: {
           type: 'radio',
@@ -1473,7 +1791,7 @@ export const puckConfig: PuckConfig = {
     CTA1: {
       label: 'CTA 1 (Newsletter / Action)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         actionType: { type: 'radio', label: 'Action Mode', options: CTA_ACTION_TYPE_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
@@ -1521,7 +1839,7 @@ export const puckConfig: PuckConfig = {
     CTA2: {
       label: 'CTA 2 (Dual Action & Features)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: CTA_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge Pill' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1557,7 +1875,7 @@ export const puckConfig: PuckConfig = {
     FAQ1: {
       label: 'FAQ 1 (Centered Accordion)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1601,7 +1919,7 @@ export const puckConfig: PuckConfig = {
     FAQ2: {
       label: 'FAQ 2 (Split Editorial)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FAQ_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge Pill' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1647,7 +1965,7 @@ export const puckConfig: PuckConfig = {
     Stats1: {
       label: 'Stats 1 (Metric Strip)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
         layout: layoutField,
       },
@@ -1669,7 +1987,7 @@ export const puckConfig: PuckConfig = {
     Stats2: {
       label: 'Stats 2 (Metric Cards)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: STATS_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
         layout: layoutField,
       },
@@ -1691,7 +2009,7 @@ export const puckConfig: PuckConfig = {
     Feature1: {
       label: 'Feature 1 (Feature Grid)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FEATURE_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1727,7 +2045,7 @@ export const puckConfig: PuckConfig = {
     Feature2: {
       label: 'Feature 2 (Split Showcase)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: FEATURE_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
@@ -1771,7 +2089,7 @@ export const puckConfig: PuckConfig = {
     Contact1: {
       label: 'Contact 1 (Centered Form)',
       fields: {
-        theme: { type: 'radio', label: 'Theme', options: CONTACT_THEME_OPTIONS },
+        theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },

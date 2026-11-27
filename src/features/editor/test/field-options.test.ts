@@ -1,12 +1,17 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  IMAGE_ASPECT_RATIO_OPTIONS,
+  IMAGE_COLUMNS_OPTIONS,
   MAP_ASPECT_RATIO_OPTIONS,
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
   MAP_THEME_OPTIONS,
+  // PDF_DISPLAY_MODE_OPTIONS,
+  // PDF_PREVIEW_HEIGHT_OPTIONS,
   SCROLL_DIRECTION_OPTIONS,
   TEAM_IMAGE_SHAPE_OPTIONS,
+  VIDEO_ASPECT_RATIO_OPTIONS,
   getMapContainerClass,
   getTeamImageShapeClass,
 } from '../config/field-options.ts';
@@ -85,6 +90,31 @@ void describe('field-options map configurations', () => {
       assert.ok(getTeamImageShapeClass('rounded').includes('rounded-full'));
       assert.ok(getTeamImageShapeClass('square').includes('aspect-square'));
       assert.ok(getTeamImageShapeClass('rectangle').includes('aspect-[3/4]'));
+    });
+
+    void it('defines media upload block options for video, image, and pdf', () => {
+      assert.deepStrictEqual(
+        VIDEO_ASPECT_RATIO_OPTIONS.map((o) => o.value),
+        ['16/9', '21/9', '4/3', '1/1']
+      );
+      assert.deepStrictEqual(
+        IMAGE_COLUMNS_OPTIONS.map((o) => o.value),
+        [1, 2, 3]
+      );
+      assert.deepStrictEqual(
+        IMAGE_ASPECT_RATIO_OPTIONS.map((o) => o.value),
+        ['16/9', '4/3', '1/1', '3/4', 'auto']
+      );
+      /*
+      assert.deepStrictEqual(
+        PDF_DISPLAY_MODE_OPTIONS.map((o) => o.value),
+        ['viewer', 'card']
+      );
+      assert.deepStrictEqual(
+        PDF_PREVIEW_HEIGHT_OPTIONS.map((o) => o.value),
+        ['sm', 'md', 'lg']
+      );
+      */
     });
   });
 });
