@@ -1,12 +1,17 @@
+import type { CustomField } from '@puckeditor/core';
 import { BookOpen, Cloud, GitBranch, Lock, Sparkles, Users } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import {
   ClientPartnerBlock,
   HeaderBlock,
   HeroSliderBlock,
+  ImageBlock,
+  // PdfBlock,
   TeamSliderBlock,
+  VideoBlock,
 } from '@/features/editor/components/blocks';
 import { FieldTabs } from '@/features/editor/components/FieldTabs';
+import { MediaUploadInput } from '@/features/editor/components/MediaUploadField';
 import {
   FormButton,
   FormContainer,
@@ -28,18 +33,52 @@ import {
   FORM_THEME_OPTIONS,
   getGridColumnsClass,
   getTextAlignClass,
+  IMAGE_ASPECT_RATIO_OPTIONS,
+  IMAGE_COLUMNS_OPTIONS,
+  IMAGE_OBJECT_FIT_OPTIONS,
   INPUT_TYPE_OPTIONS,
   layoutField,
   MAP_ASPECT_RATIO_OPTIONS,
   MAP_HEIGHT_OPTIONS,
   MAP_LOCATION_MODE_OPTIONS,
   MAP_THEME_OPTIONS,
+  // PDF_DISPLAY_MODE_OPTIONS,
+  // PDF_PREVIEW_HEIGHT_OPTIONS,
   SCROLL_DIRECTION_OPTIONS,
   SPACING_OPTIONS,
   TEAM_CARDS_PER_VIEW_OPTIONS,
   TEAM_IMAGE_SHAPE_OPTIONS,
+  VIDEO_ASPECT_RATIO_OPTIONS,
 } from '@/features/editor/config/field-options';
-import { type CardIconName, type PuckConfig, type PuckPageData } from '@/features/editor/types';
+import {
+  type CardIconName,
+  type MediaType,
+  type PuckConfig,
+  type PuckPageData,
+} from '@/features/editor/types';
+
+function createMediaUploadField<T extends string | undefined = string>(options: {
+  label: string;
+  mediaType: MediaType;
+  placeholder?: string;
+}): CustomField<T> {
+  return {
+    type: 'custom',
+    label: options.label,
+    render: ({ value, onChange, readOnly }) => (
+      <MediaUploadInput
+        label={options.label}
+        mediaType={options.mediaType}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(nextValue) => {
+          onChange(nextValue as T);
+        }}
+        placeholder={options.placeholder}
+        readOnly={readOnly}
+      />
+    ),
+  };
+}
 
 function renderCardIcon(icon: CardIconName) {
   const iconClass = 'h-4 w-4 text-slate-900';
@@ -85,6 +124,14 @@ export const puckConfig: PuckConfig = {
     socialProof: {
       title: 'Social Proof',
       components: ['ClientPartnerSection', 'Logos', 'Stats'],
+    },
+    media: {
+      title: 'Media & Documents',
+      components: [
+        'VideoUpload',
+        'ImageUpload',
+        // 'PdfUpload',
+      ],
     },
     layout: {
       title: 'Layout',
@@ -508,6 +555,312 @@ export const puckConfig: PuckConfig = {
       },
       render: (props) => <ClientPartnerBlock {...props} />,
     },
+
+    VideoUpload: {
+      label: 'Video Media',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        videoUrl: createMediaUploadField({
+          label: 'Video File / URL',
+          mediaType: 'video',
+          placeholder: 'Paste MP4, WebM, YouTube, or Vimeo URL...',
+        }),
+        posterUrl: createMediaUploadField({
+          label: 'Poster Thumbnail (Optional)',
+          mediaType: 'image',
+          placeholder: 'Paste poster thumbnail image URL...',
+        }),
+        caption: { type: 'text', label: 'Video Caption', contentEditable: true },
+        autoPlayOnScroll: {
+          type: 'radio',
+          label: 'Play When Scrolled Into View',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        loop: {
+          type: 'radio',
+          label: 'Loop Video',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        muted: {
+          type: 'radio',
+          label: 'Start Muted',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showControls: {
+          type: 'radio',
+          label: 'Show Player Controls',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Aspect Ratio',
+          options: VIDEO_ASPECT_RATIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.videoUrl}
+              {fields.posterUrl}
+              {fields.caption}
+            </>
+          }
+          appearance={
+            <>
+              {fields.autoPlayOnScroll}
+              {fields.loop}
+              {fields.muted}
+              {fields.showControls}
+              {fields.aspectRatio}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'FIRM OVERVIEW',
+        title: 'Inside Our Global Litigation & Advisory Practice',
+        description:
+          'Watch how our multidisciplinary legal teams navigate high-stakes corporate transactions and courtroom advocacy. Video automatically plays as visitors scroll to this section.',
+        videoUrl:
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        posterUrl:
+          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80',
+        caption: 'Vanguard Legal LLP — Annual Practice Overview & Client Impact Briefing',
+        autoPlayOnScroll: true,
+        loop: true,
+        muted: true,
+        showControls: true,
+        aspectRatio: '16/9',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <VideoBlock {...props} />,
+    },
+
+    ImageUpload: {
+      label: 'Image Gallery & Upload',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        items: {
+          type: 'array',
+          label: 'Images',
+          getItemSummary: (item) => item.alt || 'Image Item',
+          defaultItemProps: {
+            imageUrl: '',
+            alt: 'Law Firm Office',
+            caption: 'Executive conference suite and legal research library.',
+            category: 'Office',
+          },
+          arrayFields: {
+            imageUrl: createMediaUploadField({
+              label: 'Image File / URL',
+              mediaType: 'image',
+              placeholder: 'Paste image URL or upload file...',
+            }),
+            alt: { type: 'text', label: 'Title / Alt Text', contentEditable: true },
+            caption: { type: 'textarea', label: 'Caption (Optional)', contentEditable: true },
+            category: { type: 'text', label: 'Badge / Category (Optional)' },
+          },
+        },
+        columns: {
+          type: 'select',
+          label: 'Grid Columns',
+          options: IMAGE_COLUMNS_OPTIONS,
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Image Aspect Ratio',
+          options: IMAGE_ASPECT_RATIO_OPTIONS,
+        },
+        objectFit: {
+          type: 'radio',
+          label: 'Image Fit',
+          options: IMAGE_OBJECT_FIT_OPTIONS,
+        },
+        rounded: {
+          type: 'radio',
+          label: 'Rounded Corners',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        showCaptions: {
+          type: 'radio',
+          label: 'Show Captions',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        enableLightbox: {
+          type: 'radio',
+          label: 'Fullscreen Lightbox on Click',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.items}
+            </>
+          }
+          appearance={
+            <>
+              {fields.columns}
+              {fields.aspectRatio}
+              {fields.objectFit}
+              {fields.rounded}
+              {fields.showCaptions}
+              {fields.enableLightbox}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'VISUAL GALLERY',
+        title: 'Our Offices & Legal Chambers',
+        description:
+          'Explore our global headquarters, arbitration chambers, and client briefing centers.',
+        columns: 3,
+        aspectRatio: '4/3',
+        objectFit: 'cover',
+        rounded: true,
+        showCaptions: true,
+        enableLightbox: true,
+        items: [
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Manhattan Executive Boardroom',
+            caption: 'Primary arbitration and cross-border M&A briefing suite in New York.',
+            category: 'Headquarters',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=80',
+            alt: ' Appellate Litigation Practice',
+            caption: 'Dedicated trial preparation and appellate strategy team.',
+            category: 'Litigation',
+          },
+          {
+            imageUrl:
+              'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80',
+            alt: 'Financial District Tower',
+            caption: 'Serving institutional clients across North America, Europe, and Asia.',
+            category: 'Global Presence',
+          },
+        ],
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <ImageBlock {...props} />,
+    },
+
+    /*
+    PdfUpload: {
+      label: 'PDF Document',
+      fields: {
+        eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
+        title: { type: 'text', label: 'Section Title', contentEditable: true },
+        description: { type: 'textarea', label: 'Description', contentEditable: true },
+        pdfUrl: createMediaUploadField({
+          label: 'PDF File / URL',
+          mediaType: 'pdf',
+          placeholder: 'Upload a .pdf file or paste document URL...',
+        }),
+        fileName: { type: 'text', label: 'Document File Name', contentEditable: true },
+        fileSize: { type: 'text', label: 'File Size Label (e.g. 2.4 MB)' },
+        pageCount: { type: 'text', label: 'Page Count Label (e.g. 18 Pages)' },
+        showDownloadButton: {
+          type: 'radio',
+          label: 'Show Download Button',
+          options: BOOLEAN_RADIO_OPTIONS,
+        },
+        downloadButtonLabel: { type: 'text', label: 'Download Button Label' },
+        displayMode: {
+          type: 'radio',
+          label: 'Display Mode',
+          options: PDF_DISPLAY_MODE_OPTIONS,
+        },
+        previewHeight: {
+          type: 'select',
+          label: 'Embedded Viewer Height',
+          options: PDF_PREVIEW_HEIGHT_OPTIONS,
+        },
+        theme: {
+          type: 'radio',
+          label: 'Theme',
+          options: FORM_THEME_OPTIONS,
+        },
+        layout: layoutField,
+      },
+      renderFields: ({ fields }) => (
+        <FieldTabs
+          content={
+            <>
+              {fields.eyebrow}
+              {fields.title}
+              {fields.description}
+              {fields.pdfUrl}
+              {fields.fileName}
+              {fields.fileSize}
+              {fields.pageCount}
+              {fields.downloadButtonLabel}
+            </>
+          }
+          appearance={
+            <>
+              {fields.displayMode}
+              {fields.previewHeight}
+              {fields.showDownloadButton}
+              {fields.theme}
+              {fields.layout}
+            </>
+          }
+        />
+      ),
+      defaultProps: {
+        eyebrow: 'LEGAL PUBLICATIONS & FILINGS',
+        title: '2026 Corporate Governance & Regulatory Compliance Guide',
+        description:
+          'Review or download our comprehensive legal briefing covering SEC disclosure standards, fiduciary duties, and cross-border compliance frameworks.',
+        pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileName: 'Corporate-Governance-Compliance-Guide-2026.pdf',
+        fileSize: '1.8 MB',
+        pageCount: '12 Pages',
+        displayMode: 'viewer',
+        previewHeight: 'md',
+        showDownloadButton: true,
+        downloadButtonLabel: 'Download PDF',
+        theme: 'light',
+        layout: { padding: '32px' },
+      },
+      render: (props) => <PdfBlock {...props} />,
+    },
+    */
 
     Hero: {
       label: 'Hero',
