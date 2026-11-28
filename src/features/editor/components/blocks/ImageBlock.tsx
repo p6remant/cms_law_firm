@@ -1,12 +1,8 @@
-import { type ChangeEvent, useRef, useState } from 'react';
-import { Expand, Image as ImageIcon, Upload, X } from 'lucide-react';
+import { useState } from 'react';
+import { Expand, Image as ImageIcon, X } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import type { ImageBlockProps, ImageMediaItem } from '@/features/editor/types';
-import {
-  getAcceptAttribute,
-  getImageAspectRatioClass,
-  validateMediaFile,
-} from '@/features/editor/utils/media-utils';
+import { getImageAspectRatioClass } from '@/features/editor/utils/media-utils';
 
 export function ImageBlock({
   eyebrow,
@@ -22,12 +18,7 @@ export function ImageBlock({
   layout,
 }: ImageBlockProps) {
   const isDark = theme === 'dark';
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [uploadedItems, setUploadedItems] = useState<ImageMediaItem[]>([]);
   const [lightboxItem, setLightboxItem] = useState<ImageMediaItem | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-
-  const combinedItems = [...items, ...uploadedItems];
 
   const gridColsClass =
     columns === 1
@@ -38,35 +29,6 @@ export function ImageBlock({
 
   const aspectClass = getImageAspectRatioClass(aspectRatio);
   const fitClass = objectFit === 'contain' ? 'object-contain' : 'object-cover';
-
-  const handleUploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files;
-    if (!fileList || fileList.length === 0) return;
-
-    const newImages: ImageMediaItem[] = [];
-    for (const file of Array.from(fileList)) {
-      const validation = validateMediaFile(file, 'image');
-      if (!validation.valid) {
-        setUploadError(validation.error ?? 'Invalid image format.');
-        continue;
-      }
-
-      const objectUrl = URL.createObjectURL(file);
-      const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]+/g, ' ');
-      newImages.push({
-        imageUrl: objectUrl,
-        alt: cleanName || 'Uploaded Image',
-        caption: file.name,
-        category: 'Uploaded',
-      });
-    }
-
-    if (newImages.length > 0) {
-      setUploadError(null);
-      setUploadedItems((prev) => [...prev, ...newImages]);
-    }
-    event.target.value = '';
-  };
 
   const hasHeader = Boolean(eyebrow || title || description);
 
@@ -79,61 +41,33 @@ export function ImageBlock({
       }`}
     >
       <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept={getAcceptAttribute('image')}
-          onChange={handleUploadFiles}
-          className="hidden"
-        />
+        {hasHeader && (
+          <div className="mb-6 max-w-2xl space-y-2">
+            {eyebrow && (
+              <p
+                className={`text-xs font-semibold tracking-widest uppercase ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`}
+              >
+                {eyebrow}
+              </p>
+            )}
+            {title && <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>}
+            {description && (
+              <p
+                className={`text-sm leading-relaxed sm:text-base ${
+                  isDark ? 'text-slate-300' : 'text-slate-600'
+                }`}
+              >
+                {description}
+              </p>
+            )}
+          </div>
+        )}
 
-        <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          {hasHeader ? (
-            <div className="max-w-2xl space-y-2">
-              {eyebrow && (
-                <p
-                  className={`text-xs font-semibold tracking-widest uppercase ${
-                    isDark ? 'text-slate-400' : 'text-slate-500'
-                  }`}
-                >
-                  {eyebrow}
-                </p>
-              )}
-              {title && <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>}
-              {description && (
-                <p
-                  className={`text-sm leading-relaxed sm:text-base ${
-                    isDark ? 'text-slate-300' : 'text-slate-600'
-                  }`}
-                >
-                  {description}
-                </p>
-              )}
-            </div>
-          ) : (
-            <div />
-          )}
-
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className={`inline-flex items-center gap-1.5 self-start border px-3.5 py-2 text-xs font-semibold transition-colors sm:self-auto ${
-              isDark
-                ? 'border-neutral-800 bg-neutral-900 text-slate-200 hover:bg-neutral-800'
-                : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Upload className="h-3.5 w-3.5" />
-            <span>Upload Images</span>
-          </button>
-        </div>
-
-        {uploadError && <p className="mb-4 text-xs font-medium text-rose-500">{uploadError}</p>}
-
-        {combinedItems.length > 0 ? (
+        {items.length > 0 ? (
           <div className={`grid gap-6 ${gridColsClass}`}>
-            {combinedItems.map((item, idx) => {
+            {items.map((item, idx) => {
               const hasImage = Boolean(item.imageUrl.trim());
               return (
                 <figure
@@ -213,19 +147,8 @@ export function ImageBlock({
             <ImageIcon className="h-10 w-10 text-slate-400" />
             <p className="mt-3 text-sm font-semibold">No Images Added</p>
             <p className="mt-1 max-w-sm text-xs opacity-80">
-              Upload high-resolution photos, awards, or courtroom exhibits using the sidebar or
-              button below.
+              Add images using the Content tab in the right sidebar.
             </p>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className={`mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold ${
-                isDark ? 'bg-white text-neutral-950' : 'bg-slate-900 text-white'
-              }`}
-            >
-              <Upload className="h-3.5 w-3.5" />
-              <span>Upload Image Files</span>
-            </button>
           </div>
         )}
 

@@ -1,14 +1,9 @@
-import { type ChangeEvent, useRef, useState } from 'react';
-import { Eye, Film, Maximize2, Pause, Play, Upload, Volume2, VolumeX } from 'lucide-react';
+import { useRef } from 'react';
+import { Film, Maximize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { BlockLayout } from '@/features/editor/components/BlockLayout';
 import { useVideoScrollPlay } from '@/features/editor/hooks/useVideoScrollPlay';
 import type { VideoBlockProps } from '@/features/editor/types';
-import {
-  getAcceptAttribute,
-  getVideoAspectRatioClass,
-  resolveVideoSource,
-  validateMediaFile,
-} from '@/features/editor/utils/media-utils';
+import { getVideoAspectRatioClass, resolveVideoSource } from '@/features/editor/utils/media-utils';
 
 export function VideoBlock({
   eyebrow,
@@ -29,55 +24,19 @@ export function VideoBlock({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [localVideoOverride, setLocalVideoOverride] = useState<{
-    basePropUrl: string;
-    objectUrl: string;
-    fileName: string;
-  } | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-
-  const activeVideoUrl =
-    localVideoOverride && localVideoOverride.basePropUrl === videoUrl
-      ? localVideoOverride.objectUrl
-      : videoUrl;
-
-  const resolvedSource = resolveVideoSource(activeVideoUrl);
+  const resolvedSource = resolveVideoSource(videoUrl);
   const aspectClass = getVideoAspectRatioClass(aspectRatio);
 
-  const { isInView, isPlaying, isMuted, setIsPlaying, togglePlay, toggleMute } = useVideoScrollPlay(
-    {
-      containerRef,
-      videoRef,
-      iframeRef,
-      videoKind: resolvedSource.kind,
-      autoPlayOnScroll,
-      initialMuted: muted,
-      src: resolvedSource.src,
-    }
-  );
-
-  const handleLocalUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const validation = validateMediaFile(file, 'video');
-    if (!validation.valid) {
-      setUploadError(validation.error ?? 'Invalid video file.');
-      event.target.value = '';
-      return;
-    }
-
-    setUploadError(null);
-    const objectUrl = URL.createObjectURL(file);
-    setLocalVideoOverride({
-      basePropUrl: videoUrl,
-      objectUrl,
-      fileName: file.name,
-    });
-    event.target.value = '';
-  };
+  const { isPlaying, isMuted, setIsPlaying, togglePlay, toggleMute } = useVideoScrollPlay({
+    containerRef,
+    videoRef,
+    iframeRef,
+    videoKind: resolvedSource.kind,
+    autoPlayOnScroll,
+    initialMuted: muted,
+    src: resolvedSource.src,
+  });
 
   const handleFullscreen = () => {
     const el = videoRef.current ?? containerRef.current;
@@ -98,69 +57,27 @@ export function VideoBlock({
       }`}
     >
       <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={getAcceptAttribute('video')}
-          onChange={handleLocalUpload}
-          className="hidden"
-        />
-
         {hasHeader && (
-          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div className="max-w-2xl space-y-2">
-              {eyebrow && (
-                <p
-                  className={`text-xs font-semibold tracking-widest uppercase ${
-                    isDark ? 'text-slate-400' : 'text-slate-500'
-                  }`}
-                >
-                  {eyebrow}
-                </p>
-              )}
-              {title && <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>}
-              {description && (
-                <p
-                  className={`text-sm leading-relaxed sm:text-base ${
-                    isDark ? 'text-slate-300' : 'text-slate-600'
-                  }`}
-                >
-                  {description}
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-              {autoPlayOnScroll && (
-                <span
-                  className={`inline-flex items-center gap-1.5 border px-3 py-1 text-xs font-medium transition-colors ${
-                    isInView && isPlaying
-                      ? isDark
-                        ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-300'
-                        : 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                      : isDark
-                        ? 'border-neutral-800 bg-neutral-900 text-slate-400'
-                        : 'border-slate-200 bg-slate-100 text-slate-600'
-                  }`}
-                >
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>{isInView && isPlaying ? 'Auto-Playing in View' : 'Scroll Auto-Play'}</span>
-                </span>
-              )}
-
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  isDark
-                    ? 'border-neutral-800 bg-neutral-900 text-slate-200 hover:bg-neutral-800'
-                    : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
+          <div className="mb-6 max-w-2xl space-y-2">
+            {eyebrow && (
+              <p
+                className={`text-xs font-semibold tracking-widest uppercase ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}
               >
-                <Upload className="h-3.5 w-3.5" />
-                <span>Upload Video</span>
-              </button>
-            </div>
+                {eyebrow}
+              </p>
+            )}
+            {title && <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>}
+            {description && (
+              <p
+                className={`text-sm leading-relaxed sm:text-base ${
+                  isDark ? 'text-slate-300' : 'text-slate-600'
+                }`}
+              >
+                {description}
+              </p>
+            )}
           </div>
         )}
 
@@ -271,32 +188,13 @@ export function VideoBlock({
               <p className="mt-1 max-w-md text-xs leading-relaxed opacity-80">
                 {resolvedSource.errorMessage}
               </p>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={`mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-colors ${
-                  isDark
-                    ? 'bg-white text-neutral-950 hover:bg-slate-100'
-                    : 'bg-slate-900 text-white hover:bg-slate-800'
-                }`}
-              >
-                <Upload className="h-3.5 w-3.5" />
-                <span>Select Video File (MP4 / WebM)</span>
-              </button>
             </div>
           )}
         </div>
 
-        {uploadError && <p className="mt-3 text-xs font-medium text-rose-500">{uploadError}</p>}
-
-        {(caption || (localVideoOverride && localVideoOverride.basePropUrl === videoUrl)) && (
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
-            {caption && <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>{caption}</p>}
-            {localVideoOverride && localVideoOverride.basePropUrl === videoUrl && (
-              <span className={isDark ? 'text-emerald-400' : 'text-emerald-700'}>
-                Loaded file: {localVideoOverride.fileName}
-              </span>
-            )}
+        {caption && (
+          <div className="mt-3 text-xs">
+            <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>{caption}</p>
           </div>
         )}
       </BlockLayout>
