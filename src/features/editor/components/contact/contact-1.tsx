@@ -15,7 +15,7 @@ export function Contact1(props: Contact1Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-2xl px-6 sm:px-8">
         <div className="text-center">
@@ -37,7 +37,7 @@ export function Contact1(props: Contact1Props) {
           )}
         </div>
 
-        <div className={`mt-10 rounded-lg border p-6 sm:p-8 ${resolved.themeClasses.surface}`}>
+        <div className={`mt-10 border p-6 sm:p-8 ${resolved.themeClasses.surface}`}>
           <ContactForm
             nameLabel={resolved.nameLabel}
             emailLabel={resolved.emailLabel}

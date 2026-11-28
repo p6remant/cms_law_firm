@@ -18,7 +18,7 @@ export function FAQ2(props: FAQ2Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div
@@ -31,7 +31,7 @@ export function FAQ2(props: FAQ2Props) {
           <div className={hasItems ? 'lg:col-span-5 lg:sticky lg:top-8' : undefined}>
             {resolved.badge && (
               <span
-                className={`mb-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
+                className={`mb-4 inline-flex items-center border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
               >
                 {resolved.badge}
               </span>
@@ -51,7 +51,7 @@ export function FAQ2(props: FAQ2Props) {
             )}
 
             {resolved.contactCta && (
-              <div className={`mt-8 rounded-lg border p-6 ${resolved.themeClasses.contactCard}`}>
+              <div className={`mt-8 border p-6 ${resolved.themeClasses.contactCard}`}>
                 {resolved.contactCta.title && (
                   <h3 className={`text-base font-semibold ${resolved.themeClasses.heading}`}>
                     {resolved.contactCta.title}
@@ -73,7 +73,7 @@ export function FAQ2(props: FAQ2Props) {
                     rel={resolved.contactCta.rel}
                     className={`${
                       resolved.contactCta.title || resolved.contactCta.description ? 'mt-5 ' : ''
-                    }inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium tracking-normal ${resolved.contactCta.buttonClasses}`}
+                    }inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium tracking-normal ${resolved.contactCta.buttonClasses}`}
                   >
                     <span>{resolved.contactCta.buttonText}</span>
                     {resolved.contactCta.isExternal && (

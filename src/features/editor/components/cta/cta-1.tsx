@@ -44,7 +44,7 @@ export function CTA1(props: CTA1Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
@@ -97,11 +97,11 @@ export function CTA1(props: CTA1Props) {
                     aria-label={resolved.newsletterPlaceholder}
                     aria-invalid={feedback?.type === 'error' ? true : undefined}
                     aria-describedby={describedBy}
-                    className={`w-full flex-1 rounded-md border px-3.5 py-2.5 text-sm transition-colors focus:outline-none ${resolved.themeClasses.input}`}
+                    className={`w-full flex-1 border px-3.5 py-2.5 text-sm transition-colors focus:outline-none ${resolved.themeClasses.input}`}
                   />
                   <button
                     type="submit"
-                    className={`inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md px-5 py-2.5 text-sm font-medium whitespace-nowrap ${resolved.newsletterButtonClasses}`}
+                    className={`inline-flex shrink-0 cursor-pointer items-center justify-center px-5 py-2.5 text-sm font-medium whitespace-nowrap ${resolved.newsletterButtonClasses}`}
                   >
                     {resolved.newsletterButtonText}
                   </button>

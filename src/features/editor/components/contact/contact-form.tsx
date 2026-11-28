@@ -125,7 +125,7 @@ export function ContactForm({
           placeholder="Your name"
           aria-invalid={fieldErrors.name ? true : undefined}
           aria-describedby={fieldErrors.name ? nameErrorId : undefined}
-          className={`w-full rounded-md border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
+          className={`w-full border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
         />
         {fieldErrors.name && (
           <p id={nameErrorId} className={`mt-1.5 text-xs ${themeClasses.errorText}`}>
@@ -155,7 +155,7 @@ export function ContactForm({
           placeholder="you@example.com"
           aria-invalid={fieldErrors.email ? true : undefined}
           aria-describedby={fieldErrors.email ? emailErrorId : undefined}
-          className={`w-full rounded-md border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
+          className={`w-full border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
         />
         {fieldErrors.email && (
           <p id={emailErrorId} className={`mt-1.5 text-xs ${themeClasses.errorText}`}>
@@ -183,7 +183,7 @@ export function ContactForm({
           placeholder="Write your message..."
           aria-invalid={fieldErrors.message ? true : undefined}
           aria-describedby={fieldErrors.message ? messageErrorId : undefined}
-          className={`w-full rounded-md border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
+          className={`w-full border px-3.5 py-2.5 text-sm transition-colors ${themeClasses.input}`}
         />
         {fieldErrors.message && (
           <p id={messageErrorId} className={`mt-1.5 text-xs ${themeClasses.errorText}`}>
@@ -196,7 +196,7 @@ export function ContactForm({
         type="submit"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
-        className={`inline-flex w-full cursor-pointer items-center justify-center rounded-md px-5 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60 ${themeClasses.submitButton}`}
+        className={`inline-flex w-full cursor-pointer items-center justify-center px-5 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60 ${themeClasses.submitButton}`}
       >
         {isSubmitting ? 'Sending...' : submitLabel}
       </button>
@@ -206,7 +206,7 @@ export function ContactForm({
           id={statusId}
           role={status.type === 'error' ? 'alert' : 'status'}
           aria-live="polite"
-          className={`rounded-md border px-4 py-3 text-sm ${
+          className={`border px-4 py-3 text-sm ${
             status.type === 'success' ? themeClasses.statusSuccess : themeClasses.statusError
           }`}
         >

@@ -3,7 +3,7 @@ import { initialPageData, puckConfig } from '@/features/editor/config/puck-confi
 
 export function PuckPageRenderer() {
   return (
-    <div className="space-y-6 rounded-xl border border-slate-200 bg-white p-8 shadow-xs">
+    <div className="w-full bg-white">
       <Render config={puckConfig} data={initialPageData} />
     </div>
   );

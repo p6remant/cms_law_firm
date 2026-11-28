@@ -18,7 +18,7 @@ export function CTA2(props: CTA2Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div
@@ -31,7 +31,7 @@ export function CTA2(props: CTA2Props) {
           <div className={hasFeatures ? 'lg:col-span-7' : undefined}>
             {resolved.badge && (
               <span
-                className={`mb-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
+                className={`mb-4 inline-flex items-center border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
               >
                 {resolved.badge}
               </span>
@@ -69,7 +69,7 @@ export function CTA2(props: CTA2Props) {
 
           {hasFeatures && (
             <div className="lg:col-span-5">
-              <div className={`rounded-lg border p-6 sm:p-8 ${resolved.themeClasses.surface}`}>
+              <div className={`border p-6 sm:p-8 ${resolved.themeClasses.surface}`}>
                 <ul className="space-y-4">
                   {resolved.features.map((feature, idx) => (
                     <li key={`${feature}-${String(idx)}`} className="flex items-start gap-3">

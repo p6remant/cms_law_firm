@@ -14,7 +14,7 @@ export function Stats2(props: Stats2Props) {
   return (
     <section
       aria-label="Key statistics"
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {hasItems && (
@@ -22,7 +22,7 @@ export function Stats2(props: Stats2Props) {
             {resolved.items.map((item, index) => (
               <div
                 key={`${item.value}-${item.label}-${String(index)}`}
-                className={`flex h-full flex-col rounded-lg border p-6 sm:p-8 ${resolved.themeClasses.card}`}
+                className={`flex h-full flex-col border p-6 sm:p-8 ${resolved.themeClasses.card}`}
               >
                 <dt className={`order-2 mt-3 text-sm font-medium ${resolved.themeClasses.label}`}>
                   {item.label}

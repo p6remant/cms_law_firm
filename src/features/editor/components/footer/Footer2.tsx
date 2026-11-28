@@ -36,7 +36,7 @@ function FooterLinkAnchor({
       <span>{link.label || link.href}</span>
       {badgeClassName && link.badge && (
         <span
-          className={`ml-1.5 inline-block rounded border px-1.5 py-0.5 text-[10px] font-medium tracking-normal ${badgeClassName}`}
+          className={`ml-1.5 inline-block border px-1.5 py-0.5 text-[10px] font-medium tracking-normal ${badgeClassName}`}
         >
           {link.badge}
         </span>
@@ -129,7 +129,7 @@ export function Footer2(props: Footer2Props) {
                   }}
                   placeholder={resolved.newsletterPlaceholder}
                   aria-label={resolved.newsletterPlaceholder}
-                  className={`w-full flex-1 rounded-md border px-3.5 py-2.5 text-sm tracking-normal transition-colors focus:outline-none ${resolved.themeClasses.border} ${
+                  className={`w-full flex-1 border px-3.5 py-2.5 text-sm tracking-normal transition-colors focus:outline-none ${resolved.themeClasses.border} ${
                     isDark
                       ? 'bg-black text-white placeholder:text-neutral-500 focus:border-white'
                       : 'bg-white text-black placeholder:text-neutral-500 focus:border-black'
@@ -137,7 +137,7 @@ export function Footer2(props: Footer2Props) {
                 />
                 <button
                   type="submit"
-                  className={`inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md px-5 py-2.5 text-sm font-medium tracking-normal transition-colors ${
+                  className={`inline-flex shrink-0 cursor-pointer items-center justify-center px-5 py-2.5 text-sm font-medium tracking-normal transition-colors ${
                     isDark
                       ? 'bg-white text-black hover:bg-neutral-200'
                       : 'bg-black text-white hover:bg-neutral-800'
@@ -354,7 +354,7 @@ export function Footer2(props: Footer2Props) {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     aria-label="Back to top"
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium tracking-normal transition-colors ${resolved.themeClasses.border} ${resolved.themeClasses.link} ${
+                    className={`inline-flex cursor-pointer items-center gap-1.5 border px-3 py-1.5 text-xs font-medium tracking-normal transition-colors ${resolved.themeClasses.border} ${resolved.themeClasses.link} ${
                       isDark ? 'hover:border-white' : 'hover:border-black'
                     }`}
                   >

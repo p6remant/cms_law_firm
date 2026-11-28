@@ -16,7 +16,7 @@ export function Feature1(props: Feature1Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div className="max-w-3xl">
@@ -49,12 +49,12 @@ export function Feature1(props: Feature1Props) {
                 key={`${item.title}-${String(index)}`}
                 className={
                   isCardMode
-                    ? `flex h-full flex-col rounded-lg border p-6 sm:p-8 ${resolved.themeClasses.card}`
+                    ? `flex h-full flex-col border p-6 sm:p-8 ${resolved.themeClasses.card}`
                     : `flex h-full flex-col border-t pt-6 ${resolved.themeClasses.flatItem}`
                 }
               >
                 <div
-                  className={`mb-5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border ${resolved.themeClasses.iconContainer}`}
+                  className={`mb-5 inline-flex h-10 w-10 shrink-0 items-center justify-center border ${resolved.themeClasses.iconContainer}`}
                 >
                   <FeatureIcon
                     icon={item.icon}

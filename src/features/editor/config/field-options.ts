@@ -155,9 +155,9 @@ export function getTeamImageShapeClass(shape: TeamImageShape): string {
     case 'rounded':
       return 'h-28 w-28 rounded-full aspect-square object-cover mx-auto';
     case 'square':
-      return 'w-full aspect-square rounded-xl object-cover';
+      return 'w-full aspect-square object-cover';
     case 'rectangle':
-      return 'w-full aspect-[3/4] rounded-xl object-cover';
+      return 'w-full aspect-[3/4] object-cover';
     default:
       return 'h-28 w-28 rounded-full aspect-square object-cover mx-auto';
   }
