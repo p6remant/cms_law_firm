@@ -23,14 +23,14 @@ export function Feature2(props: Feature2Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
           <div className={isMediaLeft ? 'lg:order-2 lg:col-span-6' : 'lg:order-1 lg:col-span-6'}>
             {resolved.badge && (
               <span
-                className={`mb-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
+                className={`mb-4 inline-flex items-center border px-3 py-1 text-xs font-medium ${resolved.themeClasses.badge}`}
               >
                 {resolved.badge}
               </span>
@@ -54,7 +54,7 @@ export function Feature2(props: Feature2Props) {
                 {resolved.items.map((item, index) => (
                   <li key={`${item.title}-${String(index)}`} className="flex items-start gap-4">
                     <div
-                      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border ${resolved.themeClasses.iconContainer}`}
+                      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center border ${resolved.themeClasses.iconContainer}`}
                     >
                       <FeatureIcon
                         icon={item.icon}
@@ -85,9 +85,7 @@ export function Feature2(props: Feature2Props) {
 
           <div className={isMediaLeft ? 'lg:order-1 lg:col-span-6' : 'lg:order-2 lg:col-span-6'}>
             {resolved.imageUrl ? (
-              <div
-                className={`overflow-hidden rounded-lg border ${resolved.themeClasses.mediaFrame}`}
-              >
+              <div className={`overflow-hidden border ${resolved.themeClasses.mediaFrame}`}>
                 <img
                   src={resolved.imageUrl}
                   alt={resolved.imageAlt ?? resolved.heading}
@@ -98,7 +96,7 @@ export function Feature2(props: Feature2Props) {
             ) : (
               <div
                 aria-hidden="true"
-                className={`rounded-lg border p-6 sm:p-8 ${resolved.themeClasses.mediaFrame}`}
+                className={`border p-6 sm:p-8 ${resolved.themeClasses.mediaFrame}`}
               >
                 <div
                   className={`flex items-center justify-between gap-4 border-b pb-4 ${resolved.themeClasses.border}`}
@@ -109,7 +107,7 @@ export function Feature2(props: Feature2Props) {
                     {resolved.badge ?? 'Overview'}
                   </span>
                   <span
-                    className={`rounded border px-2 py-0.5 text-xs font-medium tabular-nums ${resolved.themeClasses.badge}`}
+                    className={`border px-2 py-0.5 text-xs font-medium tabular-nums ${resolved.themeClasses.badge}`}
                   >
                     {String(resolved.items.length).padStart(2, '0')}
                   </span>
@@ -120,10 +118,10 @@ export function Feature2(props: Feature2Props) {
                     ? resolved.items.slice(0, 3).map((item, index) => (
                         <div
                           key={`${item.title}-${String(index)}`}
-                          className={`flex items-start gap-3.5 rounded-md border p-4 ${resolved.themeClasses.mediaPlaceholderMuted}`}
+                          className={`flex items-start gap-3.5 border p-4 ${resolved.themeClasses.mediaPlaceholderMuted}`}
                         >
                           <div
-                            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border ${resolved.themeClasses.iconContainer}`}
+                            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center border ${resolved.themeClasses.iconContainer}`}
                           >
                             <FeatureIcon
                               icon={item.icon}
@@ -154,17 +152,17 @@ export function Feature2(props: Feature2Props) {
                     : VISUAL_SKELETON_ROWS.map((row) => (
                         <div
                           key={row.id}
-                          className={`flex items-start gap-3.5 rounded-md border p-4 ${resolved.themeClasses.mediaPlaceholderMuted}`}
+                          className={`flex items-start gap-3.5 border p-4 ${resolved.themeClasses.mediaPlaceholderMuted}`}
                         >
                           <div
-                            className={`h-8 w-8 shrink-0 rounded border ${resolved.themeClasses.border}`}
+                            className={`h-8 w-8 shrink-0 border ${resolved.themeClasses.border}`}
                           />
                           <div className="min-w-0 flex-1 space-y-2.5 pt-0.5">
                             <div
-                              className={`h-2.5 ${row.titleWidth} rounded border ${resolved.themeClasses.border}`}
+                              className={`h-2.5 ${row.titleWidth} border ${resolved.themeClasses.border}`}
                             />
                             <div
-                              className={`h-2 ${row.bodyWidth} rounded border ${resolved.themeClasses.border}`}
+                              className={`h-2 ${row.bodyWidth} border ${resolved.themeClasses.border}`}
                             />
                           </div>
                         </div>

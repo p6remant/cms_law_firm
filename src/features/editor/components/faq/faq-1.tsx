@@ -16,7 +16,7 @@ export function FAQ1(props: FAQ1Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-3xl px-6 sm:px-8 lg:px-12">
         <div className="text-center">

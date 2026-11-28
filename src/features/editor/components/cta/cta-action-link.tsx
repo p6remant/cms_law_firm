@@ -7,7 +7,7 @@ export function CTAActionLink({ button, classes }: { button: ResolvedCTAButton; 
       href={button.href}
       target={button.target}
       rel={button.rel}
-      className={`inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium tracking-normal ${classes}`}
+      className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium tracking-normal ${classes}`}
     >
       <span>{button.text}</span>
       {button.isExternal && (

@@ -36,11 +36,11 @@ export function Stats1(props: Stats1Props) {
   return (
     <section
       aria-label="Key statistics"
-      className={`w-full border-y ${resolved.themeClasses.wrapper}`}
+      className={`w-full border-b ${resolved.themeClasses.wrapper}`}
     >
       <BlockLayout layout={resolved.layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {hasItems && (
-          <dl className={`grid ${gridClass} rounded-lg border ${resolved.themeClasses.divider}`}>
+          <dl className={`grid ${gridClass} border ${resolved.themeClasses.divider}`}>
             {resolved.items.map((item, index) => {
               const dividerClasses = getStripItemDividerClass(index, resolved.items.length);
               return (
