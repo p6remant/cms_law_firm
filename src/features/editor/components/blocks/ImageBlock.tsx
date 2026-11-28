@@ -16,7 +16,6 @@ export function ImageBlock({
   columns,
   aspectRatio,
   objectFit,
-  rounded,
   showCaptions,
   enableLightbox,
   theme,
@@ -39,7 +38,6 @@ export function ImageBlock({
 
   const aspectClass = getImageAspectRatioClass(aspectRatio);
   const fitClass = objectFit === 'contain' ? 'object-contain' : 'object-cover';
-  const radiusClass = rounded ? 'rounded-xl' : 'rounded-none';
 
   const handleUploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files;
@@ -73,14 +71,14 @@ export function ImageBlock({
   const hasHeader = Boolean(eyebrow || title || description);
 
   return (
-    <BlockLayout layout={layout}>
-      <div
-        className={`rounded-2xl border p-6 transition-colors sm:p-8 ${
-          isDark
-            ? 'border-neutral-800 bg-neutral-950 text-white'
-            : 'border-slate-200 bg-white text-slate-900 shadow-xs'
-        }`}
-      >
+    <section
+      className={`w-full border-b transition-colors ${
+        isDark
+          ? 'border-neutral-800 bg-neutral-950 text-white'
+          : 'border-slate-200 bg-white text-slate-900'
+      }`}
+    >
+      <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
         <input
           ref={fileInputRef}
           type="file"
@@ -120,7 +118,7 @@ export function ImageBlock({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className={`inline-flex items-center gap-1.5 self-start rounded-lg border px-3.5 py-2 text-xs font-semibold transition-colors sm:self-auto ${
+            className={`inline-flex items-center gap-1.5 self-start border px-3.5 py-2 text-xs font-semibold transition-colors sm:self-auto ${
               isDark
                 ? 'border-neutral-800 bg-neutral-900 text-slate-200 hover:bg-neutral-800'
                 : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
@@ -140,7 +138,7 @@ export function ImageBlock({
               return (
                 <figure
                   key={`${item.alt}-${String(idx)}`}
-                  className={`group flex flex-col overflow-hidden border transition-all ${radiusClass} ${
+                  className={`group flex flex-col overflow-hidden border transition-all ${
                     isDark
                       ? 'border-neutral-800 bg-neutral-900/60'
                       : 'border-slate-200 bg-slate-50/60'
@@ -156,7 +154,7 @@ export function ImageBlock({
                           className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.02] ${fitClass}`}
                         />
                         {item.category && (
-                          <span className="absolute top-3 left-3 rounded-full border border-white/20 bg-black/65 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xs">
+                          <span className="absolute top-3 left-3 border border-white/20 bg-black/65 px-2.5 py-1 text-[11px] font-semibold text-white">
                             {item.category}
                           </span>
                         )}
@@ -167,7 +165,7 @@ export function ImageBlock({
                               setLightboxItem(item);
                             }}
                             aria-label={`View ${item.alt || 'image'} fullscreen`}
-                            className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 hover:bg-black/85"
+                            className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/85"
                           >
                             <Expand className="h-3.5 w-3.5" />
                             <span>Inspect</span>
@@ -206,7 +204,7 @@ export function ImageBlock({
           </div>
         ) : (
           <div
-            className={`flex flex-col items-center justify-center rounded-xl border border-dashed p-12 text-center ${
+            className={`flex flex-col items-center justify-center border border-dashed p-12 text-center ${
               isDark
                 ? 'border-neutral-800 bg-neutral-900/40 text-slate-300'
                 : 'border-slate-300 bg-slate-50 text-slate-600'
@@ -221,7 +219,7 @@ export function ImageBlock({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className={`mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${
+              className={`mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold ${
                 isDark ? 'bg-white text-neutral-950' : 'bg-slate-900 text-white'
               }`}
             >
@@ -235,13 +233,13 @@ export function ImageBlock({
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-xs"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4"
             onClick={() => {
               setLightboxItem(null);
             }}
           >
             <div
-              className="relative max-h-[90vh] max-w-5xl overflow-hidden rounded-2xl border border-white/15 bg-neutral-950 p-2 text-white shadow-2xl"
+              className="relative max-h-[90vh] max-w-5xl overflow-hidden border border-white/15 bg-neutral-950 p-2 text-white"
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -252,14 +250,14 @@ export function ImageBlock({
                 onClick={() => {
                   setLightboxItem(null);
                 }}
-                className="absolute top-4 right-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/70 text-white hover:bg-black"
+                className="absolute top-4 right-4 z-10 inline-flex h-9 w-9 items-center justify-center border border-white/20 bg-black/70 text-white hover:bg-black"
               >
                 <X className="h-4 w-4" />
               </button>
               <img
                 src={lightboxItem.imageUrl}
                 alt={lightboxItem.alt}
-                className="max-h-[78vh] w-auto rounded-xl object-contain"
+                className="max-h-[78vh] w-auto object-contain"
               />
               {(lightboxItem.alt || lightboxItem.caption) && (
                 <div className="px-4 py-3">
@@ -272,7 +270,7 @@ export function ImageBlock({
             </div>
           </div>
         )}
-      </div>
-    </BlockLayout>
+      </BlockLayout>
+    </section>
   );
 }

@@ -37,14 +37,14 @@ export function TeamSliderBlock({
   const imageClass = getTeamImageShapeClass(imageShape);
 
   return (
-    <BlockLayout layout={layout}>
-      <div
-        className={`rounded-2xl border p-8 transition-colors ${
-          isDark
-            ? 'border-neutral-800 bg-neutral-950 text-white'
-            : 'border-slate-200 bg-white text-slate-900 shadow-xs'
-        }`}
-      >
+    <section
+      className={`w-full border-b transition-colors ${
+        isDark
+          ? 'border-neutral-800 bg-neutral-950 text-white'
+          : 'border-slate-200 bg-white text-slate-900'
+      }`}
+    >
+      <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div className="max-w-2xl space-y-2">
             {eyebrow && (
@@ -72,7 +72,7 @@ export function TeamSliderBlock({
                 type="button"
                 onClick={prev}
                 aria-label="Previous team members"
-                className={`rounded-lg border p-2 transition-colors ${
+                className={`border p-2 transition-colors ${
                   isDark
                     ? 'border-neutral-800 bg-neutral-900 text-white hover:bg-neutral-800'
                     : 'border-slate-200 bg-slate-50 text-slate-900 hover:bg-slate-100'
@@ -84,7 +84,7 @@ export function TeamSliderBlock({
                 type="button"
                 onClick={next}
                 aria-label="Next team members"
-                className={`rounded-lg border p-2 transition-colors ${
+                className={`border p-2 transition-colors ${
                   isDark
                     ? 'border-neutral-800 bg-neutral-900 text-white hover:bg-neutral-800'
                     : 'border-slate-200 bg-slate-50 text-slate-900 hover:bg-slate-100'
@@ -100,7 +100,7 @@ export function TeamSliderBlock({
           {visibleMembers.map((member, idx) => (
             <div
               key={`${member.name}-${String(startIndex + idx)}`}
-              className={`flex flex-col rounded-xl border p-5 transition-all ${
+              className={`flex flex-col border p-5 transition-all ${
                 imageShape === 'rounded' ? 'items-center text-center' : 'items-start text-left'
               } ${
                 isDark ? 'border-neutral-800 bg-neutral-900/60' : 'border-slate-200 bg-slate-50/70'
@@ -153,7 +153,7 @@ export function TeamSliderBlock({
                     goTo(idx);
                   }}
                   aria-label={`Go to team page ${String(idx + 1)}`}
-                  className={`h-2 rounded-full transition-all ${
+                  className={`h-2 transition-all ${
                     isActive
                       ? isDark
                         ? 'w-6 bg-white'
@@ -167,7 +167,7 @@ export function TeamSliderBlock({
             })}
           </div>
         )}
-      </div>
-    </BlockLayout>
+      </BlockLayout>
+    </section>
   );
 }

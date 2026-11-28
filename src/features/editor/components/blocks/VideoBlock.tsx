@@ -89,15 +89,15 @@ export function VideoBlock({
   const hasHeader = Boolean(eyebrow || title || description);
 
   return (
-    <BlockLayout layout={layout}>
-      <div
-        ref={containerRef}
-        className={`rounded-2xl border p-6 transition-colors sm:p-8 ${
-          isDark
-            ? 'border-neutral-800 bg-neutral-950 text-white'
-            : 'border-slate-200 bg-white text-slate-900 shadow-xs'
-        }`}
-      >
+    <section
+      ref={containerRef}
+      className={`w-full border-b transition-colors ${
+        isDark
+          ? 'border-neutral-800 bg-neutral-950 text-white'
+          : 'border-slate-200 bg-white text-slate-900'
+      }`}
+    >
+      <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
         <input
           ref={fileInputRef}
           type="file"
@@ -133,7 +133,7 @@ export function VideoBlock({
             <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
               {autoPlayOnScroll && (
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1.5 border px-3 py-1 text-xs font-medium transition-colors ${
                     isInView && isPlaying
                       ? isDark
                         ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-300'
@@ -151,7 +151,7 @@ export function VideoBlock({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-semibold transition-colors ${
                   isDark
                     ? 'border-neutral-800 bg-neutral-900 text-slate-200 hover:bg-neutral-800'
                     : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
@@ -165,7 +165,7 @@ export function VideoBlock({
         )}
 
         <div
-          className={`group relative overflow-hidden rounded-xl border ${aspectClass} ${
+          className={`group relative overflow-hidden border ${aspectClass} ${
             isDark ? 'border-neutral-800 bg-neutral-900' : 'border-slate-200 bg-slate-950'
           }`}
         >
@@ -191,7 +191,7 @@ export function VideoBlock({
 
               {/* Floating Quick Controls Bar */}
               <div className="pointer-events-none absolute top-3 right-3 left-3 flex items-center justify-between gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                <div className="pointer-events-auto inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-xs">
+                <div className="pointer-events-auto inline-flex items-center gap-1.5 border border-white/15 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white">
                   <button
                     type="button"
                     onClick={togglePlay}
@@ -212,7 +212,7 @@ export function VideoBlock({
                     type="button"
                     onClick={toggleMute}
                     aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                    className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-xs transition-colors hover:bg-black/85"
+                    className="inline-flex items-center gap-1 border border-white/15 bg-black/70 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-black/85"
                   >
                     {isMuted ? (
                       <>
@@ -231,7 +231,7 @@ export function VideoBlock({
                     type="button"
                     onClick={handleFullscreen}
                     aria-label="Fullscreen video"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-black/70 p-1.5 text-white backdrop-blur-xs transition-colors hover:bg-black/85"
+                    className="inline-flex items-center justify-center border border-white/15 bg-black/70 p-1.5 text-white transition-colors hover:bg-black/85"
                   >
                     <Maximize2 className="h-3.5 w-3.5" />
                   </button>
@@ -259,10 +259,10 @@ export function VideoBlock({
               }`}
             >
               <div
-                className={`flex h-14 w-14 items-center justify-center rounded-2xl border ${
+                className={`flex h-14 w-14 items-center justify-center border ${
                   isDark
                     ? 'border-neutral-800 bg-neutral-900 text-slate-400'
-                    : 'border-slate-200 bg-white text-slate-500 shadow-2xs'
+                    : 'border-slate-200 bg-white text-slate-500'
                 }`}
               >
                 <Film className="h-7 w-7" />
@@ -274,7 +274,7 @@ export function VideoBlock({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold transition-colors ${
                   isDark
                     ? 'bg-white text-neutral-950 hover:bg-slate-100'
                     : 'bg-slate-900 text-white hover:bg-slate-800'
@@ -299,7 +299,7 @@ export function VideoBlock({
             )}
           </div>
         )}
-      </div>
-    </BlockLayout>
+      </BlockLayout>
+    </section>
   );
 }

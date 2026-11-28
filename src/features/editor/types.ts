@@ -401,7 +401,7 @@ export type ImageBlockProps = WithLayout<{
   columns: 1 | 2 | 3;
   aspectRatio: ImageAspectRatio;
   objectFit: ImageObjectFit;
-  rounded: boolean;
+  rounded?: boolean;
   showCaptions: boolean;
   enableLightbox: boolean;
   theme: 'light' | 'dark';

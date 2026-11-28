@@ -16,15 +16,15 @@ export function ClientPartnerBlock({ title, items, columns, theme, layout }: Cli
   const gridColsClass = columns === 3 ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-2 sm:grid-cols-4';
 
   return (
-    <BlockLayout layout={layout}>
-      <div
-        className={`rounded-2xl border px-8 py-12 transition-colors sm:px-12 sm:py-16 ${
-          isDark
-            ? 'border-neutral-800 bg-neutral-950 text-white'
-            : 'border-slate-200 bg-white text-slate-900 shadow-xs'
-        }`}
-      >
-        <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-12 lg:gap-0">
+    <section
+      className={`w-full border-b transition-colors ${
+        isDark
+          ? 'border-neutral-800 bg-neutral-950 text-white'
+          : 'border-slate-200 bg-white text-slate-900'
+      }`}
+    >
+      <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-0">
           <div className="lg:col-span-4 lg:pr-10">
             <h2
               className={`text-2xl leading-snug font-semibold tracking-tight sm:text-3xl ${
@@ -44,7 +44,7 @@ export function ClientPartnerBlock({ title, items, columns, theme, layout }: Cli
               {rows.map((row, rowIdx) => (
                 <div
                   key={`partner-row-${String(rowIdx)}`}
-                  className={`grid items-center gap-6 py-7 first:pt-2 last:pb-2 ${gridColsClass}`}
+                  className={`grid items-center gap-6 py-6 first:pt-2 last:pb-2 ${gridColsClass}`}
                 >
                   {row.map((item, colIdx) => (
                     <div
@@ -55,11 +55,11 @@ export function ClientPartnerBlock({ title, items, columns, theme, layout }: Cli
                         <img
                           src={item.imageUrl}
                           alt={item.name}
-                          className="h-7 w-7 shrink-0 rounded-full object-cover"
+                          className="h-7 w-7 shrink-0 object-cover"
                         />
                       ) : (
                         <div
-                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                          className={`flex h-7 w-7 shrink-0 items-center justify-center ${
                             isDark ? 'bg-neutral-800 text-slate-300' : 'bg-slate-100 text-slate-700'
                           }`}
                         >
@@ -80,7 +80,7 @@ export function ClientPartnerBlock({ title, items, columns, theme, layout }: Cli
             </div>
           </div>
         </div>
-      </div>
-    </BlockLayout>
+      </BlockLayout>
+    </section>
   );
 }
