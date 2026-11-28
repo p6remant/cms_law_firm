@@ -331,62 +331,32 @@ const featureItemsField: ArrayField<FeatureItem[]> = {
 
 export const puckConfig: PuckConfig = {
   categories: {
-    navigation: {
-      title: 'Navigation',
+    header: {
+      title: 'Header',
       components: ['Header'],
     },
-    introduction: {
-      title: 'Introduction',
+    hero: {
+      title: 'Hero',
       components: ['HeroSlider', 'Hero'],
     },
-    content: {
-      title: 'Content',
-      components: ['Feature1', 'Feature2', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
-    },
-    forms: {
-      title: 'Contact',
-      components: ['Contact1'],
+    sections: {
+      title: 'Sections',
+      components: ['Feature1', 'Feature2', 'TeamSection', 'CTA1', 'CTA2', 'FAQ1', 'FAQ2'],
     },
     socialProof: {
       title: 'Social Proof',
-      components: ['Logos', 'Stats1', 'Stats2'],
-      // components: [
-      //   'TeamSection',
-      //   'FeatureGrid',
-      //   'Card',
-      //   'CTA',
-      //   'FAQ',
-      //   'Steps',
-      //   'FeatureSplit',
-      //   'Bento',
-      // ],
+      components: ['ClientPartnerSection', 'Logos', 'Stats1', 'Stats2'],
     },
-    // socialProof: {
-    //   title: 'Social Proof',
-    //   components: ['ClientPartnerSection', 'Logos', 'Stats1', 'Stats2'],
-    // },
-    media: {
-      title: 'Media & Documents',
-      components: [
-        'VideoUpload',
-        'ImageUpload',
-        // 'PdfUpload',
-      ],
+    mediaContact: {
+      title: 'Media & Contact',
+      components: ['ImageUpload', 'VideoUpload', 'Map', 'Contact1'],
     },
-    layout: {
-      title: 'Layout',
-      components: ['Grid', 'Flex', 'Space'],
-    },
-    typography: {
-      title: 'Typography',
-      components: ['Heading', 'Text', 'RichText'],
-    },
-    interactive: {
-      title: 'Actions',
-      components: ['Button', 'Map'],
+    basicLayout: {
+      title: 'Basic & Layout',
+      components: ['Grid', 'Flex', 'Space', 'Heading', 'Text', 'RichText', 'Button'],
     },
     footer: {
-      title: 'Footers',
+      title: 'Footer',
       components: ['FooterSimple', 'Footer2'],
     },
   },
@@ -395,7 +365,7 @@ export const puckConfig: PuckConfig = {
       label: 'Header',
       fields: {
         brandName: { type: 'text', label: 'Brand Name', contentEditable: true },
-        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
+        logoUrl: { type: 'text', label: 'Logo URL' },
         navItems: {
           type: 'array',
           label: 'Navigation Links',
@@ -407,10 +377,10 @@ export const puckConfig: PuckConfig = {
             label: { type: 'text', label: 'Label', contentEditable: true },
           },
         },
-        ctaLabel: { type: 'text', label: 'CTA Button Label', contentEditable: true },
+        ctaLabel: { type: 'text', label: 'CTA Label', contentEditable: true },
         showCta: {
           type: 'radio',
-          label: 'Show CTA Button',
+          label: 'Show CTA',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         sticky: {
@@ -437,9 +407,9 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
-              {fields.showCta}
-              {fields.sticky}
               {fields.theme}
+              {fields.sticky}
+              {fields.showCta}
               {fields.layout}
             </>
           }
@@ -459,7 +429,7 @@ export const puckConfig: PuckConfig = {
         showCta: true,
         sticky: false,
         theme: 'light',
-        layout: { padding: '16px' },
+        layout: { padding: '24px' },
       },
       render: (props) => <HeaderBlock {...props} />,
     },
@@ -469,7 +439,7 @@ export const puckConfig: PuckConfig = {
       fields: {
         slides: {
           type: 'array',
-          label: 'Hero Slides',
+          label: 'Slides',
           getItemSummary: (item) => item.title || 'Slide',
           defaultItemProps: {
             badge: 'LEGAL EXCELLENCE',
@@ -483,18 +453,18 @@ export const puckConfig: PuckConfig = {
             badge: { type: 'text', label: 'Badge', contentEditable: true },
             title: { type: 'text', label: 'Title', contentEditable: true },
             description: { type: 'textarea', label: 'Description', contentEditable: true },
-            ctaLabel: { type: 'text', label: 'CTA Button', contentEditable: true },
+            ctaLabel: { type: 'text', label: 'Button Label', contentEditable: true },
             bgImage: { type: 'text', label: 'Background Image URL' },
           },
         },
         showArrows: {
           type: 'radio',
-          label: 'Prev / Next Buttons',
+          label: 'Show Arrows',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         showDots: {
           type: 'radio',
-          label: 'Dots Indicator',
+          label: 'Show Dots',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         autoScroll: {
@@ -514,7 +484,7 @@ export const puckConfig: PuckConfig = {
         },
         align: {
           type: 'radio',
-          label: 'Text Alignment',
+          label: 'Alignment',
           options: ALIGN_OPTIONS,
         },
         theme: {
@@ -532,13 +502,11 @@ export const puckConfig: PuckConfig = {
           content={<>{fields.slides}</>}
           appearance={
             <>
-              {fields.align}
               {fields.theme}
+              {fields.align}
               {fields.showArrows}
               {fields.showDots}
               {fields.autoScroll}
-              {fields.autoScrollInterval}
-              {fields.scrollDirection}
               {fields.layout}
             </>
           }
@@ -580,13 +548,13 @@ export const puckConfig: PuckConfig = {
         scrollDirection: 'right',
         align: 'center',
         theme: 'dark',
-        layout: { padding: '32px' },
+        layout: { padding: '0px' },
       },
       render: (props) => <HeroSliderBlock {...props} />,
     },
 
     TeamSection: {
-      label: 'Team Section',
+      label: 'Team',
       fields: {
         eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
         title: { type: 'text', label: 'Title', contentEditable: true },
@@ -615,17 +583,17 @@ export const puckConfig: PuckConfig = {
         },
         cardsPerView: {
           type: 'select',
-          label: 'Cards Per View',
+          label: 'Cards Per Row',
           options: TEAM_CARDS_PER_VIEW_OPTIONS,
         },
         showArrows: {
           type: 'radio',
-          label: 'Prev / Next Buttons',
+          label: 'Show Arrows',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         showDots: {
           type: 'radio',
-          label: 'Dots Indicator',
+          label: 'Show Dots',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         autoScroll: {
@@ -662,14 +630,12 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
-              {fields.imageShape}
-              {fields.cardsPerView}
               {fields.theme}
+              {fields.cardsPerView}
+              {fields.imageShape}
               {fields.showArrows}
               {fields.showDots}
               {fields.autoScroll}
-              {fields.autoScrollInterval}
-              {fields.scrollDirection}
               {fields.layout}
             </>
           }
@@ -680,7 +646,7 @@ export const puckConfig: PuckConfig = {
         title: 'Experienced Legal Leadership',
         description:
           'Meet the dedicated partners and attorneys committed to delivering exceptional outcomes for our clients.',
-        imageShape: 'rounded',
+        imageShape: 'square',
         cardsPerView: 3,
         members: [
           {
@@ -718,7 +684,7 @@ export const puckConfig: PuckConfig = {
         autoScrollInterval: 5000,
         scrollDirection: 'right',
         theme: 'light',
-        layout: { padding: '32px' },
+        layout: { padding: '48px' },
       },
       render: (props) => <TeamSliderBlock {...props} />,
     },
@@ -729,7 +695,7 @@ export const puckConfig: PuckConfig = {
         title: { type: 'text', label: 'Heading', contentEditable: true },
         items: {
           type: 'array',
-          label: 'Clients & Partners',
+          label: 'Partners',
           getItemSummary: (item) => item.name || 'Partner',
           defaultItemProps: {
             name: 'New Partner',
@@ -737,12 +703,12 @@ export const puckConfig: PuckConfig = {
           },
           arrayFields: {
             name: { type: 'text', label: 'Name', contentEditable: true },
-            imageUrl: { type: 'text', label: 'Logo / Image URL (Optional)' },
+            imageUrl: { type: 'text', label: 'Logo URL' },
           },
         },
         columns: {
           type: 'radio',
-          label: 'Columns per Row',
+          label: 'Columns',
           options: CLIENT_COLUMNS_OPTIONS,
         },
         theme: {
@@ -762,8 +728,8 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
-              {fields.columns}
               {fields.theme}
+              {fields.columns}
               {fields.layout}
             </>
           }
@@ -787,13 +753,13 @@ export const puckConfig: PuckConfig = {
           { name: 'Help Scout', imageUrl: '' },
         ],
         theme: 'light',
-        layout: { padding: '32px' },
+        layout: { padding: '48px' },
       },
       render: (props) => <ClientPartnerBlock {...props} />,
     },
 
     VideoUpload: {
-      label: 'Video Media',
+      label: 'Video',
       fields: {
         eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
         title: { type: 'text', label: 'Title', contentEditable: true },
@@ -804,29 +770,29 @@ export const puckConfig: PuckConfig = {
           placeholder: 'Paste MP4, WebM, YouTube, or Vimeo URL...',
         }),
         posterUrl: createMediaUploadField({
-          label: 'Poster Thumbnail (Optional)',
+          label: 'Poster Image',
           mediaType: 'image',
           placeholder: 'Paste poster thumbnail image URL...',
         }),
-        caption: { type: 'text', label: 'Video Caption', contentEditable: true },
+        caption: { type: 'text', label: 'Caption', contentEditable: true },
         autoPlayOnScroll: {
           type: 'radio',
-          label: 'Play When Scrolled Into View',
+          label: 'Autoplay on Scroll',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         loop: {
           type: 'radio',
-          label: 'Loop Video',
+          label: 'Loop',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         muted: {
           type: 'radio',
-          label: 'Start Muted',
+          label: 'Muted',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         showControls: {
           type: 'radio',
-          label: 'Show Player Controls',
+          label: 'Show Controls',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         aspectRatio: {
@@ -855,12 +821,12 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
+              {fields.theme}
+              {fields.aspectRatio}
               {fields.autoPlayOnScroll}
               {fields.loop}
               {fields.muted}
               {fields.showControls}
-              {fields.aspectRatio}
-              {fields.theme}
               {fields.layout}
             </>
           }
@@ -882,12 +848,12 @@ export const puckConfig: PuckConfig = {
         showControls: true,
         aspectRatio: '16/9',
         theme: 'light',
-        layout: { padding: '32px' },
+        layout: { padding: '48px' },
       },
       render: (props) => <VideoBlock {...props} />,
     },
     ImageUpload: {
-      label: 'Image Gallery & Upload',
+      label: 'Image Gallery',
       fields: {
         eyebrow: { type: 'text', label: 'Eyebrow', contentEditable: true },
         title: { type: 'text', label: 'Title', contentEditable: true },
@@ -909,29 +875,24 @@ export const puckConfig: PuckConfig = {
               placeholder: 'Paste image URL or upload file...',
             }),
             alt: { type: 'text', label: 'Title / Alt Text', contentEditable: true },
-            caption: { type: 'textarea', label: 'Caption (Optional)', contentEditable: true },
-            category: { type: 'text', label: 'Badge / Category (Optional)' },
+            caption: { type: 'textarea', label: 'Caption', contentEditable: true },
+            category: { type: 'text', label: 'Category' },
           },
         },
         columns: {
           type: 'select',
-          label: 'Grid Columns',
+          label: 'Columns',
           options: IMAGE_COLUMNS_OPTIONS,
         },
         aspectRatio: {
           type: 'select',
-          label: 'Image Aspect Ratio',
+          label: 'Aspect Ratio',
           options: IMAGE_ASPECT_RATIO_OPTIONS,
         },
         objectFit: {
           type: 'radio',
           label: 'Image Fit',
           options: IMAGE_OBJECT_FIT_OPTIONS,
-        },
-        rounded: {
-          type: 'radio',
-          label: 'Rounded Corners',
-          options: BOOLEAN_RADIO_OPTIONS,
         },
         showCaptions: {
           type: 'radio',
@@ -940,7 +901,7 @@ export const puckConfig: PuckConfig = {
         },
         enableLightbox: {
           type: 'radio',
-          label: 'Fullscreen Lightbox on Click',
+          label: 'Lightbox on Click',
           options: BOOLEAN_RADIO_OPTIONS,
         },
         theme: {
@@ -962,13 +923,12 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
+              {fields.theme}
               {fields.columns}
               {fields.aspectRatio}
               {fields.objectFit}
-              {fields.rounded}
               {fields.showCaptions}
               {fields.enableLightbox}
-              {fields.theme}
               {fields.layout}
             </>
           }
@@ -982,7 +942,7 @@ export const puckConfig: PuckConfig = {
         columns: 3,
         aspectRatio: '4/3',
         objectFit: 'cover',
-        rounded: true,
+        rounded: false,
         showCaptions: true,
         enableLightbox: true,
         items: [
@@ -996,7 +956,7 @@ export const puckConfig: PuckConfig = {
           {
             imageUrl:
               'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=80',
-            alt: ' Appellate Litigation Practice',
+            alt: 'Appellate Litigation Practice',
             caption: 'Dedicated trial preparation and appellate strategy team.',
             category: 'Litigation',
           },
@@ -1009,7 +969,7 @@ export const puckConfig: PuckConfig = {
           },
         ],
         theme: 'light',
-        layout: { padding: '32px' },
+        layout: { padding: '48px' },
       },
       render: (props) => <ImageBlock {...props} />,
     },
@@ -1103,7 +1063,7 @@ export const puckConfig: PuckConfig = {
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         subheading: { type: 'textarea', label: 'Subheading' },
-        ctaLabel: { type: 'text', label: 'Button label' },
+        ctaLabel: { type: 'text', label: 'Button Label' },
         align: { type: 'radio', label: 'Alignment', options: ALIGN_OPTIONS },
         theme: {
           type: 'radio',
@@ -1127,8 +1087,8 @@ export const puckConfig: PuckConfig = {
           }
           appearance={
             <>
-              {fields.align}
               {fields.theme}
+              {fields.align}
               {fields.layout}
             </>
           }
@@ -1142,56 +1102,59 @@ export const puckConfig: PuckConfig = {
         ctaLabel: 'Try Puck Cloud',
         align: 'center',
         theme: 'dark',
-        layout: { padding: '48px' },
+        layout: { padding: '0px' },
       },
       render: ({ eyebrow, heading, subheading, ctaLabel, align, theme, layout }) => {
         const isDark = theme === 'dark';
         return (
-          <BlockLayout
-            layout={layout}
+          <section
             className={
               isDark
-                ? 'rounded-2xl bg-neutral-950 px-8 text-white'
-                : 'rounded-2xl border border-slate-200 bg-slate-50 px-8 text-slate-900'
+                ? 'w-full border-b border-neutral-800 bg-neutral-950 text-white'
+                : 'w-full border-b border-slate-200 bg-slate-50 text-slate-900'
             }
           >
-            <div className={`mx-auto max-w-3xl space-y-4 py-12 ${getTextAlignClass(align)}`}>
-              {eyebrow && (
-                <p
-                  className={`text-xs font-semibold tracking-widest uppercase ${
-                    isDark ? 'text-slate-400' : 'text-slate-500'
-                  }`}
-                >
-                  {eyebrow}
-                </p>
-              )}
-              <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{heading}</h1>
-              <p
-                className={`text-base leading-relaxed ${
-                  isDark ? 'text-slate-300' : 'text-slate-600'
-                }`}
+            <BlockLayout layout={layout} className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+              <div
+                className={`mx-auto max-w-3xl space-y-4 py-16 sm:py-24 ${getTextAlignClass(align)}`}
               >
-                {subheading}
-              </p>
-              {ctaLabel && (
-                <div className="pt-3">
-                  <span
-                    className={`inline-flex items-center rounded-lg px-5 py-2.5 text-sm font-semibold ${
-                      isDark ? 'bg-white text-slate-950' : 'bg-slate-900 text-white'
+                {eyebrow && (
+                  <p
+                    className={`text-xs font-semibold tracking-widest uppercase ${
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}
                   >
-                    {ctaLabel}
-                  </span>
-                </div>
-              )}
-            </div>
-          </BlockLayout>
+                    {eyebrow}
+                  </p>
+                )}
+                <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{heading}</h1>
+                <p
+                  className={`text-base leading-relaxed ${
+                    isDark ? 'text-slate-300' : 'text-slate-600'
+                  }`}
+                >
+                  {subheading}
+                </p>
+                {ctaLabel && (
+                  <div className="pt-3">
+                    <span
+                      className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold ${
+                        isDark ? 'bg-white text-slate-950' : 'bg-slate-900 text-white'
+                      }`}
+                    >
+                      {ctaLabel}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </BlockLayout>
+          </section>
         );
       },
     },
 
     Logos: {
-      label: 'Logos',
+      label: 'Logo Strip',
       fields: {
         heading: { type: 'text', label: 'Heading' },
         logos: {
@@ -1224,11 +1187,14 @@ export const puckConfig: PuckConfig = {
           { name: 'Vanguard LLP' },
           { name: 'veriTech' },
         ],
-        layout: { padding: '24px' },
+        layout: { padding: '32px' },
       },
       render: ({ heading, logos, layout }) => (
-        <BlockLayout layout={layout}>
-          <div className="rounded-xl border border-slate-200 bg-white p-6 text-center">
+        <section className="w-full border-b border-slate-200 bg-white">
+          <BlockLayout
+            layout={layout}
+            className="mx-auto max-w-7xl px-6 py-8 text-center sm:px-8 lg:px-12"
+          >
             <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
               {heading}
             </p>
@@ -1242,8 +1208,8 @@ export const puckConfig: PuckConfig = {
                 </span>
               ))}
             </div>
-          </div>
-        </BlockLayout>
+          </BlockLayout>
+        </section>
       ),
     },
 
@@ -1497,7 +1463,7 @@ export const puckConfig: PuckConfig = {
     },
 
     RichText: {
-      label: 'RichText',
+      label: 'Rich Text',
       fields: {
         richtext: { type: 'richtext', label: 'Rich text', contentEditable: true },
         layout: layoutField,
@@ -1572,7 +1538,7 @@ export const puckConfig: PuckConfig = {
               onClick={(e) => {
                 e.preventDefault();
               }}
-              className={`inline-flex items-center rounded-lg px-4 py-2 text-xs font-semibold transition ${variantClass}`}
+              className={`inline-flex items-center px-4 py-2 text-xs font-semibold transition ${variantClass}`}
             >
               {label}
             </a>
@@ -1590,24 +1556,24 @@ export const puckConfig: PuckConfig = {
         address: { type: 'textarea', label: 'Address' },
         locationMode: {
           type: 'radio',
-          label: 'Location source',
+          label: 'Location Source',
           options: MAP_LOCATION_MODE_OPTIONS,
         },
         latitude: { type: 'text', label: 'Latitude' },
         longitude: { type: 'text', label: 'Longitude' },
         googleMapsUrl: { type: 'text', label: 'Google Maps URL / Embed' },
-        zoom: { type: 'number', label: 'Zoom level', min: 1, max: 20 },
+        zoom: { type: 'number', label: 'Zoom Level', min: 1, max: 20 },
         height: { type: 'select', label: 'Height', options: MAP_HEIGHT_OPTIONS },
-        aspectRatio: { type: 'select', label: 'Aspect ratio', options: MAP_ASPECT_RATIO_OPTIONS },
+        aspectRatio: { type: 'select', label: 'Aspect Ratio', options: MAP_ASPECT_RATIO_OPTIONS },
         showDirectionsButton: {
           type: 'radio',
-          label: 'Directions button',
+          label: 'Directions Button',
           options: [
             { label: 'Show', value: true },
             { label: 'Hide', value: false },
           ],
         },
-        directionsButtonLabel: { type: 'text', label: 'Button label' },
+        directionsButtonLabel: { type: 'text', label: 'Button Label' },
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         layout: layoutField,
       },
@@ -1623,16 +1589,16 @@ export const puckConfig: PuckConfig = {
               {fields.latitude}
               {fields.longitude}
               {fields.googleMapsUrl}
-              {fields.showDirectionsButton}
               {fields.directionsButtonLabel}
             </>
           }
           appearance={
             <>
-              {fields.zoom}
+              {fields.theme}
               {fields.height}
               {fields.aspectRatio}
-              {fields.theme}
+              {fields.zoom}
+              {fields.showDirectionsButton}
               {fields.layout}
             </>
           }
@@ -1653,25 +1619,25 @@ export const puckConfig: PuckConfig = {
         showDirectionsButton: true,
         directionsButtonLabel: 'Get Directions',
         theme: 'light',
-        layout: { padding: '32px' },
+        layout: { padding: '48px' },
       },
       render: (props) => <MapBlock {...props} />,
     },
 
     FooterSimple: {
-      label: 'Footer 1 (Simple)',
+      label: 'Footer Simple',
       fields: {
-        logoText: { type: 'text', label: 'Logo Text (Default)' },
-        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
-        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
-        description: { type: 'textarea', label: 'Description / About' },
+        logoText: { type: 'text', label: 'Logo Text' },
+        logoUrl: { type: 'text', label: 'Logo URL' },
+        brandSubtitle: { type: 'text', label: 'Tagline' },
+        description: { type: 'textarea', label: 'Description' },
         socialLinks: footerSocialLinksField,
-        contactTitle: { type: 'text', label: 'Contact Section Title' },
-        address: { type: 'textarea', label: 'Address (Multiline)' },
-        phone: { type: 'text', label: 'Telephone' },
+        contactTitle: { type: 'text', label: 'Contact Heading' },
+        address: { type: 'textarea', label: 'Address' },
+        phone: { type: 'text', label: 'Phone' },
         email: { type: 'text', label: 'Email' },
         linkColumns: footerLinkColumnsField,
-        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        copyrightNotice: { type: 'text', label: 'Copyright' },
         bottomLinks: footerBottomLinksField,
         theme: {
           type: 'radio',
@@ -1711,23 +1677,23 @@ export const puckConfig: PuckConfig = {
     },
 
     Footer2: {
-      label: 'Footer 2',
+      label: 'Footer Newsletter',
       fields: {
-        logoText: { type: 'text', label: 'Logo Text (Default)' },
-        logoUrl: { type: 'text', label: 'Logo Image URL (Optional)' },
-        brandSubtitle: { type: 'text', label: 'Subtitle / Tagline (Optional)' },
-        description: { type: 'textarea', label: 'Description / About' },
+        logoText: { type: 'text', label: 'Logo Text' },
+        logoUrl: { type: 'text', label: 'Logo URL' },
+        brandSubtitle: { type: 'text', label: 'Tagline' },
+        description: { type: 'textarea', label: 'Description' },
         newsletterHeading: { type: 'text', label: 'Newsletter Heading' },
         newsletterDescription: { type: 'textarea', label: 'Newsletter Description' },
-        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
-        newsletterButtonText: { type: 'text', label: 'Newsletter Button Label' },
+        newsletterPlaceholder: { type: 'text', label: 'Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Button Label' },
         linkColumns: footerLinkColumnsField,
-        contactTitle: { type: 'text', label: 'Contact Section Title' },
-        address: { type: 'textarea', label: 'Address (Multiline)' },
-        phone: { type: 'text', label: 'Telephone' },
+        contactTitle: { type: 'text', label: 'Contact Heading' },
+        address: { type: 'textarea', label: 'Address' },
+        phone: { type: 'text', label: 'Phone' },
         email: { type: 'text', label: 'Email' },
         socialLinks: footerSocialLinksField,
-        copyrightNotice: { type: 'text', label: 'Copyright Text' },
+        copyrightNotice: { type: 'text', label: 'Copyright' },
         bottomLinks: footerBottomLinksField,
         theme: {
           type: 'radio',
@@ -1744,7 +1710,7 @@ export const puckConfig: PuckConfig = {
         },
         showBackToTop: {
           type: 'radio',
-          label: 'Back to Top Button',
+          label: 'Back to Top',
           options: [
             { label: 'Show', value: true },
             { label: 'Hide', value: false },
@@ -1789,21 +1755,21 @@ export const puckConfig: PuckConfig = {
     },
 
     CTA1: {
-      label: 'CTA 1 (Newsletter / Action)',
+      label: 'CTA Banner',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         actionType: { type: 'radio', label: 'Action Mode', options: CTA_ACTION_TYPE_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
-        newsletterPlaceholder: { type: 'text', label: 'Newsletter Email Placeholder' },
-        newsletterButtonText: { type: 'text', label: 'Newsletter Submit Label' },
+        newsletterPlaceholder: { type: 'text', label: 'Email Placeholder' },
+        newsletterButtonText: { type: 'text', label: 'Submit Label' },
         newsletterButtonVariant: {
           type: 'select',
-          label: 'Newsletter Button Variant',
+          label: 'Button Variant',
           options: CTA_BUTTON_VARIANT_OPTIONS,
         },
-        disclaimer: { type: 'text', label: 'Newsletter Disclaimer' },
+        disclaimer: { type: 'text', label: 'Disclaimer' },
         primaryButton: createCTAButtonField('Primary Button'),
         secondaryButton: createCTAButtonField('Secondary Button'),
         layout: layoutField,
@@ -1812,7 +1778,6 @@ export const puckConfig: PuckConfig = {
         <FieldTabs
           content={
             <>
-              {fields.actionType}
               {fields.eyebrow}
               {fields.heading}
               {fields.description}
@@ -1826,6 +1791,7 @@ export const puckConfig: PuckConfig = {
           appearance={
             <>
               {fields.theme}
+              {fields.actionType}
               {fields.newsletterButtonVariant}
               {fields.layout}
             </>
@@ -1837,10 +1803,10 @@ export const puckConfig: PuckConfig = {
     },
 
     CTA2: {
-      label: 'CTA 2 (Dual Action & Features)',
+      label: 'CTA Split',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
-        badge: { type: 'text', label: 'Badge Pill' },
+        badge: { type: 'text', label: 'Badge' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
         features: ctaFeaturesField,
@@ -1873,7 +1839,7 @@ export const puckConfig: PuckConfig = {
     },
 
     FAQ1: {
-      label: 'FAQ 1 (Centered Accordion)',
+      label: 'FAQ Centered',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
@@ -1882,7 +1848,7 @@ export const puckConfig: PuckConfig = {
         items: faqItemsField,
         defaultOpenIndex: {
           type: 'number',
-          label: 'Default Open Index (-1 for none)',
+          label: 'Default Open Index',
           min: -1,
         },
         allowMultipleOpen: {
@@ -1905,8 +1871,8 @@ export const puckConfig: PuckConfig = {
           appearance={
             <>
               {fields.theme}
-              {fields.defaultOpenIndex}
               {fields.allowMultipleOpen}
+              {fields.defaultOpenIndex}
               {fields.layout}
             </>
           }
@@ -1917,17 +1883,17 @@ export const puckConfig: PuckConfig = {
     },
 
     FAQ2: {
-      label: 'FAQ 2 (Split Editorial)',
+      label: 'FAQ Split',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
-        badge: { type: 'text', label: 'Badge Pill' },
+        badge: { type: 'text', label: 'Badge' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
         items: faqItemsField,
         contactCta: faqContactCtaField,
         defaultOpenIndex: {
           type: 'number',
-          label: 'Default Open Index (-1 for none)',
+          label: 'Default Open Index',
           min: -1,
         },
         allowMultipleOpen: {
@@ -1951,8 +1917,8 @@ export const puckConfig: PuckConfig = {
           appearance={
             <>
               {fields.theme}
-              {fields.defaultOpenIndex}
               {fields.allowMultipleOpen}
+              {fields.defaultOpenIndex}
               {fields.layout}
             </>
           }
@@ -1963,7 +1929,7 @@ export const puckConfig: PuckConfig = {
     },
 
     Stats1: {
-      label: 'Stats 1 (Metric Strip)',
+      label: 'Stats Strip',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
@@ -1985,7 +1951,7 @@ export const puckConfig: PuckConfig = {
     },
 
     Stats2: {
-      label: 'Stats 2 (Metric Cards)',
+      label: 'Stats Cards',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         items: statItemsField,
@@ -2007,13 +1973,13 @@ export const puckConfig: PuckConfig = {
     },
 
     Feature1: {
-      label: 'Feature 1 (Feature Grid)',
+      label: 'Features Grid',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
-        columns: { type: 'radio', label: 'Grid Columns', options: FEATURE_COLUMNS_OPTIONS },
+        columns: { type: 'radio', label: 'Columns', options: FEATURE_COLUMNS_OPTIONS },
         cardMode: { type: 'radio', label: 'Card Style', options: FEATURE_CARD_MODE_OPTIONS },
         items: featureItemsField,
         layout: layoutField,
@@ -2043,7 +2009,7 @@ export const puckConfig: PuckConfig = {
     },
 
     Feature2: {
-      label: 'Feature 2 (Split Showcase)',
+      label: 'Features Split',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         badge: { type: 'text', label: 'Badge' },
@@ -2055,8 +2021,8 @@ export const puckConfig: PuckConfig = {
           label: 'Media Position',
           options: FEATURE_MEDIA_POSITION_OPTIONS,
         },
-        imageUrl: { type: 'text', label: 'Image URL (Optional)' },
-        imageAlt: { type: 'text', label: 'Image Alt Text (Optional)' },
+        imageUrl: { type: 'text', label: 'Image URL' },
+        imageAlt: { type: 'text', label: 'Image Alt Text' },
         ctaButton: createCTAButtonField('CTA Button'),
         layout: layoutField,
       },
@@ -2087,16 +2053,16 @@ export const puckConfig: PuckConfig = {
     },
 
     Contact1: {
-      label: 'Contact 1 (Centered Form)',
+      label: 'Contact Form',
       fields: {
         theme: { type: 'radio', label: 'Theme', options: MAP_THEME_OPTIONS },
         eyebrow: { type: 'text', label: 'Eyebrow' },
         heading: { type: 'text', label: 'Heading' },
         description: { type: 'textarea', label: 'Description' },
-        nameLabel: { type: 'text', label: 'Name Field Label' },
-        emailLabel: { type: 'text', label: 'Email Field Label' },
-        messageLabel: { type: 'text', label: 'Message Field Label' },
-        submitLabel: { type: 'text', label: 'Submit Button Label' },
+        nameLabel: { type: 'text', label: 'Name Label' },
+        emailLabel: { type: 'text', label: 'Email Label' },
+        messageLabel: { type: 'text', label: 'Message Label' },
+        submitLabel: { type: 'text', label: 'Submit Label' },
         successMessage: { type: 'textarea', label: 'Success Message' },
         errorMessage: { type: 'textarea', label: 'Error Message' },
         layout: layoutField,
